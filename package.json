@@ -1,0 +1,25 @@
+{
+  "name": "sparkpost-api-documentation",
+  "version": "1.0.0",
+  "description": "This is the Apiary Blueprint source for the SparkPost API Documentation",
+  "author": "Message Systems, Inc.",
+  "scripts": {
+    "test": "grunt"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "api-blueprint-validator": "^0.1.2",
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-shell": "^1.1.2",
+    "matchdep": "^0.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SparkPost/sparkpost-api-documentation.git"
+  },
+  "engines": {
+    "node": ">=0.10.x"
+  },
+  "private": true
+}
