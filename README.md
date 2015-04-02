@@ -25,10 +25,10 @@ The SparkPost API Docs in Apiary Blueprint format (based on Markdown)
 Once all the dependencies are installed, you can execute the Apiary Blueprint Validator tests in the following ways:
 
 * Run the test on ALL /services/ files sequentially
-  ```grunt test```
+  ```grunt testFiles```
 
 * Run the test an individual /services/ file
-  ```grunt test <filename>```
+  ```grunt shell:test:<filename>```
 
 #### Compile and Test
 
