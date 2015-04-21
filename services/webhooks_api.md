@@ -466,7 +466,7 @@ and returns detailed information on the response received from the target.
     }
     ```
 
-## Webhooks Batch Status [/webhooks/{id}/batch-status{?timezone,limit}]
+## Webhooks Batch Status [/webhooks/{id}/batch-status{?limit}]
 
 ### Retrieve Status Information [GET]
 
@@ -477,7 +477,6 @@ are currently in a failed state.
 
 + Parameters
   + id (required, uuid, `12affc24-f183-11e3-9234-3c15c2c818c2`) ... UUID identifying a webhook
-  + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string. Defaults to `UTC`
   + limit (optional, int, `1000`) ... Maximum number of results to return. Defaults to `1000`.
 
 + Request
