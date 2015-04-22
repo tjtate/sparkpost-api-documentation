@@ -3,3 +3,5 @@ node_modules
 *.swp
 *.swo
 *.log
+.idea
+apiary.html
