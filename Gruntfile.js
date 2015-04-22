@@ -1,5 +1,6 @@
 var matchdep = require('matchdep')
     , fs = require('fs')
+    , q = require('q')
     , request = require('request');
 
 module.exports = function(grunt) {
@@ -74,30 +75,54 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('generate-apiary-preview', 'Creates apiary.html preview', function() {
-        var done = this.async()
+    /**
+     * Generates an apiary preview for an .md file
+     * @param file The .md file
+     * @returns {*|promise}
+     */
+    function generatePreview(file) {
+        var deferred = q.defer()
             , options = {
                 url: 'https://api.apiary.io/blueprint/generate',
-                body: fs.readFileSync('./apiary.apib', 'utf-8'),
                 headers: {
                     'Accept': 'text/html',
                     'Content-Type': 'text/plain'
                 }
             };
-        
+
+        options.body = 'FORMAT: X-1A' + 
+            grunt.util.linefeed + 
+            'HOST: https://api.sparkpost.com/api/v1' + 
+            grunt.util.linefeed + grunt.util.linefeed + 
+            '# SparkPost API v1' + 
+            grunt.util.linefeed +
+            fs.readFileSync('./services/' + file + '', 'utf-8');
+    
         request.post(options, function(err, response, body) {
+            var filename = file.split('\.')[0];
+            
             if (err || response.statusCode !== 200) {
                 grunt.log.error('There was an error trying to generate the preview for ' + file, err, response.statusCode, response.body);
-                done(false);
+                return deferred.reject(err || response.body);
             } else {
-                fs.writeFile('./apiary-previews/apiary.html', body, function(err) {
+                fs.writeFile('./apiary-previews/' + filename + '.html', body, function(err) {
                     if (err) {
                         grunt.log.error('There was an error trying to write to apiary.html', err);
-                        return done(false);
+                        return deferred.reject(err);
                     }
-                    done();
+                    return deferred.resolve();
                 });
             }
+        });
+        
+        return deferred.promise;
+    }
+
+    // grunt generate-apiary-preview - creates apiary previews for all meta 
+    grunt.registerTask('generate-apiary-preview', 'Creates preview files for all md files in services', function() {
+        var done = this.async();
+        fs.readdir('./services', function(err, files) {
+            q.all(files.map(generatePreview)).then(done, done);
         });
     });
 
