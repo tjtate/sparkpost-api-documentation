@@ -30,6 +30,22 @@ module.exports = function(grunt) {
                 dest: 'apiary.apib'
             }
         },
+        connect: {
+            apiary: {
+                options: {
+                    port: 4000,
+                    hostname: '127.0.0.1',
+                    open: true,
+                    middleware: function(connect) {
+                        return [
+                            require('connect-livereload')(),
+                            connect.static('apiary-previews'),
+                            connect.directory('apiary-previews')
+                        ];
+                    }
+                }
+            }
+        },
         shell: {
             test: {
                 command : function(file) {
@@ -44,6 +60,15 @@ module.exports = function(grunt) {
                     stdout : true,
                     stderr: false,
                     failOnError : true
+                }
+            }
+        },
+        watch: {
+            apiaryDocs: {
+                files: [ 'services/*.md' ],
+                tasks: [ 'compile', 'generate-apiary-preview' ],
+                options: {
+                    livereload: true
                 }
             }
         }
@@ -65,7 +90,7 @@ module.exports = function(grunt) {
                 grunt.log.error('There was an error trying to generate the preview for ' + file, err, response.statusCode, response.body);
                 done(false);
             } else {
-                fs.writeFile('./apiary.html', body, function(err) {
+                fs.writeFile('./apiary-previews/apiary.html', body, function(err) {
                     if (err) {
                         grunt.log.error('There was an error trying to write to apiary.html', err);
                         return done(false);
@@ -91,9 +116,11 @@ module.exports = function(grunt) {
     ]);
 
     //grunt preview - creates a livereloaded preview of the docs, Apiary-style
-    grunt.registerTask('preview', 'View the apiary generated HTML files in the browser', [
+    grunt.registerTask('preview', 'View the apiary generated HTML files in the browser with all that live-reload goodness', [
         'compile',
-        'generate-apiary-preview'
+        'generate-apiary-preview',
+        'connect:apiary',
+        'watch:apiaryDocs'
     ]);
 
     // grunt test - runs apiary-blueprint-validator on combined apiary.apib file
