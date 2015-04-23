@@ -1,4 +1,7 @@
-var matchdep = require('matchdep');
+var matchdep = require('matchdep')
+    , fs = require('fs')
+    , q = require('q')
+    , request = require('request');
 
 module.exports = function(grunt) {
     // Dynamically load any preexisting grunt tasks/modules
@@ -8,8 +11,8 @@ module.exports = function(grunt) {
     grunt.initConfig({
         concat: {
             options: {
-                banner: 'FORMAT: X-1A' + grunt.util.linefeed + 
-                    'HOST: https://api.sparkpost.com/api/v1' + 
+                banner: 'FORMAT: X-1A' + grunt.util.linefeed +
+                    'HOST: https://api.sparkpost.com/api/v1' +
                     grunt.util.linefeed + grunt.util.linefeed
             },
             prod: {
@@ -28,6 +31,22 @@ module.exports = function(grunt) {
                 dest: 'apiary.apib'
             }
         },
+        connect: {
+            apiary: {
+                options: {
+                    port: 4000,
+                    hostname: '127.0.0.1',
+                    open: true,
+                    middleware: function(connect) {
+                        return [
+                            require('connect-livereload')(),
+                            connect.static('apiary-previews'),
+                            connect.directory('apiary-previews')
+                        ];
+                    }
+                }
+            }
+        },
         shell: {
             test: {
                 command : function(file) {
@@ -44,9 +63,69 @@ module.exports = function(grunt) {
                     failOnError : true
                 }
             }
+        },
+        watch: {
+            apiaryDocs: {
+                files: [ 'services/*.md' ],
+                tasks: [ 'generate-apiary-preview' ],
+                options: {
+                    livereload: true
+                }
+            }
         }
     });
+
+    /**
+     * Generates an apiary preview for an .md file
+     * @param file The .md file
+     * @returns {*|promise}
+     */
+    function generatePreview(file) {
+        var deferred = q.defer()
+            , options = {
+                url: 'https://api.apiary.io/blueprint/generate',
+                headers: {
+                    'Accept': 'text/html',
+                    'Content-Type': 'text/plain'
+                }
+            };
+
+        options.body = 'FORMAT: X-1A' + 
+            grunt.util.linefeed + 
+            'HOST: https://api.sparkpost.com/api/v1' + 
+            grunt.util.linefeed + grunt.util.linefeed + 
+            '# SparkPost API v1' + 
+            grunt.util.linefeed +
+            fs.readFileSync('./services/' + file, 'utf-8');
     
+        request.post(options, function(err, response, body) {
+            var output = file.split('\.')[0] + '.html';
+            
+            if (err || response.statusCode !== 200) {
+                grunt.log.error('There was an error trying to generate the preview for ' + file, err, response.statusCode, response.body);
+                return deferred.reject(err || response.body);
+            } else {
+                fs.writeFile('./apiary-previews/' + output, body, function(err) {
+                    if (err) {
+                        grunt.log.error('There was an error trying to write to apiary.html', err);
+                        return deferred.reject(err);
+                    }
+                    return deferred.resolve();
+                });
+            }
+        });
+        
+        return deferred.promise;
+    }
+
+    // grunt generate-apiary-preview - creates apiary previews for all meta 
+    grunt.registerTask('generate-apiary-preview', 'Creates preview files for all md files in services', function() {
+        var done = this.async();
+        fs.readdir('./services', function(err, files) {
+            q.all(files.map(generatePreview)).then(done, done);
+        });
+    });
+
     // grunt testFiles - runs apiary-blueprint-validator on individual blueprint files
     grunt.registerTask('testFiles', 'Validates individual blueprint files', [
         'shell:test:introduction.md',
@@ -61,9 +140,16 @@ module.exports = function(grunt) {
         'shell:test:smtp_api.md'
     ]);
 
+    //grunt preview - creates a live-reloaded preview of the docs, Apiary-style
+    grunt.registerTask('preview', 'View the apiary generated HTML files in the browser with all that live-reload goodness', [
+        'generate-apiary-preview',
+        'connect:apiary',
+        'watch:apiaryDocs'
+    ]);
+
     // grunt test - runs apiary-blueprint-validator on combined apiary.apib file
     grunt.registerTask('test', [ 'shell:test' ]);
-    
+
     // grunt compile - concatenates all the individual blueprint files and validates it
     grunt.registerTask('compile', [ 'concat:prod', 'test' ]);
 
