@@ -67,7 +67,7 @@ module.exports = function(grunt) {
         watch: {
             apiaryDocs: {
                 files: [ 'services/*.md' ],
-                tasks: [ 'compile', 'generate-apiary-preview' ],
+                tasks: [ 'generate-apiary-preview' ],
                 options: {
                     livereload: true
                 }
