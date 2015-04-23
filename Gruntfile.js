@@ -12,8 +12,8 @@ module.exports = function(grunt) {
         concat: {
             options: {
                 banner: 'FORMAT: X-1A' + grunt.util.linefeed +
-                'HOST: https://api.sparkpost.com/api/v1' +
-                grunt.util.linefeed + grunt.util.linefeed
+                    'HOST: https://api.sparkpost.com/api/v1' +
+                    grunt.util.linefeed + grunt.util.linefeed
             },
             prod: {
                 src: [
@@ -96,16 +96,16 @@ module.exports = function(grunt) {
             grunt.util.linefeed + grunt.util.linefeed + 
             '# SparkPost API v1' + 
             grunt.util.linefeed +
-            fs.readFileSync('./services/' + file + '', 'utf-8');
+            fs.readFileSync('./services/' + file, 'utf-8');
     
         request.post(options, function(err, response, body) {
-            var filename = file.split('\.')[0];
+            var output = file.split('\.')[0] + '.html';
             
             if (err || response.statusCode !== 200) {
                 grunt.log.error('There was an error trying to generate the preview for ' + file, err, response.statusCode, response.body);
                 return deferred.reject(err || response.body);
             } else {
-                fs.writeFile('./apiary-previews/' + filename + '.html', body, function(err) {
+                fs.writeFile('./apiary-previews/' + output, body, function(err) {
                     if (err) {
                         grunt.log.error('There was an error trying to write to apiary.html', err);
                         return deferred.reject(err);
@@ -140,9 +140,8 @@ module.exports = function(grunt) {
         'shell:test:smtp_api.md'
     ]);
 
-    //grunt preview - creates a livereloaded preview of the docs, Apiary-style
+    //grunt preview - creates a live-reloaded preview of the docs, Apiary-style
     grunt.registerTask('preview', 'View the apiary generated HTML files in the browser with all that live-reload goodness', [
-        'compile',
         'generate-apiary-preview',
         'connect:apiary',
         'watch:apiaryDocs'
