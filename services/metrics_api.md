@@ -1766,6 +1766,135 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
   [Bounce Reasons][]
 
 
+## Bounce Reasons By Domain [/metrics/deliverability/bounce-reason/domain{?from,to,domains,campaigns,templates,sandbox,metrics,timezone,limit}]
+
++ Model
+
+    + Body
+
+        ```
+        {
+          "results": [
+            {
+              "reason": "Some Fake Reason",
+              "domain": "example.com",
+              "bounce_class_name": "Undetermined",
+              "bounce_class_description": "The response text could not be identified",
+              "bounce_category_id": 0,
+              "bounce_category_name": "Undetermined",
+              "classification_id": 1,
+              "count_inband_bounce": 119,
+              "count_outofband_bounce": 118,
+              "count_bounce": 237
+            },
+            {
+              "reason": "Some Fake Reason",
+              "domain": "aol.com",
+              "bounce_class_name": "Invalid Recipient",
+              "bounce_class_description": "The recipient is invalid",
+              "bounce_category_id": 1,
+              "bounce_category_name": "Hard",
+              "classification_id": 10,
+              "count_inband_bounce": 133,
+              "count_outofband_bounce": 126,
+              "count_bounce": 259
+            }
+          ]
+        }
+        ```
+
+    + Schema
+
+        ```
+        {
+          "type":"object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "required":false,
+          "properties":{
+            "results": {
+              "type":"array",
+              "required":false,
+              "items":
+                {
+                  "type":"object",
+                  "required":false,
+                  "properties":{
+                    "bounce_category_name": {
+                      "type":"string",
+                      "required":false
+                    },
+                    "bounce_class_description": {
+                      "type":"string",
+                      "required":false
+                    },
+                    "bounce_class_name": {
+                      "type":"string",
+                      "required":false
+                    },
+                    "classification_id": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_bounce": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_inband_bounce": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_outofband_bounce": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "reason": {
+                      "type":"string",
+                      "required":false
+                    },
+                    "domain": {
+                      "type":"string",
+                      "required":false
+                    }
+                  }
+                }
+            }
+          }
+        }
+        ```
+
+### Bounce Reason Metrics By Domain [GET]
+
+Provides deliverability metrics, specific to bounce events, grouped by the domain and bounce reasons.
+
++ Parameters
+    + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
+    + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
+    + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
+    + sandbox (optional, string, `true`) ... Restrict the query to events generated with a sandbox sending domain
+    + metrics (required, list) ... Comma-delimited list of metrics to include
+        
+        + Values
+            + `count_bounce`
+            + `count_inband_bounce`
+            + `count_outofband_bounce`
+            
+    + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
+    + limit (optional, int, `5`) ... Maximum number of results to return [1,1000]
+
++ Request
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Response 200 (application/json)
+
+  [Bounce Reasons By Domain][]
+
+
 ## Bounce Classifications [/metrics/deliverability/bounce-classification{?from,to,domains,campaigns,templates,sandbox,metrics,timezone,limit}]
 
 + Model
@@ -1966,6 +2095,97 @@ Provides deliverability metrics, specific to rejection events, grouped by the re
   [Rejection Reasons][]
 
 
+## Rejection Reasons By Domain [/metrics/deliverability/rejection-reason/domain{?from,to,domains,campaigns,templates,sandbox,timezone,limit}]
+
++ Model
+
+    + Body
+
+        ```
+        {
+          "results": [
+            {
+              "reason": "520 rejection message",
+              "domain": "example.com",
+              "count_rejected": 30,
+              "rejection_category_id": 2,
+              "rejection_type": "Generation Rejection"
+            },
+            {
+              "reason": "503 rejection message",
+              "domain": "aol.com",
+              "count_rejected": 24,
+              "rejection_category_id": 1,
+              "rejection_type": "Policy Rejection"
+            }
+          ]
+        }
+        ```
+
+    + Schema
+
+        ```
+        {
+          "type":"object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "required":false,
+          "properties":{
+            "results": {
+              "type":"array",
+              "required":false,
+              "items":
+                {
+                  "type":"object",
+                  "required":false,
+                  "properties":{
+                    "count_rejected": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "reason": {
+                      "type":"string",
+                      "required":false
+                    },
+                     "domain": {
+                       "type":"string",
+                       "required":false
+                     },
+                    "rejection_category_id": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "rejection_category_name": {
+                      "type":"string",
+                      "required":false
+                    }
+                  }
+                }
+            }
+          }
+        }
+        ```
+
+### Rejection Reason Metrics By Domain [GET]
+
+Provides deliverability metrics, specific to rejection events, grouped by the domain and rejection reasons.
+
++ Parameters
+  + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+  + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+  + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
+  + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
+  
+  + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
+  + sandbox (optional, string, `true`) ... Restrict the query to events generated with a sandbox sending domain
+  
+  + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
+  + limit (optional, int, `5`) ... Maximum number of results to return
+
++ Response 200 (application/json)
+
+  [Rejection Reasons By Domain][]
+
+
 ## Delay Reasons [/metrics/deliverability/delay-reason{?from,to,domains,campaigns,templates,sandbox,timezone,limit}]
 
 + Model
@@ -2051,6 +2271,97 @@ Provides deliverability metrics, specific to delay events, grouped by the delay 
 
   [Delay Reasons][]
 
+
+## Delay Reasons By Domain [/metrics/deliverability/delay-reason/domain{?from,to,domains,campaigns,templates,sandbox,timezone,limit}]
+
++ Model
+
+    + Body
+
+        ```
+        {
+          "results":[
+            {
+              "reason": "400 fake tempfail reason",
+              "domain": "example.com",
+              "count_delayed": 200,
+              "count_delayed_first": 100
+            },
+            {
+              "reason": "425 fake tempfail reason",
+              "domain": "aol.com",
+              "count_delayed": 100,
+              "count_delayed_first": 50
+            }
+          ]
+        }
+        ```
+
+    + Schema
+
+        ```
+        {
+          "type":"object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "required":false,
+          "properties":{
+            "results": {
+              "type":"array",
+              "required":false,
+              "items":
+                {
+                  "type":"object",
+                  "required":false,
+                  "properties":{
+                    "count_delayed_first": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_delayed": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "reason": {
+                      "type":"string",
+                      "required":false
+                    },
+                    "domain": {
+                      "type":"string",
+                      "required":false
+                    }
+                  }
+                }
+            }
+          }
+        }
+        ```
+
+### Delay Reason Metrics By Domain [GET]
+
+Provides deliverability metrics, specific to delay events, grouped by the domain and delay reasons.
+
++ Parameters
+  + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+  + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+  + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
+  + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
+  
+  + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
+  + sandbox (optional, string, `true`) ... Restrict the query to events generated with a sandbox sending domain
+  
+  + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
+  + limit (optional, int, `5`) ... Maximum number of results to return
+
++ Request
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Response 200 (application/json)
+
+  [Delay Reasons By Domain][]
 
 ## Engagement Details [/metrics/deliverability/link-name{?from,to,timezone,campaigns,templates,metrics,limit}]
 
