@@ -66,7 +66,7 @@ List descriptions of the events, event types, and event fields that could be inc
               "timestamp": {
                 "description": "Event date and time, in Unix timestamp format (integer seconds since 00:00:00 GMT 1970-01-01)",
                 "sampleValue": 1427736822
-              },
+              }
             }
           }
         }
@@ -398,7 +398,7 @@ and returns detailed information on the response received from the target.
         "response": {
           "status": 200,
           "headers": {
-            "Content-Type: text/plain",
+            "Content-Type": "text/plain"
           },
           "body": "OK"
         }
