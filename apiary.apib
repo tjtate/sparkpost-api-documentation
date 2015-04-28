@@ -3172,29 +3172,15 @@ In this case `{{user}}` and `{{offercode}}` are the items taken from the substit
 
 ### Link Names
 
-Links can be named, and the link name will be tracked in event and webhook data.
-The link name is optional and can be specified with the **data-msys-linkname**
-custom attribute, the **title** attribute, or the **alt** attribute.  For example:
+Name all links using the **data-msys-linkname** custom attribute.  The link name has a maximum length of 63 characters and is truncated if it exceeds that limit. For example:
 
 ```
 <a href="http://www.example.com/" data-msys-linkname="banner">Example</a>
-
-<a href="http://www.example.com/" title="middle">Example</a>
-
-<a href="http://www.example.com/" alt="bottom">
-<img src="http://www.example.com/logo.png"></a>
 ```
 
-The link name is computed using the following order of precedence:
+If this attribute is not specified, the link name will fall back to **Raw URL**.
 
-1. The value of the **data-msys-linkname** attribute, if available 
-2. The value of the **title** attribute, if available 
-3. The value of the **alt** attribute, if available 
-4. **Null** when there is no link name 
-
-The link name will be incorporated into the click-tracked link.
-The link name has a maximum length of 63 characters and is
-truncated if it exceeds that limit. 
+The link name will be incorporated into the click-tracked link and will be tracked in engagement events.
 
 ### URLs Generated Using Substitution Data
 
@@ -3233,7 +3219,7 @@ The following use of url substitutions _is_ supported:
 <a href="http://www.company.com/{{atom1}}/{{atom2}}?user={{username}}">Go</a>
 ```
 
-atom1, atom2, and username will all be url encoded as expected.  This will generate a valid url.
+`{{atom1}}`, `{{atom2}}`, and `{{username}}` will all be url encoded as expected.  This will generate a valid url.
 
 Example 2:
 
