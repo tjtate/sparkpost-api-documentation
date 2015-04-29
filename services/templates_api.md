@@ -63,6 +63,18 @@ Options for a template are described in a JSON object with the following fields:
 |click_tracking |boolean |Enable or disable click tracking | no - defaults to the setting at the transmission level | To override the default for a specific transmission, specify the _options.click_tracking_ field upon creation of the transmission. |
 |transactional |boolean |Distinguish between transactional and non-transactional messages for unsubscribe and suppression purposes | no - defaults to the setting at the transmission level | To override the default for a specific transmission, specify the _options.transactional_ field upon creation of the transmission. |
 
+## Error Attributes
+
+On success, the API returns a "results" JSON object along with HTTP 200.  However, on failure, an "errors" JSON array will be returned along with HTTP 4xx.  Each error is described in a JSON object with the following fields:
+
+| Field         | Type     | Description                           |  Example |
+|--------------------|:-:       |---------------------------------------|--------|
+|message |string | Explains the class of error  | "substitution language syntax error in template content" |
+|code |string| Identifies the class of error| "3000" |
+|description|string| Detailed explanation of error| "Error while compiling part text: line 4: syntax error near 'age'" |
+|part|string| For substitution errors, identifies the MIME part where the error occurred | "text", "html", "Header:Subject", "text/plain" |
+|line|number| For substitution errors, identifies the line number within the MIME part identified by the "part" JSON field | 4 |
+
 ## Create [/templates]
 
 ### Create a Template [POST]
@@ -99,6 +111,20 @@ By default, when a template is referenced in a transmission, it is the published
           "results": {
             "id": "11806290401558530"
           }
+        }
+
++ Response 422 (application/json)
+
+        {
+          "errors" : [
+            {
+              "part" : "text",
+              "description" : "Error while compiling part text: line 4: syntax error near 'age'",
+              "line" : 4,
+              "code" : "3000",
+              "message" : "substitution language syntax error in template content"
+            }
+          ]
         }
 
 ## Retrieve [/templates/{id}{?draft}]

@@ -1,6 +1,4 @@
-FORMAT: X-1A
-
-# Webhooks API
+# Webhooks [/webhooks]
 
 # Group Webhooks
 
