@@ -1,5 +1,10 @@
 # SparkPost API Documentation
 
+## Prerequisites
+
+* You have installed [Git](http://git-scm.com/downloads) on your development machine
+* You have installed [Node.js and NPM](https://nodejs.org/) on your development machine
+
 The SparkPost API Docs in Apiary Blueprint format (based on Markdown)
 
 ## Installation
@@ -7,6 +12,8 @@ The SparkPost API Docs in Apiary Blueprint format (based on Markdown)
 1. Clone the repository
 
 ```git clone https://github.com/SparkPost/sparkpost-api-documentation```
+
+2. Change into the directory
 
 2. We use [Grunt](http://gruntjs.com/) for our task runner, so you will also have to install Grunt globally
 
