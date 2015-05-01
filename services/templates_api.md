@@ -101,6 +101,18 @@ By default, when a template is referenced in a transmission, it is the published
           }
         }
 
++ Response 403 (application/json)
+
+        {
+          "errors" : [
+            {
+              "description" : "Unconfigured or unverified sending domain.",
+              "code" : "1100",
+              "message" : "permission denied"
+            }
+          ]
+        }
+
 ## Retrieve [/templates/{id}{?draft}]
 
 ### Retrieve a Template [GET]

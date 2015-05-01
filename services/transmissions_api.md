@@ -147,6 +147,22 @@ returned.
         }
         ```
 
++ Response 403 (application/json)
+
+    + Body
+
+        ```
+        {
+          "errors" : [
+            {
+              "description" : "Unconfigured or unverified sending domain.",
+              "code" : "1100",
+              "message" : "permission denied"
+            }
+          ]
+        }
+        ```
+
 
 ## Retrieve [/transmissions/{id}]
 
