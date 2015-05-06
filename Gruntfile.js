@@ -55,7 +55,7 @@ module.exports = function(grunt) {
                     } else {
                         file = 'apiary.apib'
                     }
-                    return 'node ./node_modules/.bin/api-blueprint-validator ' + file;
+                    return 'node ./bin/api-blueprint-validator ' + file;
                 },
                 options : {
                     stdout : true,
