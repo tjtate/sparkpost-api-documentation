@@ -55,7 +55,7 @@ module.exports = function(grunt) {
                     } else {
                         file = 'apiary.apib'
                     }
-                    return 'node ./node_modules/.bin/api-blueprint-validator ' + file;
+                    return 'node ./bin/api-blueprint-validator ' + file;
                 },
                 options : {
                     stdout : true,
@@ -121,6 +121,10 @@ module.exports = function(grunt) {
     // grunt generate-apiary-preview - creates apiary previews for all meta 
     grunt.registerTask('generate-apiary-preview', 'Creates preview files for all md files in services', function() {
         var done = this.async();
+        try {
+            fs.mkdirSync('./apiary-previews');
+        } catch(e){}
+        
         fs.readdir('./services', function(err, files) {
             q.all(files.map(generatePreview)).then(done, done);
         });
