@@ -4827,15 +4827,23 @@ The following recipients attribute is used when specifying a stored recipient li
  
 ### Create Transmission [POST]
 
-Create a transmission in one of three ways:
+You can create a transmission in a number of ways.
 
-1. Create a transmission using inline email part content (specify the recipients inline).
+#### Using Inline Email Part Content
 
-1. Create a transmission using inline RFC822 content (specify the recipients inline). Note: Content headers are not generated for transmissions providing RFC822 content. They are expected to be provided as headers contained in the RFC822 content.
+Create a transmission using inline email part content (specify the recipients inline).
 
-1. Create a transmission using a stored recipients list by specifying the "list_id" in the "recipients" attribute (specify the email part content inline).
+#### Using Inline RFC822 Content
 
-1. Create a transmission using a stored template by specifying the "template_id" in the "content" attribute (specify the recipients inline).  The "use_draft_template" field is optional and indicates whether to use a draft version or the published version of the template when generating messages.
+Create a transmission using inline RFC822 content (specify the recipients inline). Note: Content headers are not generated for transmissions providing RFC822 content. They are expected to be provided as headers contained in the RFC822 content.
+
+#### Using a Stored Recipients List
+
+Create a transmission using a stored recipients list by specifying the "list_id" in the "recipients" attribute (specify the email part content inline).
+
+#### Using a Stored Template
+
+Create a transmission using a stored template by specifying the "template_id" in the "content" attribute (specify the recipients inline).  The "use_draft_template" field is optional and indicates whether to use a draft version or the published version of the template when generating messages.
 
 
 Note: Use the **num_rcpt_errors** parameter to limit the number of recipient errors returned.
