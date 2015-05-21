@@ -58,15 +58,24 @@ The following recipients attribute is used when specifying a stored recipient li
  
 ### Create Transmission [POST]
 
-Create a transmission using inline email part content.  Note that this example specifies the recipients inline.
+Create a transmission in one of three ways:
 
-Use the **num_rcpt_errors** parameter to limit the number of recipient errors
-returned.
+1. Create a transmission using inline email part content (specify the recipients inline).
+
+1. Create a transmission using inline RFC822 content (specify the recipients inline). Note: Content headers are not generated for transmissions providing RFC822 content. They are expected to be provided as headers contained in the RFC822 content.
+
+1. Create a transmission using a stored recipients list by specifying the "list_id" in the "recipients" attribute (specify the email part content inline).
+
+1. Create a transmission using a stored template by specifying the "template_id" in the "content" attribute (specify the recipients inline).  The "use_draft_template" field is optional and indicates whether to use a draft version or the published version of the template when generating messages.
+
+
+Note: Use the **num_rcpt_errors** parameter to limit the number of recipient errors returned.
 
 + Parameters
   + num_rcpt_errors (optional, number, `3`) ... Maximum number of recipient errors that this call can return, otherwise all validation errors are returned.
 
-+ Request (application/json)
+
++ Request Create a Transmission Using Inline Email Part Content (application/json)
 
     + Headers
 
@@ -162,6 +171,276 @@ returned.
           ]
         }
         ```
+
++ Request Create Transmission with Inline RFC822 Content (application/json)
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+  + Body
+  
+            {
+              "options": {
+                "open_tracking": true,
+                "click_tracking": true
+              },
+              "campaign_id": "christmas_campaign",
+              "return_path": "bounces-christmas-campaign@flintstone.com",
+              "metadata": {
+                "user_type": "students"
+              },
+              "substitution_data": {
+                "sender": "Big Store Team"
+              },
+              "recipients": [
+                {
+                  "return_path": "123@bounces.flintstone.com",
+                  "address": {
+                    "email": "wilma@flintstone.com",
+                    "name": "Wilma Flintstone"
+                  },
+                  "tags": [
+                    "greeting",
+                    "prehistoric",
+                    "fred",
+                    "flintstone"
+                  ],
+                  "metadata": {
+                    "place": "Bedrock"
+                  },
+                  "substitution_data": {
+                    "name": "Will Smith"
+                  }
+                },
+                {
+                  "address": {
+                    "email": "abc@flintstone.com",
+                    "name": "Fred Fintstone"
+                  },
+                  "tags": [
+                    "greeting",
+                    "prehistoric",
+                    "fred",
+                    "flintstone"
+                  ],
+                  "metadata": {
+                    "place": "MD"
+                  },
+                  "substitution_data": {
+                    "name": "Fred"
+                  }
+                }
+              ],
+              "content": {
+                "email_rfc822": "Content-Type: text\/plain\r\nTo: \"{{address.name}}\" <{{address.email}}>\r\n\r\n Hi {{name}} \nSave big this Christmas in your area {{place}}! \nClick http://www.mysite.com and get huge discount\n Hurry, this offer is only to {{user_type}}\n {{sender}}\r\n"
+              }
+            }
+
++ Response 200 (application/json)
+
+  + Body
+  
+            {
+              "results": {
+                "total_rejected_recipients": 0,
+                "total_accepted_recipients": 2,
+                "id": "11668787484950529"
+              }
+            }
+
++ Response 403 (application/json)
+
+  + Body
+
+            {
+              "errors" : [
+                {
+                  "description" : "Unconfigured or unverified sending domain.",
+                  "code" : "1100",
+                  "message" : "permission denied"
+                }
+              ]
+            }
+
+
++ Request Create Transmission with Stored Recipient List (application/json)
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+  + Body
+  
+            {
+                "campaign_id": "christmas_campaign",
+                "return_path": "bounces-christmas-campaign@flintstone.com",
+
+                "recipients": {
+                  "list_id": "christmas_sales_2013"
+                },
+
+                "content": {
+                  "from": {
+                    "name": "Fred Flintstone",
+                    "email": "fred@flintstone.com"
+                  },
+
+                  "subject": "Big Christmas savings!",
+
+                  "text": "Hi {{name}} \nSave big this Christmas in your area {{place}}! \nClick http://www.mysite.com and get huge discount\n Hurry, this offer is only to {{user_type}}\n {{sender}}",
+                  "html": "<p>Hi {{name}} \nSave big this Christmas in your area {{place}}! \nClick http://www.mysite.com and get huge discount\n</p><p>Hurry, this offer is only to {{user_type}}\n</p><p>{{sender}}</p>"
+                }
+            }
+
++ Response 200 (application/json)
+
+  + Body
+
+            {
+              "results": {
+                "total_rejected_recipients": 0,
+                "total_accepted_recipients": 10,
+                "id": "11668787484950529"
+              }
+            }
+
++ Response 404 (application/json)
+
+  + Body
+  
+            {
+              "errors": [
+                {
+                  "message": "resource not found",
+                  "description": "List 'christmas_sales_2013' does not exist",
+                  "code": "1600"
+                }
+              ]
+            }
+
++ Request Create Transmission with Stored Template (application/json)
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+  + Body
+  
+            {
+              "options": {
+                "open_tracking": true,
+                "click_tracking": true
+              },
+
+              "campaign_id": "thanksgiving_campaign",
+
+              "content": {
+                "template_id": "christmas_offer",
+                "use_draft_template": false
+              },
+
+              "return_path": "bounces-christmas-campaign@flintstone.com",
+
+              "metadata": {
+                "user_type": "students"
+              },
+              "substitution_data": {
+                "subkey": "subvalue"
+              },
+
+              "recipients": [
+                {
+                  "return_path": "123@bounces.flintstone.com",
+                  "address": {
+                    "email": "wilma@flintstone.com",
+                    "name": "Wilma Flintstone"
+                  },
+                  "tags": [
+                    "greeting",
+                    "prehistoric",
+                    "fred",
+                    "flintstone"
+                  ],
+                  "metadata": {
+                    "place": "Bedrock"
+                  },
+                  "substitution_data": {
+                    "subrcptkey": "subrcptvalue"
+                  }
+                },
+                {
+                  "return_path": "456@bounces.flintstone.com",
+                  "address": {
+                    "email": "abc@flintstone.com"
+                  },
+                  "tags": [
+                    "greeting",
+                    "prehistoric",
+                    "fred",
+                    "flintstone"
+                  ],
+                  "metadata": {
+                    "place": "MD"
+                  }
+                }
+              ]
+            }
+
++ Response 200 (application/json)
+
+  + Body
+  
+            {
+              "errors": [
+                {
+                  "message": "transmission created, but with validation errors",
+                  "code": "2000"
+                }
+              ],
+              "results": {
+                "rcpt_to_errors": [
+                  {
+                    "message": "required field is missing",
+                    "description": "address.email is required for each recipient",
+                    "code": "1400"
+                  }
+                ],
+                "total_rejected_recipients": 1,
+                "total_accepted_recipients": 1,
+                "id": "11668787484950530"
+              }
+            }
+
++ Response 404 (application/json)
+
+  + Body
+  
+            {
+              "errors": [
+                {
+                  "message": "resource not found",
+                  "description": "template 'christmas_offer' does not exist",
+                  "code": "1600"
+                }
+              ]
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## Retrieve [/transmissions/{id}]
