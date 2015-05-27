@@ -1,6 +1,6 @@
-# Metrics [/metrics]
-
 # Group Metrics
+
+# Metrics [/metrics]
 
 SparkPost logs copious amounts of statistical, real-time data about message processing, message
 disposition, and campaign performance.  This reporting data is available in the UI or through the Metrics API.  The Metrics API provides a variety of endpoints enabling you to retrieve a summary of the data, data grouped by a specific qualifier, or data by event type.  Within each endpoint, you can also apply various filters to drill down to the data for your specific reporting needs.
