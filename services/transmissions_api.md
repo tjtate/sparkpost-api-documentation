@@ -62,22 +62,22 @@ You can create a transmission in a number of ways.
 
 #### Using Inline Email Part Content
 
-Create a transmission using inline email part content (specify the recipients inline).
+Create a transmission using inline email part content.
 
 #### Using Inline RFC822 Content
 
-Create a transmission using inline RFC822 content (specify the recipients inline). Note: Content headers are not generated for transmissions providing RFC822 content. They are expected to be provided as headers contained in the RFC822 content.
+Create a transmission using inline RFC822 content. Content headers are not generated for transmissions providing RFC822 content. They are expected to be provided as headers contained in the RFC822 content.
 
 #### Using a Stored Recipients List
 
-Create a transmission using a stored recipients list by specifying the "list_id" in the "recipients" attribute (specify the email part content inline).
+Create a transmission using a stored recipients list by specifying the "list_id" in the "recipients" attribute.
 
 #### Using a Stored Template
 
-Create a transmission using a stored template by specifying the "template_id" in the "content" attribute (specify the recipients inline).  The "use_draft_template" field is optional and indicates whether to use a draft version or the published version of the template when generating messages.
+Create a transmission using a stored template by specifying the "template_id" in the "content" attribute.  The "use_draft_template" field is optional and indicates whether to use a draft version or the published version of the template when generating messages.
 
 
-Note: Use the **num_rcpt_errors** parameter to limit the number of recipient errors returned.
+Note: In all cases, you can use the **num_rcpt_errors** parameter to limit the number of recipient errors returned.
 
 + Parameters
   + num_rcpt_errors (optional, number, `3`) ... Maximum number of recipient errors that this call can return, otherwise all validation errors are returned.

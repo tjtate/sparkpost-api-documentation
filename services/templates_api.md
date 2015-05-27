@@ -88,6 +88,8 @@ By default, when a template is referenced in a transmission, it is the published
 
 #### Create Parts
 
+The following are key points about creating parts in your templates, as shown in the example:
+
 * The "id" field may be supplied, and it must be unique.
 * By default, templates are created as drafts.  If you would like to directly publish a template upon creation, set the "published" field to true.
 * Open and click tracking may be enable/disabled at the template level using the "open_tracking" and
