@@ -1,7 +1,19 @@
 var matchdep = require('matchdep')
     , fs = require('fs')
     , q = require('q')
-    , request = require('request');
+    , request = require('request')
+    , services = [
+        'introduction.md',
+        'metrics_api.md',
+        'recipient_list_api.md',
+        'sending_domains_api.md',
+        'substitutions_reference.md',
+        'suppression_list_api.md',
+        'templates_api.md',
+        'transmissions_api.md',
+        'webhooks_api.md',
+        'smtp_api.md'
+    ];
 
 module.exports = function(grunt) {
     // Dynamically load any preexisting grunt tasks/modules
@@ -16,18 +28,7 @@ module.exports = function(grunt) {
                     grunt.util.linefeed + grunt.util.linefeed
             },
             prod: {
-                src: [
-                    'services/introduction.md',
-                    'services/metrics_api.md',
-                    'services/recipient_list_api.md',
-                    'services/sending_domains_api.md',
-                    'services/substitutions_reference.md',
-                    'services/suppression_list_api.md',
-                    'services/templates_api.md',
-                    'services/transmissions_api.md',
-                    'services/webhooks_api.md',
-                    'services/smtp_api.md'
-                ],
+                src: services.map(function(s) { return 'services/' + s; }),
                 dest: 'apiary.apib'
             }
         },
@@ -35,7 +36,7 @@ module.exports = function(grunt) {
             apiary: {
                 options: {
                     port: 4000,
-                    hostname: '127.0.0.1',
+                    hostname: '0.0.0.0',
                     open: true,
                     middleware: function(connect) {
                         return [
@@ -131,18 +132,9 @@ module.exports = function(grunt) {
     });
 
     // grunt testFiles - runs apiary-blueprint-validator on individual blueprint files
-    grunt.registerTask('testFiles', 'Validates individual blueprint files', [
-        'shell:test:introduction.md',
-        'shell:test:metrics_api.md',
-        'shell:test:recipient_list_api.md',
-        'shell:test:sending_domains_api.md',
-        'shell:test:substitutions_reference.md',
-        'shell:test:suppression_list_api.md',
-        'shell:test:templates_api.md',
-        'shell:test:transmissions_api.md',
-        'shell:test:webhooks_api.md',
-        'shell:test:smtp_api.md'
-    ]);
+    grunt.registerTask('testFiles', 'Validates individual blueprint files', services.map(function(s) {
+        return 'shell:test:' + s;
+    }));
 
     //grunt preview - creates a live-reloaded preview of the docs, Apiary-style
     grunt.registerTask('preview', 'View the apiary generated HTML files in the browser with all that live-reload goodness', [
