@@ -4,7 +4,8 @@
   "description": "This is the Apiary Blueprint source for the SparkPost API Documentation",
   "author": "Message Systems, Inc.",
   "scripts": {
-    "test": "grunt"
+    "test": "grunt",
+    "setup-remotes": "bash ./bin/setup-remotes.sh"
   },
   "dependencies": {},
   "devDependencies": {
