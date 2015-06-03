@@ -2266,6 +2266,10 @@ Provides aggregate count of deliveries grouped by the attempt number.
 
 Returns a list of campaigns that the Metrics API contains data on.
 
++ Parameters
+    + match (optional, string, `example`) ... Only return results containing this string 
+    + limit (optional, int, `5`) ... Maximum number of results to return
+
 + Request
 
     + Headers
@@ -2322,6 +2326,10 @@ Returns a list of campaigns that the Metrics API contains data on.
 ### Domains List [GET]
 
 Returns a list of domains that the Metrics API contains data on.
+
++ Parameters
+    + match (optional, string, `example`) ... Only return results containing this string 
+    + limit (optional, int, `5`) ... Maximum number of results to return
 
 + Request
 
