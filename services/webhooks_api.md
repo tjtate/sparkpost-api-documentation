@@ -39,7 +39,6 @@ List descriptions of the events, event types, and event fields that could be inc
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
       Accept: application/json
 
 + Response 200 (application/json)
@@ -83,7 +82,6 @@ Provide an example of the event data that will be posted by a Webhook for the sp
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
       Accept: application/json
 
 + Response 200 (application/json)
