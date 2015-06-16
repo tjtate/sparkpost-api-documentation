@@ -54,7 +54,7 @@ The following recipients attribute is used when specifying a stored recipient li
 
 ## Create [/transmissions{?num_rcpt_errors}]
  
-### Create Transmission [POST]
+### Create a Transmission [POST]
 
 You can create a transmission in a number of ways.
 
@@ -81,7 +81,7 @@ Note: In all cases, you can use the **num_rcpt_errors** parameter to limit the n
   + num_rcpt_errors (optional, number, `3`) ... Maximum number of recipient errors that this call can return, otherwise all validation errors are returned.
 
 
-+ Request Create a Transmission Using Inline Email Part Content (application/json)
++ Request Create Transmission Using Inline Email Part Content (application/json)
 
     + Headers
 
