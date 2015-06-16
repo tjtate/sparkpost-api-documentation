@@ -75,7 +75,7 @@ On success, the API returns a "results" JSON object along with HTTP 200.  Howeve
 |part|string| For substitution errors, identifies the MIME part where the error occurred | "text", "html", "Header:Subject", "text/plain" |
 |line|number| For substitution errors, identifies the line number within the MIME part identified by the "part" JSON field | 4 |
 
-## Create [/templates]
+## Create and List [/templates]
 
 ### Create a Template [POST]
 
@@ -240,6 +240,40 @@ Fully formed email_rfc822 content may be provided instead of the "text", "html",
           }
         }
 
+### List all Templates [GET]
+
+Lists the most recent version of each template in your account. Each template object in the list will have the following fields:
+
+- id: Unique template ID
+- name: Template name
+- published: Published state of the template (true = published, false = draft)
+- description: Template description
+
++ Request
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        {
+          "results" : [
+            {
+              "id" : "summer_sale",
+              "name" : "Summer Sale!",
+              "published" : true,
+              "description" : ""
+            },
+            {
+              "id" : "daily",
+              "name" : "daily",
+              "published" : false,
+              "description" : ""
+            }
+          ]
+        }
 
 ## Retrieve [/templates/{id}{?draft}]
 
@@ -299,43 +333,6 @@ If the template was used for message generation, the result will also include a 
               }
             }
           }
-        }
-
-## List [/templates/]
-
-### List all Templates [GET]
-
-Lists the most recent version of each template in your account. Each template object in the list will have the following fields:
-
-- id: Unique template ID
-- name: Template name
-- published: Published state of the template (true = published, false = draft)
-- description: Template description
-
-+ Request
-
-    + Headers
-
-            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-            Accept: application/json
-
-+ Response 200 (application/json)
-
-        {
-          "results" : [
-            {
-              "id" : "summer_sale",
-              "name" : "Summer Sale!",
-              "published" : true,
-              "description" : ""
-            },
-            {
-              "id" : "daily",
-              "name" : "daily",
-              "published" : false,
-              "description" : ""
-            }
-          ]
         }
 
 ## Update [/templates/{id}{?update_published}]

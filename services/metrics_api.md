@@ -48,7 +48,7 @@ Definitions for terms found in Metrics API
 |`total_msg_volume` | Total size of delivered messages, in bytes (including attachments)|
 |`count_spam_complaint` | Number of spam complaints received from an ISP|
 
-## Metrics Discoverability Links [/metrics/]
+## Discoverability Links [/metrics/]
 
 The Metrics API is designed for discoverability of child links.  Calling the API root displays a
 list of URIs that exists within the Metrics API.
@@ -137,7 +137,7 @@ Provides links to all child URIs within the Metrics API.
 
 + Response 200
 
-    [Metrics Discoverability Links][]
+    [Discoverability Links][]
 
 
 ## Deliverability Metrics [/metrics/deliverability{?from,to,domains,campaigns,templates,sandbox,metrics,timezone}]
