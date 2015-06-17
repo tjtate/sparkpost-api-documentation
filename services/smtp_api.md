@@ -15,17 +15,18 @@ The fields supported in the X-MSYS-API header are as follows:
 
 | field | type | description | required | notes |
 |-------|------|-------------|----------|-------|
-| campaign_id | string | Name of the campaign to associate with the SMTP message | no | Maximum length - 64 bytes (same restriction as the REST API)
-| metadata | JSON object | JSON key value pairs associated with the SMTP message | no | A maximum of 200 bytes of metadata is available during click
-| tags | JSON array | Array of text labels associated with the SMTP message | no | Tags are available in click/open events. Maximum number of tags -
+| campaign_id | string | Name of the campaign to associate with the SMTP message | no | Maximum length - 64 bytes (same restriction as the REST API) |
+| metadata | JSON object | JSON key value pairs associated with the SMTP message | no | A maximum of 200 bytes of metadata is available during click/open events. |
+| tags | JSON array | Array of text labels associated with the SMTP message | no | Tags are available in click/open events. Maximum number of tags is 10 per recipient, 100 system wide. |
 | options | JSON object | JSON object in which SMTP API options are defined | no | For a full description, see the Options Attributes. |
 
 ## Options Attributes
 
 | field | type | description | required | notes |
 |-------|------|-------------|----------|-------|
-| open_tracking | boolean | Whether open tracking is enabled for this SMTP message | no | defaults to false |
-| click_tracking | boolean | Whether click tracking is enabled for this SMTP message | no | defaults to false |
+| open_tracking | boolean | Whether open tracking is enabled for this SMTP message | no | Defaults to false. |
+| click_tracking | boolean | Whether click tracking is enabled for this SMTP message | no | Defaults to false. |
+| sandbox|boolean|Whether or not to use the sandbox sending domain | no |Defaults to false.|
 
 SMTP defines a maximum line length of 1000 characters (including CRLF).  If the value of the X-MSYS-API JSON string is
 longer than 998 characters, it will need to be folded across multiple lines before the message is injected.  An example

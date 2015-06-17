@@ -29,7 +29,7 @@ In addition, engagement tracking options can be set in the transmission to track
 |open_tracking|boolean| Whether open tracking is enabled for this transmission| no |If not specified, the setting at template level is used, or defaults to true. | 
 |click_tracking|boolean| Whether click tracking is enabled for this transmission| no |If not specified, the setting at template level is used, or defaults to true. | 
 |transactional|boolean|Whether message is transactional or non-transactional for unsubscribe and suppression purposes | no |If not specified, the setting at template level is used, or defaults to false. |
-|sandbox|boolean|Whether or not to use the sandbox environment | no |Defaults to false.|
+|sandbox|boolean|Whether or not to use the sandbox sending domain | no |Defaults to false.|
 
 
 ### Using a Stored Template
