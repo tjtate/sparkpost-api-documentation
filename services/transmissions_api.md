@@ -16,7 +16,6 @@ In addition, engagement tracking options can be set in the transmission to track
 |description | string |Description of the transmission|no | Maximum length - 1024 bytes| 
 |metadata|JSON object|Transmission level metadata containing key/value pairs |no| Metadata is available during events through the Webhooks and is provided to the substitution engine.  A maximum of 200 bytes of merged metadata (transmission level + recipient level) is available with recipient metadata taking precedence over transmission metadata when there are conflicts.  |
 |substitution_data|JSON object|Key/value pairs that are provided to the substitution engine| no | Recipient substitution data takes precedence over transmission substitution data. Unlike metadata, substitution data is not included in Webhook events. |
-|return_path | string |Email to use for envelope FROM | yes | To support Variable Envelope Return Path (VERP), this field can also optionally be specified inside of the address object of a specific recipient in order to give the recipient a unique envelope MAIL FROM.|
 |content| JSON object | Content that will be used to construct a message | yes | Specify a stored template or specify inline template content. When using a stored template, specify the "template_id" as described in Using a Stored Template.  Otherwise, provide the inline content using the fields described in the Templates API documentation for Content Attributes.  Maximum size - 15MBs|
 |total_recipients | number | Computed total recipients | no | Read only|
 |num_generated | number | Computed total number of messages generated | no |Read only|
@@ -97,7 +96,6 @@ Note: In all cases, you can use the **num_rcpt_errors** parameter to limit the n
           },
 
           "campaign_id": "christmas_campaign",
-          "return_path": "bounces-christmas-campaign@flintstone.com",
 
           "metadata": {
             "user_type": "students"
@@ -109,7 +107,6 @@ Note: In all cases, you can use the **num_rcpt_errors** parameter to limit the n
 
           "recipients": [
             {
-              "return_path": "123@bounces.flintstone.com",
               "address": {
                 "email": "wilma@flintstone.com",
                 "name": "Wilma Flintstone"
@@ -192,7 +189,6 @@ Note: In all cases, you can use the **num_rcpt_errors** parameter to limit the n
                 "click_tracking": true
               },
               "campaign_id": "christmas_campaign",
-              "return_path": "bounces-christmas-campaign@flintstone.com",
               "metadata": {
                 "user_type": "students"
               },
@@ -201,7 +197,6 @@ Note: In all cases, you can use the **num_rcpt_errors** parameter to limit the n
               },
               "recipients": [
                 {
-                  "return_path": "123@bounces.flintstone.com",
                   "address": {
                     "email": "wilma@flintstone.com",
                     "name": "Wilma Flintstone"
@@ -280,7 +275,6 @@ Note: In all cases, you can use the **num_rcpt_errors** parameter to limit the n
   
             {
                 "campaign_id": "christmas_campaign",
-                "return_path": "bounces-christmas-campaign@flintstone.com",
 
                 "recipients": {
                   "list_id": "christmas_sales_2013"
@@ -346,8 +340,6 @@ Note: In all cases, you can use the **num_rcpt_errors** parameter to limit the n
                 "use_draft_template": false
               },
 
-              "return_path": "bounces-christmas-campaign@flintstone.com",
-
               "metadata": {
                 "user_type": "students"
               },
@@ -357,7 +349,6 @@ Note: In all cases, you can use the **num_rcpt_errors** parameter to limit the n
 
               "recipients": [
                 {
-                  "return_path": "123@bounces.flintstone.com",
                   "address": {
                     "email": "wilma@flintstone.com",
                     "name": "Wilma Flintstone"
@@ -376,7 +367,6 @@ Note: In all cases, you can use the **num_rcpt_errors** parameter to limit the n
                   }
                 },
                 {
-                  "return_path": "456@bounces.flintstone.com",
                   "address": {
                     "email": "abc@flintstone.com"
                   },
@@ -483,7 +473,6 @@ The response for a transmission using an inline template will include "template_
                 "template_id": "Bob's template",
                 "use_draft_template": false
               },
-              "return_path": "fred@flintstone.com",
               "rcpt_list_chunk_size": 100,
               "rcpt_list_total_chunks": 1,
               "num_rcpts": 10,

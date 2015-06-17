@@ -627,8 +627,7 @@ A full transmission json example follows:
     "html": "<p>Today's special offers</p><ul>\n{{each offers}}\n<li>{{render_dynamic_content(dynamic_html[loop_var])}}</li>\n{{end}}\n</ul>",
     "from": "test@example.com",
     "subject": "offers"
-  },
-  "return_path": "test@example.com"
+  }
 }
 ```
 
@@ -691,13 +690,12 @@ automatically available for each recipient:
 
 * `address.name`: Recipient's name from the _address.name_ recipient json field
 * `email` and `address.email`: Recipient's email address from the _address_ or _address.email_ recipient json field
-* `return_path`: Return path from the transmission or recipients json field
 
 Example:
 
 ```
 Hello {{address.name}}
-Your email is {{address.email}} and your return path is {{return_path}}
+Your email is {{address.email}}
 ```
 
 ### Substitutions in email_rfc822 Headers
