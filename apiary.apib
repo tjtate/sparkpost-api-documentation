@@ -2731,7 +2731,6 @@ Recipients are described in a JSON array with the following fields:
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
 |address | JSON object or string | Address information for a recipient  | yes | See the Address Attributes. |
-|return_path | string |Email to use for envelope FROM | no | To support Variable Envelope Return Path (VERP), this field provides a specific recipient a unique envelope MAIL FROM.|
 |tags | JSON array |Array of text labels associated with a recipient | no | Tags are available in Webhook events.  Maximum number of tags - 10 per recipient, 100 system wide.  Any tags over the limits are ignored.|
 |metadata | JSON object| Key/value pairs associated with a recipient |no | Metadata is available during events through the Webhooks and is provided to the substitution engine.  A maximum of 200 bytes of merged metadata (transmission level + recipient level) is available with recipient metadata taking precedence over transmission metadata when there are conflicts.  |
 |substitution_data | JSON object | Key/value pairs associated with a recipient that are provided to the substitution engine |no | Recipient substitution data takes precedence over transmission substitution data.  Unlike metadata, substitution data is not included in Webhook events.|
@@ -2811,7 +2810,6 @@ returned.
           },
           "recipients": [
               {
-                  "return_path": "return-path-wilmaflin@tstone.com",
                   "address": {
                       "email": "wilmaflin@yahoo.com",
                       "name": "Wilma"
@@ -2830,7 +2828,6 @@ returned.
                   ]
               },
               {
-                  "return_path": "return-path-abc@tstone.com",
                   "address": {
                       "email": "abc@flintstone.com",
                       "name": "ABC"
@@ -2846,8 +2843,7 @@ returned.
                   ]
               },
               {
-                  "return_path": "return-path-def@tstone.com",
-                  "address": {
+                   "address": {
                       "email": "fred.jones@flintstone.com",
                       "name": "Grad Student Office",
                       "header_to": "grad-student-office@flintstone.com"
@@ -2918,7 +2914,6 @@ retrieve the recipients contained in a list, the list must be specified and the 
                             "email": "wilmaflin@yahoo.com",
                             "name": "Wilma"
                         },
-                        "return_path": "return-path-wilmaflin@tstone.com",
                         "tags": [
                             "greeting",
                             "prehistoric",
@@ -2937,7 +2932,6 @@ retrieve the recipients contained in a list, the list must be specified and the 
                             "email": "abc@flintstone.com",
                             "name": "ABC"
                         },
-                        "return_path": "return-path-abc@tstone.com",
                         "tags": [
                             "driver",
                             "computer science",
@@ -3873,8 +3867,7 @@ A full transmission json example follows:
     "html": "<p>Today's special offers</p><ul>\n{{each offers}}\n<li>{{render_dynamic_content(dynamic_html[loop_var])}}</li>\n{{end}}\n</ul>",
     "from": "test@example.com",
     "subject": "offers"
-  },
-  "return_path": "test@example.com"
+  }
 }
 ```
 
@@ -3937,13 +3930,12 @@ automatically available for each recipient:
 
 * `address.name`: Recipient's name from the _address.name_ recipient json field
 * `email` and `address.email`: Recipient's email address from the _address_ or _address.email_ recipient json field
-* `return_path`: Return path from the transmission or recipients json field
 
 Example:
 
 ```
 Hello {{address.name}}
-Your email is {{address.email}} and your return path is {{return_path}}
+Your email is {{address.email}}
 ```
 
 ### Substitutions in email_rfc822 Headers
@@ -4793,7 +4785,6 @@ In addition, engagement tracking options can be set in the transmission to track
 |description | string |Description of the transmission|no | Maximum length - 1024 bytes| 
 |metadata|JSON object|Transmission level metadata containing key/value pairs |no| Metadata is available during events through the Webhooks and is provided to the substitution engine.  A maximum of 200 bytes of merged metadata (transmission level + recipient level) is available with recipient metadata taking precedence over transmission metadata when there are conflicts.  |
 |substitution_data|JSON object|Key/value pairs that are provided to the substitution engine| no | Recipient substitution data takes precedence over transmission substitution data. Unlike metadata, substitution data is not included in Webhook events. |
-|return_path | string |Email to use for envelope FROM | yes | To support Variable Envelope Return Path (VERP), this field can also optionally be specified inside of the address object of a specific recipient in order to give the recipient a unique envelope MAIL FROM.|
 |content| JSON object | Content that will be used to construct a message | yes | Specify a stored template or specify inline template content. When using a stored template, specify the "template_id" as described in Using a Stored Template.  Otherwise, provide the inline content using the fields described in the Templates API documentation for Content Attributes.  Maximum size - 15MBs|
 |total_recipients | number | Computed total recipients | no | Read only|
 |num_generated | number | Computed total number of messages generated | no |Read only|
@@ -4874,7 +4865,6 @@ Note: In all cases, you can use the **num_rcpt_errors** parameter to limit the n
           },
 
           "campaign_id": "christmas_campaign",
-          "return_path": "bounces-christmas-campaign@flintstone.com",
 
           "metadata": {
             "user_type": "students"
@@ -4886,7 +4876,6 @@ Note: In all cases, you can use the **num_rcpt_errors** parameter to limit the n
 
           "recipients": [
             {
-              "return_path": "123@bounces.flintstone.com",
               "address": {
                 "email": "wilma@flintstone.com",
                 "name": "Wilma Flintstone"
@@ -4969,7 +4958,6 @@ Note: In all cases, you can use the **num_rcpt_errors** parameter to limit the n
                 "click_tracking": true
               },
               "campaign_id": "christmas_campaign",
-              "return_path": "bounces-christmas-campaign@flintstone.com",
               "metadata": {
                 "user_type": "students"
               },
@@ -4978,7 +4966,6 @@ Note: In all cases, you can use the **num_rcpt_errors** parameter to limit the n
               },
               "recipients": [
                 {
-                  "return_path": "123@bounces.flintstone.com",
                   "address": {
                     "email": "wilma@flintstone.com",
                     "name": "Wilma Flintstone"
@@ -5057,7 +5044,6 @@ Note: In all cases, you can use the **num_rcpt_errors** parameter to limit the n
   
             {
                 "campaign_id": "christmas_campaign",
-                "return_path": "bounces-christmas-campaign@flintstone.com",
 
                 "recipients": {
                   "list_id": "christmas_sales_2013"
@@ -5123,8 +5109,6 @@ Note: In all cases, you can use the **num_rcpt_errors** parameter to limit the n
                 "use_draft_template": false
               },
 
-              "return_path": "bounces-christmas-campaign@flintstone.com",
-
               "metadata": {
                 "user_type": "students"
               },
@@ -5134,7 +5118,6 @@ Note: In all cases, you can use the **num_rcpt_errors** parameter to limit the n
 
               "recipients": [
                 {
-                  "return_path": "123@bounces.flintstone.com",
                   "address": {
                     "email": "wilma@flintstone.com",
                     "name": "Wilma Flintstone"
@@ -5153,7 +5136,6 @@ Note: In all cases, you can use the **num_rcpt_errors** parameter to limit the n
                   }
                 },
                 {
-                  "return_path": "456@bounces.flintstone.com",
                   "address": {
                     "email": "abc@flintstone.com"
                   },
@@ -5260,7 +5242,6 @@ The response for a transmission using an inline template will include "template_
                 "template_id": "Bob's template",
                 "use_draft_template": false
               },
-              "return_path": "fred@flintstone.com",
               "rcpt_list_chunk_size": 100,
               "rcpt_list_total_chunks": 1,
               "num_rcpts": 10,
