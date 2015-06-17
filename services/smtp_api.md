@@ -24,9 +24,9 @@ The fields supported in the X-MSYS-API header are as follows:
 
 | field | type | description | required | notes |
 |-------|------|-------------|----------|-------|
-| open_tracking | boolean | Whether open tracking is enabled for this SMTP message | no | defaults to false |
-| click_tracking | boolean | Whether click tracking is enabled for this SMTP message | no | defaults to false |
-| sandbox|boolean|Whether or not to use the sandbox environment | no |Defaults to false.|
+| open_tracking | boolean | Whether open tracking is enabled for this SMTP message | no | Defaults to false. |
+| click_tracking | boolean | Whether click tracking is enabled for this SMTP message | no | Defaults to false. |
+| sandbox|boolean|Whether or not to use the sandbox sending domain | no |Defaults to false.|
 
 SMTP defines a maximum line length of 1000 characters (including CRLF).  If the value of the X-MSYS-API JSON string is
 longer than 998 characters, it will need to be folded across multiple lines before the message is injected.  An example
