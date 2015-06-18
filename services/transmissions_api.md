@@ -76,6 +76,8 @@ Create a transmission using a stored template by specifying the "template_id" in
 
 Note: In all cases, you can use the **num_rcpt_errors** parameter to limit the number of recipient errors returned.
 
+When a transmission is created, the number of messages in the transmission is compared to the sending limit of your account. If the transmission will cause you to exceed your sending limit, the entire transmission results in an error and no messages are sent.  Note that no messages will be sent for the given transmission, regardless of the number of messages that caused you to exceed your sending limit. In this case, the Transmission API will return an HTTP 420 error code with an error detailing whether you would exceed your hourly, daily, or sandbox sending limit. 
+
 + Parameters
   + num_rcpt_errors (optional, number, `3`) ... Maximum number of recipient errors that this call can return, otherwise all validation errors are returned.
 
@@ -422,22 +424,72 @@ Note: In all cases, you can use the **num_rcpt_errors** parameter to limit the n
               ]
             }
 
++ Request that Exceeds Sending Limit (application/json)
 
+  + Headers
 
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
+  + Body
+  
+            {
+                "campaign_id": "christmas_campaign",
 
+                "recipients": {
+                  "list_id": "list_exceeds_sending_limit"
+                },
 
+                "content": {
+                  "from": {
+                    "name": "Fred Flintstone",
+                    "email": "fred@flintstone.com"
+                  },
 
+                  "subject": "Big Christmas savings!",
 
+                  "text": "Hi {{name}} \nSave big this Christmas in your area {{place}}! \nClick http://www.mysite.com and get huge discount\n Hurry, this offer is only to {{user_type}}\n {{sender}}",
+                  "html": "<p>Hi {{name}} \nSave big this Christmas in your area {{place}}! \nClick http://www.mysite.com and get huge discount\n</p><p>Hurry, this offer is only to {{user_type}}\n</p><p>{{sender}}</p>"
+                }
+            }
 
++ Response 420 (application/json)
 
+  + Body
+  
+            {
+              "errors": [
+                {
+                  "message": "Exceed Sending Limit (hourly)",
+                  "code": "2101"
+                }
+              ]
+            }
 
++ Response 420 (application/json)
 
+  + Body
+  
+            {
+              "errors": [
+                {
+                  "message": "Exceed Sending Limit (daily)",
+                  "code": "2102"
+                }
+              ]
+            }
 
++ Response 420 (application/json)
 
-
-
-
+  + Body
+  
+            {
+              "errors": [
+                {
+                  "message": "Exceed Sending Limit (sandbox)",
+                  "code": "2103"
+                }
+              ]
+            }
 
 ## Retrieve [/transmissions/{id}]
 
