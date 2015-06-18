@@ -424,7 +424,7 @@ When a transmission is created, the number of messages in the transmission is co
               ]
             }
 
-+ Request that Exceeds Sending Limit (application/json)
++ Request Number of Messages Exceeds Sending Limit (application/json)
 
   + Headers
 
