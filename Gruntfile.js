@@ -4,10 +4,10 @@ var matchdep = require('matchdep')
     , request = require('request')
     , services = [
         'introduction.md',
+        'substitutions_reference.md',
         'metrics_api.md',
         'recipient_list_api.md',
         'sending_domains_api.md',
-        'substitutions_reference.md',
         'suppression_list_api.md',
         'templates_api.md',
         'transmissions_api.md',

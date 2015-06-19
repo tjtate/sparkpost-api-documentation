@@ -1,4 +1,4 @@
-# Group Substitutions Reference
+## Substitutions Reference
 
 ### Key Features
 
@@ -488,7 +488,7 @@ The following example uses `shopping_cart` and `a_nested_array`:
 The preceding example uses indentation for ease of reading.
 The indentation will appear in the rendered content, so it is not advisable to indent a production template. 
 
-### Links and substitution expressions within substitution values
+### Links and Substitution Expressions Within Substitution Values
 
 Sometimes it may be convenient to place links and substitution expressions not only within
 a template, but within substitution values themselves.  For example, the 'my_html_chunk' substitution value
