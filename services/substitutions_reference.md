@@ -443,7 +443,7 @@ The relational and logical operators are as follows:
 ### Array Iteration
 
 The substitution language uses the `each` keyword for iteration.
-The value at each index of an array can be accessed within the each loop by using the `loop_var` variable.
+The value at each index of an array can be accessed within the each loop by using the `loop_var` variable. When using the `each` keyword to iterate over an array, the `loop_index` variable can be used to get the current index.
 
 **Note**
 
