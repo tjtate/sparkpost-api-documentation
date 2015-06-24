@@ -33,9 +33,9 @@ Redistribution and use with or without modification, are permitted provided that
 
 THIS DATABASE IS PROVIDED BY MAXMIND, INC "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL MAXMIND BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS DATABASE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-## Events [/webhooks/events]
+## Events Documentation [/webhooks/events/documentation]
 
-### Documentation [GET /webhooks/events/documentation]
+### Documentation [GET]
 
 List descriptions of the events, event types, and event fields that could be included in a Webhooks post to your target URL.
 
@@ -71,8 +71,10 @@ List descriptions of the events, event types, and event fields that could be inc
     }
   }
   ```
+
+## Events Samples [/webhooks/events/samples{?events}]
   
-### Samples [GET /webhooks/events/samples{?events}]
+### Samples [GET]
 
 List an example of the event data that will be posted by a Webhook for the specified events.
 
