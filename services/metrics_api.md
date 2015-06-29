@@ -1,5 +1,3 @@
-# Metrics [/metrics]
-
 # Group Metrics
 
 SparkPost logs copious amounts of statistical, real-time data about message processing, message
@@ -50,7 +48,7 @@ Definitions for terms found in Metrics API
 |`total_msg_volume` | Total size of delivered messages, in bytes (including attachments)|
 |`count_spam_complaint` | Number of spam complaints received from an ISP|
 
-## Metrics Discoverability Links [/metrics/]
+## Discoverability Links [/metrics/]
 
 The Metrics API is designed for discoverability of child links.  Calling the API root displays a
 list of URIs that exists within the Metrics API.
@@ -139,7 +137,7 @@ Provides links to all child URIs within the Metrics API.
 
 + Response 200
 
-    [Metrics Discoverability Links][]
+    [Discoverability Links][]
 
 
 ## Deliverability Metrics [/metrics/deliverability{?from,to,domains,campaigns,templates,sandbox,metrics,timezone}]
@@ -2577,6 +2575,10 @@ Provides aggregate count of deliveries grouped by the attempt number.
 
 Returns a list of campaigns that the Metrics API contains data on.
 
++ Parameters
+    + match (optional, string, `example`) ... Only return results containing this string 
+    + limit (optional, int, `5`) ... Maximum number of results to return
+
 + Request
 
     + Headers
@@ -2633,6 +2635,10 @@ Returns a list of campaigns that the Metrics API contains data on.
 ### Domains List [GET]
 
 Returns a list of domains that the Metrics API contains data on.
+
++ Parameters
+    + match (optional, string, `example`) ... Only return results containing this string 
+    + limit (optional, int, `5`) ... Maximum number of results to return
 
 + Request
 

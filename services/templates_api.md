@@ -63,7 +63,19 @@ Options for a template are described in a JSON object with the following fields:
 |click_tracking |boolean |Enable or disable click tracking | no - defaults to the setting at the transmission level | To override the default for a specific transmission, specify the _options.click_tracking_ field upon creation of the transmission. |
 |transactional |boolean |Distinguish between transactional and non-transactional messages for unsubscribe and suppression purposes | no - defaults to the setting at the transmission level | To override the default for a specific transmission, specify the _options.transactional_ field upon creation of the transmission. |
 
-## Create [/templates]
+## Error Attributes
+
+On success, the API returns a "results" JSON object along with HTTP 200.  However, on failure, an "errors" JSON array will be returned along with HTTP 4xx.  Each error is described in a JSON object with the following fields:
+
+| Field         | Type     | Description                           |  Example |
+|--------------------|:-:       |---------------------------------------|--------|
+|message |string | Explains the class of error  | "substitution language syntax error in template content" |
+|code |string| Identifies the class of error| "3000" |
+|description|string| Detailed explanation of error| "Error while compiling part text: line 4: syntax error near 'age'" |
+|part|string| For substitution errors, identifies the MIME part where the error occurred | "text", "html", "Header:Subject", "text/plain" |
+|line|number| For substitution errors, identifies the line number within the MIME part identified by the "part" JSON field | 4 |
+
+## Create and List [/templates]
 
 ### Create a Template [POST]
 
@@ -73,7 +85,28 @@ At a minimum, the "name" and "content" fields are required, where content must c
 
 By default, when a template is referenced in a transmission, it is the published version of that template.  To submit a transmission that uses a draft template, set the transmission field "use_draft_template" to true.  For additional details, see the Transmissions API documentation for Using a Stored Template.
 
-+ Request (application/json)
+
+#### Create Parts
+
+The following are key points about creating parts in your templates, as shown in the example:
+
+* The "id" field may be supplied, and it must be unique.
+* By default, templates are created as drafts.  If you would like to directly publish a template upon creation, set the "published" field to true.
+* Open and click tracking may be enable/disabled at the template level using the "open_tracking" and
+"click_tracking" fields.
+* The "from" field may be a JSON object composed of "email" and "name".
+* A "Reply-To" header may be specified using the "reply_to" field.
+* Both "text" and "html" may be provided.
+* Additional headers may be specified in the "headers" JSON dictionary.
+
+
+#### Create RFC822
+
+Fully formed email_rfc822 content may be provided instead of the "text", "html", "from", and "subject" parts, as shown in the example.
+
+
+
++ Request Create Basic Template (application/json)
 
     + Headers
 
@@ -99,6 +132,147 @@ By default, when a template is referenced in a transmission, it is the published
           "results": {
             "id": "11806290401558530"
           }
+        }
+
++ Response 403 (application/json)
+
+        {
+          "errors" : [
+            {
+              "description" : "Unconfigured or unverified sending domain.",
+              "code" : "1100",
+              "message" : "permission denied"
+            }
+          ]
+        }
+
++ Response 422 (application/json)
+
+        {
+          "errors" : [
+            {
+              "part" : "text",
+              "description" : "Error while compiling part text: line 4: syntax error near 'age'",
+              "line" : 4,
+              "code" : "3000",
+              "message" : "substitution language syntax error in template content"
+            }
+          ]
+        }
+
++ Request Create Parts (application/json)
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+  + Body
+
+        ```js
+        {
+          "id" : "summer_sale",
+          "name" : "Summer Sale!",
+          "published" : true,
+
+          "options": {
+            "open_tracking" : false,
+            "click_tracking" : true
+          },
+
+          "content": {
+            "from": {
+              "email": "marketing@bounces.company.example",
+              "name": "Example Company Marketing"
+            },
+
+            "subject": "Summer deals for {{name}}",
+            "reply_to": "Summer deals <summer_deals@company.example>",
+
+            "text": "Check out these deals {{name}}!",
+            "html": "<b>Check out these deals {{name}}!</b>",
+
+            "headers": {
+              "X-Customer-Campaign-ID": "Summer2014"
+            }
+          }
+        } 
+        ```
+
++ Response 200 (application/json)
+
+        {
+          "results": {
+            "id": "summer_sale"
+          }
+        }
+
+
++ Request Create RFC822 (application/json)
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+  + Body
+
+        ```js
+        {
+          "id" : "another_summer_sale",
+          "name" : "Summer Sale!",
+          "published" : true,
+
+          "options": {
+            "open_tracking" : false,
+            "click_tracking" : true
+          },
+
+          "content": {
+            "email_rfc822" : "Content-Type: text/plain\nFrom: Example Company Marketing <marketing@bounces.company.example>\nReply-To:Summer deals <summer_deals@company.example>\nX-Customer-Campaign-ID: Summer2014\nSubject: Summer deals for {{name}}\n\nCheck out these deals {{name}}!"
+          }
+        }
+        ```
+
++ Response 200 (application/json)
+
+        {
+          "results": {
+            "id": "another_summer_sale"
+          }
+        }
+
+### List all Templates [GET]
+
+Lists the most recent version of each template in your account. Each template object in the list will have the following fields:
+
+- id: Unique template ID
+- name: Template name
+- published: Published state of the template (true = published, false = draft)
+- description: Template description
+
++ Request
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        {
+          "results" : [
+            {
+              "id" : "summer_sale",
+              "name" : "Summer Sale!",
+              "published" : true,
+              "description" : ""
+            },
+            {
+              "id" : "daily",
+              "name" : "daily",
+              "published" : false,
+              "description" : ""
+            }
+          ]
         }
 
 ## Retrieve [/templates/{id}{?draft}]
@@ -161,43 +335,6 @@ If the template was used for message generation, the result will also include a 
           }
         }
 
-## List [/templates/]
-
-### List all Templates [GET]
-
-Lists the most recent version of each template in your account. Each template object in the list will have the following fields:
-
-- id: Unique template ID
-- name: Template name
-- published: Published state of the template (true = published, false = draft)
-- description: Template description
-
-+ Request
-
-    + Headers
-
-            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-            Accept: application/json
-
-+ Response 200 (application/json)
-
-        {
-          "results" : [
-            {
-              "id" : "summer_sale",
-              "name" : "Summer Sale!",
-              "published" : true,
-              "description" : ""
-            },
-            {
-              "id" : "daily",
-              "name" : "daily",
-              "published" : false,
-              "description" : ""
-            }
-          ]
-        }
-
 ## Update [/templates/{id}{?update_published}]
 
 ### Update a Template [PUT]
@@ -217,11 +354,15 @@ The example shows an update that will rename the template, enable open tracking,
 and update the content all in one API call. All content fields are included whether they are being
 changed or not.
 
+**Note:** Publishing a template is a specific case of an update.  The body of the PUT
+request should contain the `"published": true` field as shown in the example. The 
+**update_published** query parameter does not apply.
+
 + Parameters
     + id (required, string, `11714265276872`) ... ID of the template
     + update_published = `false` (optional, boolean, `true`) ...If true, directly overwrite the existing published template.  If false, create a new draft.
 
-+ Request (application/json)
++ Request Update (application/json)
 
     + Headers
 
@@ -248,10 +389,24 @@ changed or not.
         }
         ```
 
-+ Response 200 (application/json)
++ Response 200
 
+
++ Request Publish (application/json)
+
+  + Headers
+      
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+  + Body
+
+        ```js
         {
+          "published": true
         }
+        ```
+
++ Response 200
 
 
 ## Preview [/templates/{id}/preview{?draft}]

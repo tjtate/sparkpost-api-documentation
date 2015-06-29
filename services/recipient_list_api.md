@@ -23,7 +23,6 @@ Recipients are described in a JSON array with the following fields:
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
 |address | JSON object or string | Address information for a recipient  | yes | See the Address Attributes. |
-|return_path | string |Email to use for envelope FROM | no | To support Variable Envelope Return Path (VERP), this field provides a specific recipient a unique envelope MAIL FROM.|
 |tags | JSON array |Array of text labels associated with a recipient | no | Tags are available in Webhook events.  Maximum number of tags - 10 per recipient, 100 system wide.  Any tags over the limits are ignored.|
 |metadata | JSON object| Key/value pairs associated with a recipient |no | Metadata is available during events through the Webhooks and is provided to the substitution engine.  A maximum of 200 bytes of merged metadata (transmission level + recipient level) is available with recipient metadata taking precedence over transmission metadata when there are conflicts.  |
 |substitution_data | JSON object | Key/value pairs associated with a recipient that are provided to the substitution engine |no | Recipient substitution data takes precedence over transmission substitution data.  Unlike metadata, substitution data is not included in Webhook events.|
@@ -103,7 +102,6 @@ returned.
           },
           "recipients": [
               {
-                  "return_path": "return-path-wilmaflin@tstone.com",
                   "address": {
                       "email": "wilmaflin@yahoo.com",
                       "name": "Wilma"
@@ -122,7 +120,6 @@ returned.
                   ]
               },
               {
-                  "return_path": "return-path-abc@tstone.com",
                   "address": {
                       "email": "abc@flintstone.com",
                       "name": "ABC"
@@ -138,8 +135,7 @@ returned.
                   ]
               },
               {
-                  "return_path": "return-path-def@tstone.com",
-                  "address": {
+                   "address": {
                       "email": "fred.jones@flintstone.com",
                       "name": "Grad Student Office",
                       "header_to": "grad-student-office@flintstone.com"
@@ -169,6 +165,54 @@ returned.
         }
         }
         ```
+
++ Response 400 (application/json)
+
+  + Body
+
+        ```
+        {
+          "errors": [
+            {
+              "message": "At least one valid recipient is required",
+              "code": "5002"
+            }
+          ]
+        }
+        ```
+
++ Response 400 (application/json)
+
+  + Body
+
+        ```
+        {
+          "errors": [
+            {
+              "message": "List already exists",
+              "code": "5001",
+              "description": "List 'unique_id_4_graduate_students_list' already exists"
+            }
+          ]
+        }
+        ```
+
++ Response 422 (application/json)
+
+  + Body
+
+        ```
+        {
+          "errors": [
+            {
+              "message": "invalid data format/type",
+              "code": "1300",
+              "description": "List id 'rcptlist_id_students_list' cannot start with 'rcptlist_'"
+            }
+          ]
+        }
+        ```
+
 
 ## Retrieve [/recipient-lists/{id}{?show_recipients}]
 
@@ -210,7 +254,6 @@ retrieve the recipients contained in a list, the list must be specified and the 
                             "email": "wilmaflin@yahoo.com",
                             "name": "Wilma"
                         },
-                        "return_path": "return-path-wilmaflin@tstone.com",
                         "tags": [
                             "greeting",
                             "prehistoric",
@@ -229,7 +272,6 @@ retrieve the recipients contained in a list, the list must be specified and the 
                             "email": "abc@flintstone.com",
                             "name": "ABC"
                         },
-                        "return_path": "return-path-abc@tstone.com",
                         "tags": [
                             "driver",
                             "computer science",
@@ -243,6 +285,22 @@ retrieve the recipients contained in a list, the list must be specified and the 
                 ]
             }
         }
+        ```
+
++ Response 404 (application/json)
+
+  + Body
+
+        ```
+          {
+            "errors": [
+              {
+                "message": "resource not found",
+                "code": "1600",
+                "description": "List 'unique_id_4_graduate_students_list' does not exist"
+              }
+            ]
+          }
         ```
 
 ## List [/recipient-lists]
@@ -290,6 +348,201 @@ results.  To retrieve recipient details, use the RETRIEVE API for a specified re
         }
         ```
 
+## Update [/recipient-lists/{id}{?num_rcpt_errors}]
+
+### Update a Recipient List [PUT]
+
+Update an existing recipient list by specifying its ID in the URI path and use a
+**recipient list object** as the PUT request body.
+
+Use the **num_rcpt_errors** parameter to limit the number of recipient errors
+returned.
+
+**Note**
+
+The "id" field is read only and cannot be changed.  If the recipient list "id" is provided in
+the **recipient list object**, it must match the id parameter.
+
+If a "recipients" array is provided in the update request, it must contain the complete recipient
+list and all relevant recipient fields whether they are being changed or not.  The new recipients
+will completely replace the existing recipients.  The number of accepted recipients and the
+number of rejected recipients will only be returned if a "recipients" array is provided in the request.
+
+If a "name" field is provided in the update request, it will replace the existing
+"name" field for the recipient list.
+
+If a "description" field is provided in the update request, it will replace the existing
+"description" field for the recipient list.
+
+If an "attributes" object is provided in the update request, it will completely replace the existing
+"attributes" object for the recipient list.
+
++ Parameters
+  + id (required, string, `unique_id_4_graduate_students_list`) ... Identifier of the recipient list
+  + num_rcpt_errors (optional, number, `3`) ... Maximum number of recipient errors that this call can return, otherwise all validation errors are returned.
+
++ Request (application/json)
+
+  + Headers
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+  + Body
+
+        ```
+          {
+              "name": "updated_graduate_students",
+              "description": "An email list of graduate students at UMBC",
+              "attributes": {
+                  "internal_id": 112,
+                  "list_group_id": 12321
+              },
+              "recipients": [
+                  {
+                      "address": {
+                          "email": "wilmaflin@yahoo.com",
+                          "name": "Wilma"
+                      },
+                      "metadata": {
+                          "place": "Bedrock"
+                      },
+                      "substitution_data": {
+                          "subrcptkey": "subrcptvalue"
+                      },
+                      "tags": [
+                          "greeting",
+                          "prehistoric",
+                          "fred",
+                          "flintstone"
+                      ]
+                  },
+                  {
+                      "address": {
+                          "email": "fred.jones@flintstone.com",
+                          "name": "Grad Student Office",
+                          "header_to": "grad-student-office@flintstone.com"
+                      },
+                      "tags": [
+                          "driver",
+                          "computer science",
+                          "fred",
+                          "flintstone"
+                      ]
+                  }
+              ]
+          }
+        ```
+
++ Response 200 (application/json)
+
+  + Body
+
+        ```
+        {
+            "results": {
+                "total_rejected_recipients": 0,
+                "total_accepted_recipients": 2,
+                "id": "unique_id_4_graduate_students_list",
+                "name": "updated_graduate_students"
+            }
+        }
+        ```
+
++ Response 400 (application/json)
+
+  + Body
+
+        ```
+          {
+            "errors": [
+              {
+                "message": "invalid uri",
+                "code": "1101",
+                "description": "PUT requires a recipient list id in the URI"
+              }
+            ]
+          }
+        ```
+
++ Response 400 (application/json)
+
+  + Body
+
+        ```
+          {
+            "errors": [
+              {
+                "message": "At least one valid recipient is required",
+                "code": "5002"
+              }
+            ]
+          }
+        ```
+
++ Response 404 (application/json)
+
+  + Body
+
+        ```
+          {
+            "errors": [
+              {
+                "message": "resource not found",
+                "code": "1600",
+                "description": "List 'unique_id_4_graduate_students_list' does not exist"
+              }
+            ]
+          }
+        ```
+
++ Response 409 (application/json)
+
+  + Body
+
+        ```
+          {
+            "errors": [
+              {
+                "message": "resource conflict",
+                "code": "1602",
+                "description": "List 'unique_id_4_graduate_students_list' is in use by msg generation"
+              }
+            ]
+          }
+        ```
+
++ Response 409 (application/json)
+
+  + Body
+
+        ```
+          {
+            "errors": [
+              {
+                "message": "resource conflict",
+                "code": "1602",
+                "description": "List 'unique_id_4_graduate_students_list' is in use by another request"
+              }
+            ]
+          }
+        ```
+
++ Response 422 (application/json)
+
+  + Body
+
+        ```
+          {
+            "errors": [
+              {
+                "message": "invalid data format/type",
+                "code": "1300",
+                "description": "List id 'unique_id_4_graduate_students_list' does not match the list being updated"
+              }
+            ]
+          }
+        ```
+
+
 ## Delete [/recipient-lists/{id}]
 
 ### Delete a Recipient List [DELETE]
@@ -303,11 +556,59 @@ list is needed again, the list must be resubmitted with the CREATE API.
 
 + Request
 
-    + Headers
+  + Headers
 
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-    
+
 + Response 200 (application/json)
 
             {
             }
+
++ Response 400 (application/json)
+
+  + Body
+
+        ```
+          {
+            "errors": [
+              {
+                "message": "invalid uri",
+                "code": "1101",
+                "description": "DELETE requires a recipient list id in the URI"
+              }
+            ]
+          }
+        ```
+
++ Response 404 (application/json)
+
+  + Body
+
+        ```
+          {
+            "errors": [
+              {
+                "message": "resource not found",
+                "code": "1600",
+                "description": "List 'unique_id_4_graduate_students_list' does not exist"
+              }
+            ]
+          }
+        ```
+
++ Response 409 (application/json)
+
+  + Body
+
+        ```
+          {
+            "errors": [
+              {
+                "message": "resource conflict",
+                "code": "1602",
+                "description": "List 'unique_id_4_graduate_students_list' is in use by msg generation"
+              }
+            ]
+          }
+        ```

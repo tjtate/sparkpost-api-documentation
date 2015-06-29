@@ -1,8 +1,6 @@
-# Suppression List [/suppression-list]
-
 # Group Suppression List
 
-A suppression list stores a recipient's opt-out preferences. It is a list of recipient email addresses to which you do NOT want to send email. The Suppression List API is used to insert/update, check, or remove a recipient's entry from the suppression list.  An entry indicates whether the recipient requested to receive one of the following:
+A suppression list - or exclusion list, as it is sometimes called - stores a recipient's opt-out preferences. It is a list of recipient email addresses to which you do NOT want to send email. The Suppression List API is used to manage your customer-specific exclusion list entries.  An entry indicates whether the recipient requested to receive one of the following:
 
 * Transactional and non-transactional messages from a given customer
 * Transactional messages only from a given customer
@@ -11,24 +9,24 @@ A suppression list stores a recipient's opt-out preferences. It is a list of rec
 
 Transactional messages are single recipient messages that are used operationally, e.g. to reset a password or confirm a purchase; while non-transactional messages are used to run email campaigns where a list of recipients are targeted, e.g. advertising a sales event.
 
-In addition to the customer suppression list, Message Systems maintains a global suppression list across all customers.
+In addition to the customer-specific exclusion list, Message Systems maintains a global suppression list across all customers.
 
-## Suppression List Entry Attributes
+## List Entry Attributes
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
 |transactional | boolean | Whether the recipient requested to not receive any transactional messages | At a minimum, transactional or non_transactional is required upon creation of the entry. | |
 |non_transactional | boolean | Whether the recipient requested to not receive any non-transactional messages | At a minimum, transactional or non_transactional is required upon creation of the entry. |  |
-|source | string | Source responsible for inserting the suppression list entry. Valid values include: `FBL`, `List Unsubscribe`, `Bounce Rule`, `Unsubscribe Link`, `Manually Added`, `Compliance`| no - defaults to `Manually Added` on create | Field is read-only  |
+|source | string | Source responsible for inserting the list entry. Valid values include: `FBL`, `List Unsubscribe`, `Bounce Rule`, `Unsubscribe Link`, `Manually Added`, `Compliance`| no - defaults to `Manually Added` on create | Field is read-only  |
 |description | string | Short explanation of the suppression | no | |
 
 
 ## Bulk Insert/Update [/suppression-list/]
 
-### Insert or Update a Suppression List Entry [PUT]
+### Insert or Update List Entries [PUT]
 
-Bulk insert or update entries in the customer suppression list by providing a JSON object, with a "recipients" key containing an array of recipients to insert or update, as the PUT request body. Maximum size of the JSON object is 50mb. At a minimum, each recipient must have a valid "email" address and at least one of the following keys: "transactional" or "non_transactional". The optional "description" key can be used to include an explanation of what type of message should be suppressed. 
+Bulk insert or update entries in the customer-specific exclusion list by providing a JSON object, with a "recipients" key containing an array of recipients to insert or update, as the PUT request body. Maximum size of the JSON object is 50mb. At a minimum, each recipient must have a valid "email" address and at least one of the following keys: "transactional" or "non_transactional". The optional "description" key can be used to include an explanation of what type of message should be suppressed. 
 
-If the recipient entry was added to the suppression list by Compliance, it cannot be updated.
+If the recipient entry was added to the list by Compliance, it cannot be updated.
  
 If an email address is duplicated in a single request, only the first instance will be processed.
 
@@ -90,9 +88,9 @@ If an email address is duplicated in a single request, only the first instance w
 
 ## Search [/suppression-list{?to,from,types,sources,limit}]
 
-### Search for Suppression List Entries [GET]
+### Search for List Entries [GET]
 
-Perform a filtered search for entries in your suppression list.
+Perform a filtered search for entries in your customer-specific exclusion list.
 
 + Parameters
     + to = `now` (optional, datetime, `2014-07-20T09:00:00+0000`) ... Datetime the entries were last updated, in the format of YYYY-MM-DDTHH:mm:ssZ
@@ -145,13 +143,13 @@ Perform a filtered search for entries in your suppression list.
         }
 
 
-## Single suppression resource [/suppression-list/{recipient_email}]
+## Insert/Update, Retrieve, Delete [/suppression-list/{recipient_email}]
 
-### Insert or Update a Suppression List Entry [PUT]
+### Insert or Update a List Entry [PUT]
 
-Insert or update an entry in the customer's suppression list by specifying the recipient's email address in the URI path and providing a **suppression list object** as the PUT request body. At a minimum, the **suppression list object** must have at least one of the following keys: "transactional" or "non_transactional". 
+Insert or update an entry in the customer-specific exclusion list by specifying the recipient's email address in the URI path and providing a **list entry object** as the PUT request body. At a minimum, the **list entry object** must have at least one of the following keys: "transactional" or "non_transactional". 
 
-If the recipient entry was added to the suppression list by Compliance, it cannot be updated.
+If the recipient entry was added to the list by Compliance, it cannot be updated.
 
 + Parameters
     + recipient_email (required, string, `rcpt_1@example.com`) ... Recipient email address
@@ -200,13 +198,13 @@ If the recipient entry was added to the suppression list by Compliance, it canno
                 }
         }
 
-### Check Recipient Suppression Status [GET]
+### Retrieve a Recipient Suppression Status [GET]
 
-Check the suppression status for a specific recipient by specifying the recipient’s email address in the URI path.
+Retrieve the suppression status for a specific recipient by specifying the recipient’s email address in the URI path.
 
-If the recipient is not in the customer’s suppression list, an HTTP status of 404 is returned. If the recipient is in the list, an HTTP status of 200 is returned with the full suppression status in the response body.
+If the recipient is not in the customer-specific exclusion list, an HTTP status of 404 is returned. If the recipient is in the list, an HTTP status of 200 is returned with the full suppression status in the response body.
 
-In addition to the suppression list entry attributes, the response body also includes "created" and "updated" timestamps.
+In addition to the list entry attributes, the response body also includes "created" and "updated" timestamps.
 
 + Parameters
   + recipient_email (required, string, `rcpt_1@example.com`) ... Recipient email address
@@ -245,11 +243,11 @@ In addition to the suppression list entry attributes, the response body also inc
             ]
         }
 
-### Remove a Recipient's Suppression Status [DELETE]
+### Delete a List Entry [DELETE]
 
-Remove a recipient from the suppression list by specifying the recipient's email address in the URI path.
+Delete a recipient from the list by specifying the recipient's email address in the URI path.
 
-If the recipient is not in the customer’s suppression list, an HTTP status of 404 is returned. If the recipient is in the list, an HTTP status of 204 is returned indicating a successful deletion.
+If the recipient is not in the customer-specific exclusion list, an HTTP status of 404 is returned. If the recipient is in the list, an HTTP status of 204 is returned indicating a successful deletion.
 
 + Parameters
     + recipient_email (required, string, `rcpt_1@example.com`) ... Recipient email address

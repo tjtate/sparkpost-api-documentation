@@ -1,6 +1,6 @@
 # Group Sending Domains
 
-A sending domain is a domain that is used to indicate who an email is from via the "From:" header. Using a custom sending domain enables you to control what recipients see as the From value in their email clients. DNS records can be configured for a sending domain, which allows recipient mail servers to authenticate your messages. The Sending Domain's API provides the means to create, retrieve, update, and verify a custom sending domain.
+A sending domain is a domain that is used to indicate who an email is from via the "From:" header. Using a custom sending domain enables you to control what recipients see as the From value in their email clients. DNS records can be configured for a sending domain, which allows recipient mail servers to authenticate your messages. The Sending Domain's API provides the means to create, list, retrieve, update, and verify a custom sending domain.
 
 ## Sending Domain Attributes
 
@@ -52,7 +52,7 @@ These are the valid request options for verifying a Sending Domain:
 |dkim_error | string | Error message describing reason for DKIM verification failure |
 |spf_error | string | Error message describing reason for SPF verification failure |
 
-## Create [/sending-domains]
+## Create and List [/sending-domains]
 
 ### Create a Sending Domain [POST]
 
@@ -85,6 +85,30 @@ Create a sending domain by providing a **sending domain object** as the POST req
                 "domain"  : "example1.com"
 
             }
+        }
+
+### List all Sending Domains [GET]
+
+List an overview of all sending domains in the system.
+
++ Request
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Response 200 (application/json; charset=utf-8)
+
+        {
+            "results" : [
+                {
+                    "domain": "example1.com"
+                },
+                {
+                    "domain": "example2.com"
+                }
+            ]
         }
 
 ## Retrieve [/sending-domains/{domain_name}]
@@ -122,34 +146,6 @@ Retrieve a sending domain by specifying its domain name in the URI path.  The re
                 }
             }
         }
-
-
-## List [/sending-domains/]
-
-### List all Sending Domains [GET]
-
-List an overview of all sending domains in the system.
-
-+ Request
-
-    + Headers
-
-            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-            Accept: application/json
-
-+ Response 200 (application/json; charset=utf-8)
-
-        {
-            "results" : [
-                {
-                    "domain": "example1.com"
-                },
-                {
-                    "domain": "example2.com"
-                }
-            ]
-        }
-
 
 ## Update [/sending-domains/{domain}]
 

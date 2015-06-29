@@ -1,4 +1,4 @@
-# Group Substitutions Reference
+## Substitutions Reference
 
 ### Key Features
 
@@ -195,7 +195,7 @@ Here is a curly: {{
 The substitution engine automatically HTML escapes substitution values before they are
 inserted into the HTML part of the content.  Substitution values inserted into
 plain text portions of content are not HTML escaped.  In order to prevent
-HTML escaping, use triple curly braces as described in the following section. 
+HTML escaping, use triple curly braces.
 
 ### Preventing HTML Escaping
 
@@ -239,84 +239,31 @@ Personalized links are supported.  A personalized link is defined as a target li
 For example:
 
 ```
-<a href="https://company.com/dailydeals?user={{user}}&offercode={{offercode}}">
-Check out the amazing offers for today ONLY!
-</a>
+<a href="https://company.com/dailydeals?user={{user}}&offercode={{offercode}}">Go!</a>
 ```
 
 In this case `{{user}}` and `{{offercode}}` are the items taken from the substitution data or metadata. 
 
-### Link Names
-
-Links can be named, and the link name will be tracked in event and webhook data.
-The link name is optional and can be specified with the **data-msys-linkname**
-custom attribute, the **title** attribute, or the **alt** attribute.  For example:
-
-```
-<a href="http://www.example.com/" data-msys-linkname="banner">Example</a>
-
-<a href="http://www.example.com/" title="middle">Example</a>
-
-<a href="http://www.example.com/" alt="bottom">
-<img src="http://www.example.com/logo.png"></a>
-```
-
-The link name is computed using the following order of precedence:
-
-1. The value of the **data-msys-linkname** attribute, if available 
-2. The value of the **title** attribute, if available 
-3. The value of the **alt** attribute, if available 
-4. **Null** when there is no link name 
-
-The link name will be incorporated into the click-tracked link.
-The link name has a maximum length of 63 characters and is
-truncated if it exceeds that limit. 
-
-### URLs Generated Using Substitution Data
-
-In order for a link to be discovered by the link parser and then click tracked, "http://" or "https://" must exist in the template itself or in the transmission level dynamic_content.  **Links in regular substitution data will not be click tracked.**
-
-So, with substitution_data
+The substitution engine automatically URL encodes substitution values before they are
+inserted into URLs.  For example, if 'user' and 'offercode' are defined in the substitution_data as
 
 ```
 {
-  "http_in_the_template" : "www.company.com",
-  "http_in_the_sub_data" : "http://www.company.com"
+  "user" : "Spark Post",
+  "offercode" : "ABC/ZYZ"
 }
 ```
 
-The following link _will_ be tracked:
-
+Then the above URL will be correctly rendered as
 ```
-<a href="http://{{{http_in_the_template}}}">Click</a> 
-```
-
-The following link _will not_ be tracked:
-
-```
-<a href="{{{http_in_the_sub_data}}}">Click</a>
+<a href="https://company.com/dailydeals?user=Spark%20Post&offercode=ABC%2FZYZ">Go!</a>
 ```
 
-So it is important that your template links include "http://" or "https://".
-
-In addition, substitution of data in a URL is always URL encoded. There is currently no way to deactivate URL encoding in a URL context (so characters like ‘/‘, ‘?’, and ‘&’ are always escaped).
-
-Example 1:
-
-The following use of url substitutions _is_ supported:
+In order to disable URL encoding, use triple curly braces.  This is useful if you
+have an entire URL suffix which needs to be substituted.  For example:
 
 ```
-<a href="http://www.company.com/{{atom1}}/{{atom2}}?user={{username}}">Go</a>
-```
-
-atom1, atom2, and username will all be url encoded as expected.  This will generate a valid url.
-
-Example 2:
-
-The following use of url substitution _is not_ yet supported:
-
-```
-<a href="http://www.company.com/{{the_entire_suffix}}">Go</a>
+<a href="http://www.company.com/{{{the_entire_suffix}}}">Go</a>
 ```
 
 where the substitution_data looks like:
@@ -327,11 +274,38 @@ where the substitution_data looks like:
 }
 ```
 
-This will result in a url that unexpectedly looks like:
+Since triple curlies are used, the substitution value will *not* be URL encoded
+and the URL will render as expected:
 
 ```
-http://www.company.com/groups%2Fjoin%3Fuser%3Dclark
+<a href="http://www.company.com/groups/join?user=clark">Go</a>
 ```
+
+Triple curlies are also necessary if the entire URL resides in substitution data:
+
+```
+{
+  "the_entire_url" : "http://www.company.com/dailydeals?user=foo&offercode=bar"
+}
+```
+
+This URL can be inserted into the template using triple curlies:
+
+```
+<a href="{{{the_entire_url}}}">Go!</a>
+```
+
+### Link Names
+
+Name all links using the **data-msys-linkname** custom attribute.  The link name has a maximum length of 63 characters and is truncated if it exceeds that limit. For example:
+
+```
+<a href="http://www.example.com" data-msys-linkname="banner">Example</a>
+```
+
+If this attribute is not specified, the link name will fall back to **Raw URL**.
+
+The link name will be incorporated into the click-tracked link and will be tracked in engagement events.
 
 ### Substitutions Syntax Examples
 
@@ -469,7 +443,7 @@ The relational and logical operators are as follows:
 ### Array Iteration
 
 The substitution language uses the `each` keyword for iteration.
-The value at each index of an array can be accessed within the each loop by using the `loop_var` variable.
+The value at each index of an array can be accessed within the each loop by using the `loop_var` variable. When using the `each` keyword to iterate over an array, the `loop_index` variable can be used to get the current index.
 
 **Note**
 
@@ -514,7 +488,7 @@ The following example uses `shopping_cart` and `a_nested_array`:
 The preceding example uses indentation for ease of reading.
 The indentation will appear in the rendered content, so it is not advisable to indent a production template. 
 
-### Links and substitution expressions within substitution values
+### Links and Substitution Expressions Within Substitution Values
 
 Sometimes it may be convenient to place links and substitution expressions not only within
 a template, but within substitution values themselves.  For example, the 'my_html_chunk' substitution value
@@ -653,8 +627,7 @@ A full transmission json example follows:
     "html": "<p>Today's special offers</p><ul>\n{{each offers}}\n<li>{{render_dynamic_content(dynamic_html[loop_var])}}</li>\n{{end}}\n</ul>",
     "from": "test@example.com",
     "subject": "offers"
-  },
-  "return_path": "test@example.com"
+  }
 }
 ```
 
@@ -710,19 +683,19 @@ The four macros for outputting braces are listed below followed by their output:
 
 
 
-###  Default Recipient Substitution Variables
+###  Reserved Recipient Substitution Variables
 
-The following substitution variables are available for each recipient:
+The following substitution variables are reserved
+automatically available for each recipient:
 
 * `address.name`: Recipient's name from the _address.name_ recipient json field
 * `email` and `address.email`: Recipient's email address from the _address_ or _address.email_ recipient json field
-* `return_path`: Return path from the transmission or recipients json field
 
 Example:
 
 ```
 Hello {{address.name}}
-Your email is {{address.email}} and your return path is {{return_path}}
+Your email is {{address.email}}
 ```
 
 ### Substitutions in email_rfc822 Headers
@@ -752,5 +725,3 @@ then that part will be quoted-printable encoded before being placed back into th
 MIME structure.  The Content-Type will be updated appropriately.
 * If after substitution, a header value contains 8-bit data, then the header
 value will be RFC2047 base64 encoded before being written back to the headers structure.
-* Substitution values placed into the text/html part will be HTML escaped.
-* Substitution values placed into URLs will be URL encoded.

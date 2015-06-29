@@ -22,10 +22,9 @@ JSON is the basis for its request input and response format.
 All API's require that you authenticate with every request.
 
 To authenticate with the various API's, specify the "Authorization" header with each request.
-The value of the "Authorization" header must be a valid API key.
-Administrators can generate an API key using the UI. 
+The value of the "Authorization" header must be a valid API key or conform to the standard for Basic authentication.
 
-Please take care to record and safeguard your API keys at all times. You cannot retrieve an API key after it has been created.
+Administrators can generate an API key using the UI. Please take care to record and safeguard your API keys at all times. You cannot retrieve an API key after it has been created.
 
 For examples of supplying the Authorization header, refer to the cURL example below or any of the individual API request examples.
 
@@ -40,3 +39,13 @@ curl -v \
 -H "Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf" \
 -X GET "https://api.sparkpost.com/api/v1/metrics/deliverability/aggregate?campaigns=testjob&from=2014-01-23T14:00&metrics=count_targeted,count_sent,count_accepted&protocols=smtp&timezone=America%2FNew_York&to=2014-06-23T15:50"
 ```
+
+or 
+
+```
+curl -v \
+-H "Content-Type: application/json" \
+-u <APIKey>: \
+-X GET "https://api.sparkpost.com/api/v1/metrics/deliverability/aggregate?campaigns=testjob&from=2014-01-23T14:00&metrics=count_targeted,count_sent,count_accepted&protocols=smtp&timezone=America%2FNew_York&to=2014-06-23T15:50"
+```
+
