@@ -560,7 +560,9 @@ need to be structured as:
 </body>
 ```
 
-Note: The dynamic content will be correctly inserted *without* html escaping,
+**Note**
+
+The dynamic content will be correctly inserted *without* html escaping,
 regardless of whether double or triple curly braces are used.  There is no need to use triple curly braces in this case.
 
 
@@ -585,8 +587,9 @@ Attempting to insert a chunk of plain text:
 {{ render_dynamic_content(dynamic_plain.my_plain_text_chunk) }}
 ```
 
-Finally, as a more realistic example, render_dynamic_content can also be used inside an 'each' loop.
-A full transmission json example follows:
+Finally, as a more realistic example, render_dynamic_content can also be used inside an 'each' loop. Full transmission json examples follow.
+
+SparkPost.com example:
 
 ```
 {
@@ -628,6 +631,52 @@ A full transmission json example follows:
     "from": "test@example.com",
     "subject": "offers"
   }
+}
+```
+
+SparkPost Elite example:
+
+```
+{
+  "recipients": [
+    {
+      "address": {
+        "email": "foo@example.com"
+      },
+      "substitution_data": {
+        "name": "The A-Team",
+        "offers": [ "offer2", "offer1" ]
+      }
+    },
+    {
+      "address": {
+        "email": "bar@example.com"
+      },
+      "substitution_data": {
+        "name": "Johnnie Rico",
+        "offers": [ "offer3" ]
+      }
+    }
+  ],
+  "substitution_data": {
+    "dynamic_html": {
+      "offer1": "<a href=\"http://t.com/offer/1?name={{name}}\">Premium-brand wirecutters</a>",
+      "offer2": "<a href=\"http://t.com/offer/2?name={{name}}\">Corks</a>",
+      "offer3": "<a href=\"http://t.com/offer/3?name={{name}}\">Super-effective bug spray</a>"
+    },
+    "dynamic_plain": {
+      "offer1": "Premium-brand wirecutters -- http://t.com/offer/1?name={{name}}",
+      "offer2": "Corks -- http://t.com/offer/2?name={{name}}",
+      "offer3": "Super-effective bug spray -- http://t.com/offer/3?name={{name}}"
+    }
+  }
+  "content": {
+    "text": "Today's special offers:\n\n{{each offers}}\n* {{render_dynamic_content(dynamic_plain[loop_var])}}\n{{end}}\n",
+    "html": "<p>Today's special offers</p><ul>\n{{each offers}}\n<li>{{render_dynamic_content(dynamic_html[loop_var])}}</li>\n{{end}}\n</ul>",
+    "from": "test@example.com",
+    "subject": "offers"
+  },
+  "return_path": "test@example.com"
 }
 ```
 
@@ -685,17 +734,24 @@ The four macros for outputting braces are listed below followed by their output:
 
 ###  Reserved Recipient Substitution Variables
 
-The following substitution variables are reserved
-automatically available for each recipient:
+The following substitution variables are reserved and automatically available for each recipient:
 
 * `address.name`: Recipient's name from the _address.name_ recipient json field
 * `email` and `address.email`: Recipient's email address from the _address_ or _address.email_ recipient json field
+* `return_path`: Return path from the transmission or recipients json field (SparkPost Elite only)
 
-Example:
+SparkPost.com example:
 
 ```
 Hello {{address.name}}
 Your email is {{address.email}}
+```
+
+SparkPost Elite example:
+
+```
+Hello {{address.name}}
+Your email is {{address.email}} and your return path is {{return_path}}
 ```
 
 ### Substitutions in email_rfc822 Headers

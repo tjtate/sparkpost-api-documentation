@@ -13,7 +13,8 @@ var matchdep = require('matchdep')
         'templates_api.md',
         'transmissions_api.md',
         'webhooks_api.md',
-        'smtp_api.md'
+        'smtp_api.md',
+        'raw_log_api.md'
     ];
 
 module.exports = function(grunt) {
