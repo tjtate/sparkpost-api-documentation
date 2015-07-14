@@ -2,7 +2,7 @@
 
 Through use of the X-MSYS-API header in a message sent to SparkPost through SMTP 
 (see ["Sending an Email"](https://www.sparkpost.com/docs/sending-email)), you can now specify a campaign id, metadata,
-tags, and enable open and/or click tracking.  Note that to use this option you should be familiar with how to encode
+tags, Cc, Bcc, and archive recipient lists and enable open and/or click tracking.  Note that to use this option you should be familiar with how to encode
 options as JSON strings, as the value of the header field is a JSON object that specifies the relevant options:
 
 ```
