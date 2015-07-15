@@ -354,7 +354,9 @@ The example shows an update that will rename the template, enable open tracking,
 and update the content all in one API call. All content fields are included whether they are being
 changed or not.
 
-**Note:** Publishing a template is a specific case of an update.  The body of the PUT
+**Note** 
+
+Publishing a template is a specific case of an update.  The body of the PUT
 request should contain the `"published": true` field as shown in the example. The 
 **update_published** query parameter does not apply.
 

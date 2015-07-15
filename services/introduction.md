@@ -1,10 +1,16 @@
 # SparkPost API v1
 SparkPost API enables client applications to integrate with SparkPost and perform actions associated with account management, message generation, and reporting.
 
-## SparkPost API Endpoint
+## API Endpoints
+JSON is the basis for its request input and response format.
+
+### SparkPost API Endpoint
 **https://api.sparkpost.com/api/v1**
 
-JSON is the basis for its request input and response format.
+### SparkPost Elite API Endpoint
+**https://yourdomain.msyscloud.com/api/v1**
+
+Note that SparkPost Elite listens on port 443, so no explicit port number is required.
 
 ## API Conventions
 * API versioning is handled using a major version number in the URL, e.g. /api/v1/endpoint.
