@@ -161,7 +161,7 @@ Links in the response for binding-groups, bindings, nodes, and protocols apply t
     [Discoverability Links][]
 
 
-## Deliverability Metrics [/metrics/deliverability{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,sandbox,metrics,timezone}]
+## Deliverability Metrics [/metrics/deliverability{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone}]
 
 
 + Model
@@ -371,7 +371,6 @@ aggregate data, which can be used as "group by" qualifiers.
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (SparkPost Elite only)
         + Values
             + `smtp`
-    + sandbox (optional, string, `true`) ... Restrict the query to events generated with a sandbox sending domain (SparkPost.com only)
     + metrics (required, list) ... Comma-delimited list of metrics for filtering
 
         + Values
@@ -421,7 +420,7 @@ aggregate data, which can be used as "group by" qualifiers.
 
 
 
-## Deliverability Metrics by Domain [/metrics/deliverability/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,sandbox,metrics,timezone,order_by,limit}]
+## Deliverability Metrics by Domain [/metrics/deliverability/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone,order_by,limit}]
 
 + Model
 
@@ -611,7 +610,6 @@ Provides aggregate metrics grouped by domain over the time window specified.
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (SparkPost Elite only)
       + Values
           + `smtp`
-  + sandbox (optional, string, `true`) ... Restrict the query to events generated with a sandbox sending domain (SparkPost.com only)
   + metrics (required, list) ... Comma-delimited list of metrics for filtering
         
         + Values
@@ -1144,7 +1142,7 @@ Provides aggregate metrics grouped by binding group over the time window specifi
   [Deliverability Metrics by Binding Group][]
 
 
-## Deliverability Metrics by Campaign [/metrics/deliverability/campaign{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,sandbox,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Campaign [/metrics/deliverability/campaign{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone,limit,order_by}]
 
 
 + Model
@@ -1335,7 +1333,6 @@ Provides aggregate metrics grouped by campaign over the time window specified.
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (SparkPost Elite only)
       + Values
           + `smtp`
-    + sandbox (optional, string, `true`) ... Restrict the query to events generated with a sandbox sending domain (SparkPost.com only)
     + metrics (required, list) ... Comma-delimited list of metrics for filtering
       
         + Values
@@ -1386,7 +1383,7 @@ Provides aggregate metrics grouped by campaign over the time window specified.
   [Deliverability Metrics by Campaign][]
 
 
-## Deliverability Metrics by Template [/metrics/deliverability/template{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,sandbox,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Template [/metrics/deliverability/template{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone,limit,order_by}]
 
 
 + Model
@@ -1577,7 +1574,6 @@ Provides aggregate metrics grouped by template over the time window specified.
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (SparkPost Elite only)
         + Values
             + `smtp`
-    + sandbox (optional, string, `true`) ... Restrict the query to events generated with a sandbox sending domain (SparkPost.com only)
     + metrics (required, list) ... Comma-delimited list of metrics for filtering
       
         + Values
@@ -1628,7 +1624,7 @@ Provides aggregate metrics grouped by template over the time window specified.
   [Deliverability Metrics by Template][]
 
 
-## Deliverability Metrics by Watched Domain [/metrics/deliverability/watched-domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,sandbox,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Watched Domain [/metrics/deliverability/watched-domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone,limit,order_by}]
 
 + Model
 
@@ -1820,7 +1816,6 @@ in the world.
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (SparkPost Elite)
         + Values
             + `smtp`
-    + sandbox (optional, string, `true`) ... Restrict the query to events generated with a sandbox sending domain (SparkPost.com only)
     + metrics (required, list) ... Comma-delimited list of metrics for filtering
         + Values
             + `count_injected`
@@ -1870,7 +1865,7 @@ in the world.
   [Deliverability Metrics by Watched Domain][]
 
 
-## Time Series [/metrics/deliverability/time-series{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,sandbox,precision,metrics,timezone}]
+## Time Series [/metrics/deliverability/time-series{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,precision,metrics,timezone}]
 
 
 + Model
@@ -2115,7 +2110,6 @@ The following table describes the validation for the **precision** parameter:
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (SparkPost Elite only)
       + Values
           + `smtp`
-    + sandbox (optional, string, `true`) ... Restrict the query to events generated with a sandbox sending domain (SparkPost.com only)
     + precision (optional, string, `day`) ... Precision of timeseries data returned
 
         + Values
@@ -2176,7 +2170,7 @@ The following table describes the validation for the **precision** parameter:
   [Time Series][]
 
 
-## Bounce Reasons [/metrics/deliverability/bounce-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,sandbox,metrics,timezone,limit}]
+## Bounce Reasons [/metrics/deliverability/bounce-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone,limit}]
 
 + Model
 
@@ -2282,7 +2276,6 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols to include (SparkPost Elite only)
         + Values
             + `smtp`
-    + sandbox (optional, string, `true`) ... Restrict the query to events generated with a sandbox sending domain (SparkPost.com only)
     + metrics (required, list) ... Comma-delimited list of metrics to include
         
         + Values
@@ -2305,7 +2298,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
   [Bounce Reasons][]
 
 
-## Bounce Reasons By Domain [/metrics/deliverability/bounce-reason/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,sandbox,metrics,timezone,limit}]
+## Bounce Reasons By Domain [/metrics/deliverability/bounce-reason/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone,limit}]
 
 + Model
 
@@ -2417,7 +2410,6 @@ Provides deliverability metrics, specific to bounce events, grouped by the domai
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols to include (SparkPost.com only)
         + Values
             + `smtp`
-    + sandbox (optional, string, `true`) ... Restrict the query to events generated with a sandbox sending domain (SparkPost.com only)
     + metrics (required, list) ... Comma-delimited list of metrics to include
         
         + Values
@@ -2440,7 +2432,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the domai
   [Bounce Reasons By Domain][]
 
 
-## Bounce Classifications [/metrics/deliverability/bounce-classification{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,sandbox,metrics,timezone,limit}]
+## Bounce Classifications [/metrics/deliverability/bounce-classification{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone,limit}]
 
 + Model
 
@@ -2538,7 +2530,6 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (SparkPost Elite only)
         + Values
             + `smtp`
-    + sandbox (optional, string, `true`) ... Restrict the query to events generated with a sandbox sending domain (SparkPost.com only)
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
     + metrics (required, list) ... Comma-delimited list of metrics to include
         
@@ -2561,7 +2552,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
   [Bounce Classifications][]
 
 
-## Rejection Reasons [/metrics/deliverability/rejection-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,sandbox,timezone,limit}]
+## Rejection Reasons [/metrics/deliverability/rejection-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,timezone,limit}]
 
 + Model
 
@@ -2641,7 +2632,6 @@ Provides deliverability metrics, specific to rejection events, grouped by the re
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (SparkPost Elite only)
       + Values
           + `smtp`
-  + sandbox (optional, string, `true`) ... Restrict the query to events generated with a sandbox sending domain (SparkPost.com only)  
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
   + limit (optional, int, `5`) ... Maximum number of results to return
 
@@ -2650,7 +2640,7 @@ Provides deliverability metrics, specific to rejection events, grouped by the re
   [Rejection Reasons][]
 
 
-## Rejection Reasons By Domain [/metrics/deliverability/rejection-reason/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,sandbox,timezone,limit}]
+## Rejection Reasons By Domain [/metrics/deliverability/rejection-reason/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,timezone,limit}]
 
 + Model
 
@@ -2736,7 +2726,6 @@ Provides deliverability metrics, specific to rejection events, grouped by the do
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (SparkPost Elite only)
       + Values
           + `smtp`
-  + sandbox (optional, string, `true`) ... Restrict the query to events generated with a sandbox sending domain (SparkPost.com only)  
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
   + limit (optional, int, `5`) ... Maximum number of results to return
 
@@ -2745,7 +2734,7 @@ Provides deliverability metrics, specific to rejection events, grouped by the do
   [Rejection Reasons By Domain][]
 
 
-## Delay Reasons [/metrics/deliverability/delay-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,sandbox,timezone,limit}]
+## Delay Reasons [/metrics/deliverability/delay-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,timezone,limit}]
 
 + Model
 
@@ -2819,7 +2808,6 @@ Provides deliverability metrics, specific to delay events, grouped by the delay 
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (SparkPost Elite only)
       + Values
           + `smtp`
-  + sandbox (optional, string, `true`) ... Restrict the query to events generated with a sandbox sending domain (SparkPost.com only) 
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
   + limit (optional, int, `5`) ... Maximum number of results to return
 
@@ -2835,7 +2823,7 @@ Provides deliverability metrics, specific to delay events, grouped by the delay 
   [Delay Reasons][]
 
 
-## Delay Reasons By Domain [/metrics/deliverability/delay-reason/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,sandbox,timezone,limit}]
+## Delay Reasons By Domain [/metrics/deliverability/delay-reason/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,timezone,limit}]
 
 + Model
 
@@ -2915,7 +2903,6 @@ Provides deliverability metrics, specific to delay events, grouped by the domain
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (SparkPost Elite only)
       + Values
           + `smtp`
-  + sandbox (optional, string, `true`) ... Restrict the query to events generated with a sandbox sending domain (SparkPost.com only)  
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
   + limit (optional, int, `5`) ... Maximum number of results to return
 
@@ -3019,7 +3006,7 @@ name (or URL if no link name exists).
   [Engagement Details][]
 
 
-## Deliveries By Attempt [/metrics/deliverability/attempt{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,sandbox,timezone}]
+## Deliveries By Attempt [/metrics/deliverability/attempt{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,timezone}]
 
 + Model
 
@@ -3087,7 +3074,6 @@ Provides aggregate count of deliveries grouped by the attempt number.
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (SparkPost Elite only)
       + Values
           + `smtp`
-  + sandbox (optional, string, `true`) ... Restrict the query to events generated with a sandbox sending domain (SparkPost.com only)  
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
 
 + Request
