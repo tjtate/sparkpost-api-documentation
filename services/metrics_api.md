@@ -42,9 +42,6 @@ Definitions for terms found in Metrics API
 |`count_outofband_bounce` | Messages that the ISP bounced subsequent to a successful delivery|
 |`count_delayed` | Total number of delays due to any temporary failure|
 |`count_delayed_first` | Messages delayed on the first delivery attempt|
-|`avg_delivery_time_first` | Average delivery time in milliseconds (latency) for messages delivered on the first attempt|
-|`avg_delivery_time_subsequent` | Average delivery time in milliseconds (latency) for messages delivered that required more than one attempt|
-|`avg_msg_size` | Average size of delivered messages, in bytes (including attachments)|
 |`total_msg_volume` | Total size of delivered messages, in bytes (including attachments)|
 |`count_spam_complaint` | Number of spam complaints received from an ISP|
 
