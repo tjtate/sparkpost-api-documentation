@@ -470,6 +470,9 @@ See the Substitutions Reference section for more information.
 Delete a template by specifying its ID in the URI path.
 If the template delete API call succeeds, then ALL versions of the template will be deleted from the system (both published AND draft versions).
 
+**Note**
+
+If a transmission uses a stored template, and the transmission is submitted or generating, the template cannot be deleted.
 
 + Parameters
     + id (required, string, `11714265276872`) ... ID of the template
