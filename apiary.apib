@@ -4685,19 +4685,11 @@ Update an existing recipient list by specifying its ID in the URI path and use a
 Use the **num_rcpt_errors** parameter to limit the number of recipient errors
 returned.
 
-**Note**
-
 If a non-scheduled transmission contains a recipient list, the recipient list cannot
 be updated if the transmission is submitted or generating.
 
 If a scheduled transmission contains a recipient list, the recipient list cannot be updated if the transmission is
-generating or submitted and close to the scheduled generation time.  
-
-Set the scheduled_interval_update option in the [msg_gen](https://support.messagesystems.com/docs/web-momo4/modules.msg_gen.php) 
-module to configure how close to the scheduled generation time the recipient list can still be updated.  The default is 10 minutes, 
-and the minumum value is 1 second.
-
-**Note**
+generating or submitted and within 10 minutes of the scheduled generation time.  
 
 The "id" field is read only and cannot be changed.  If the recipient list "id" is provided in
 the **recipient list object**, it must match the id parameter.
@@ -4893,8 +4885,6 @@ Permanently delete the specified recipient list.
 Once a recipient list is deleted, it
 cannot be recovered.  Before deleting a list, ensure that it is no longer needed and keep a backup copy.  If a deleted
 list is needed again, the list must be resubmitted with the CREATE API.
-
-**Note**
 
 If a transmission contains a recipient list, the recipient list cannot be deleted if the transmission is
 submitted or generating.  
@@ -6349,9 +6339,7 @@ See the Substitutions Reference section for more information.
 Delete a template by specifying its ID in the URI path.
 If the template delete API call succeeds, then ALL versions of the template will be deleted from the system (both published AND draft versions).
 
-**Note**
-
-If a transmission uses a stored template, and the transmission is submitted or generating, the template cannot be deleted.
+If a transmission uses a stored template, the template cannot be deleted if the transmission is submitted or generating.
 
 + Parameters
     + id (required, string, `11714265276872`) ... ID of the template
@@ -6455,12 +6443,7 @@ The following recipients attribute is used when specifying a stored recipient li
 |list_id | string  | Identifier of the stored recipient list to use | yes | Specify this field when using a stored recipient list. |
 
 ### Scheduled Transmissions
-Use the _options.start_time_ attribute to delay generation of messages.  The scheduled time must be in the future and by default cannot be greater than 1 year from the time of submission.  If the scheduled time does not fall in that range, the transmission is not accepted.
-
-Set the start_time_max_schedule_interval option in the [msg_gen](https://support.messagesystems.com/docs/web-momo4/modules.msg_gen.php) module to configure how far in the future the message generation may be delayed.
-
-Set the scheduled_interval_delete option in the [msg_gen](https://support.messagesystems.com/docs/web-momo4/modules.msg_gen.php) module to configure how close to the scheduled generation time the transmission can still be deleted.  The default is 10 minutes, and the minumum value is 1 minute.
-
+Use the _options.start_time_ attribute to delay generation of messages.  The scheduled time must be in the future and cannot be greater than 1 year from the time of submission.  If the scheduled time does not fall in that range, the transmission is not accepted.
 
 
 ## Create [/transmissions{?num_rcpt_errors}]
@@ -6489,11 +6472,11 @@ Create a transmission using a stored recipients list by specifying the "list_id"
 
 Create a transmission using a stored template by specifying the "template_id" in the "content" attribute.  The "use_draft_template" field is optional and indicates whether to use a draft version or the published version of the template when generating messages.
 
-#### Using a Scheduled Time
+#### Scheduling Transmissions
 
-Create a scheduled transmission to be generated and sent at a future time by specifying "start_time" in the "content" attribute.
+Create a scheduled transmission to be generated and sent at a future time by specifying "start_time" in the Options attribute.
 
-Scheduling a transmission that specifies a stored template will use the LATEST version of the template available at the time of scheduled generation.  The use of published versus draft versions follows the same logic in all transmission requests, whether scheduled or immediate generation. When “use_draft_template" is not specified (or set to false), the latest published version of the specified stored template is used. If “use_draft_template" is set to true, the latest draft version is used in the transmission instead.
+Scheduling a transmission that specifies a stored template will use the LATEST version of the template available at the time of scheduled generation.  The use of published versus draft versions follows the same logic in all transmission requests, whether scheduled or immediate generation. When "use_draft_template" is not specified (or set to false), the latest published version of the specified stored template is used. If "use_draft_template" is set to true, the latest draft version is used in the transmission instead.
 
 Once message generation has been initiated, all messages in the transmission will use the template selected at the start of the generation. If a template update is made during the generation of a transmission that uses that template, the template update will succeed but the transmission will continue to use the version that was selected at the start of the generation.
 
@@ -7117,6 +7100,8 @@ The example response shows a query on _campaign_id=thanksgiving_, with **templat
 Delete a transmission by specifying its ID in the URI path.
 
 Only transmissions which are scheduled for future generation may be deleted.
+
+Scheduled transmissions cannot be deleted if the transmission is within 10 minutes of the scheduled generation time.
 
 
 + Parameters
