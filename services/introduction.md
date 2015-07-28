@@ -5,10 +5,10 @@ SparkPost API enables client applications to integrate with SparkPost and perfor
 JSON is the basis for its request input and response format.
 
 ### SparkPost API Endpoint
-**https://api.sparkpost.com/api/v1**
+**https\://api.sparkpost.com/api/v1**
 
 ### SparkPost Elite API Endpoint
-**https://yourdomain.msyscloud.com/api/v1**
+**https\://yourdomain.msyscloud.com/api/v1**
 
 Note that SparkPost Elite listens on port 443, so no explicit port number is required.
 
