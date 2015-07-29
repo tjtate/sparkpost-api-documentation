@@ -29,8 +29,8 @@ The fields supported in the X-MSYS-API header are as follows:
 |-------|------|-------------|----------|-------|
 | open_tracking | boolean | Whether open tracking is enabled for this SMTP message | no | Defaults to false. |
 | click_tracking | boolean | Whether click tracking is enabled for this SMTP message | no | Defaults to false. |
-| sandbox| boolean| Whether or not to use the sandbox sending domain (SparkPost.com only) | no | Defaults to false. |
-| skip_suppression| boolean| Whether or not to ignore customer suppression rules, for this SMTP message only. Only applicable if your configuration supports this parameter. (SparkPost Elite only)| no | Defaults to false. |
+| sandbox| boolean| Whether or not to use the sandbox sending domain (**Note** SparkPost.com only) | no | Defaults to false. |
+| skip_suppression| boolean| Whether or not to ignore customer suppression rules, for this SMTP message only. Only applicable if your configuration supports this parameter. (**Note** SparkPost Elite only)| no | Defaults to false. |
 
 ## Sending Messages with cc, bcc, and archive Recipients
 

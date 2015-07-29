@@ -39,14 +39,9 @@ THIS DATABASE IS PROVIDED BY MAXMIND, INC "AS IS" AND ANY EXPRESS OR IMPLIED WAR
 
 List descriptions of the events, event types, and event fields that could be included in a Webhooks post to your target URL.
 
-**Note**
-
-For SparkPost Elite only, an API key is required for authorization.
-
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
       Accept: application/json
 
 + Response 200 (application/json)
@@ -83,18 +78,12 @@ For SparkPost Elite only, an API key is required for authorization.
 
 List an example of the event data that will be posted by a Webhook for the specified events.
 
-**Note**
-
-For SparkPost Elite only, an API key is required for authorization.
-
-
 + Parameters
   + events (optional, string, `bounce`) ... Event types for which to get a sample payload, use the Webhooks Events endpoint to list the available event types, defaults to all event types.
 
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
       Accept: application/json
 
 + Response 200 (application/json)

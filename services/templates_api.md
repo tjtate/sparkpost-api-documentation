@@ -342,8 +342,6 @@ If the template was used for message generation, the result will also include a 
 Update an existing template by specifying its ID in the URI path and use a **template object** as the PUT request body.
 By default, the update will result in a new draft version, but the published version can be overwritten directly by using the **update_published** query parameter.
 
-**Note**
-
 The "name" field may be modified, but the "id" field is read only.
 
 If a content object is provided in the update request, it must
@@ -353,8 +351,6 @@ The new content will completely overwrite the existing content.
 The example shows an update that will rename the template, enable open tracking,
 and update the content all in one API call. All content fields are included whether they are being
 changed or not.
-
-**Note** 
 
 Publishing a template is a specific case of an update.  The body of the PUT
 request should contain the `"published": true` field as shown in the example. The 

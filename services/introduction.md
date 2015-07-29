@@ -2,15 +2,14 @@
 SparkPost API enables client applications to integrate with SparkPost and perform actions associated with account management, message generation, and reporting.
 
 ## API Endpoints
-JSON is the basis for its request input and response format.
+* JSON is the basis for its request input and response format.
+* SparkPost.com and SparkPost Elite listen on port 443, so no explicit port number is required.
 
 ### SparkPost API Endpoint
 **https\://api.sparkpost.com/api/v1**
 
 ### SparkPost Elite API Endpoint
 **https\://yourdomain.msyscloud.com/api/v1**
-
-Note that SparkPost Elite listens on port 443, so no explicit port number is required.
 
 ## API Conventions
 * API versioning is handled using a major version number in the URL, e.g. /api/v1/endpoint.
@@ -25,14 +24,10 @@ Note that SparkPost Elite listens on port 443, so no explicit port number is req
 * The JSON number type is bounded to a signed 32-bit integer.
 
 ## Authentication
-All API's require that you authenticate with every request.
-
-To authenticate with the various API's, specify the "Authorization" header with each request.
-The value of the "Authorization" header must be a valid API key or conform to the standard for Basic authentication.
-
-Administrators can generate an API key using the UI. Please take care to record and safeguard your API keys at all times. You cannot retrieve an API key after it has been created.
-
-For examples of supplying the Authorization header, refer to the cURL example below or any of the individual API request examples.
+* All API's require that you authenticate with every request.
+* To authenticate with the various API's, specify the "Authorization" header with each request. The value of the "Authorization" header must be a valid API key or conform to the standard for Basic authentication.
+* Administrators can generate an API key using the UI. Please take care to record and safeguard your API keys at all times. You cannot retrieve an API key after it has been created.
+* For examples of supplying the Authorization header, refer to the cURL example below or any of the individual API request examples.
 
 ## Using cURL
 If you are using cURL to call the API, you must include the resource URI in quotes when you pass in multiple query parameters separated by an **&**.

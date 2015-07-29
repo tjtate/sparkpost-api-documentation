@@ -1,8 +1,6 @@
 # Group Raw Log
 
-**Note** 
-
-The Raw Log API is available for SparkPost Elite only.
+**Note** The Raw Log API is available for SparkPost Elite only.
 
 In addition to the analytics data available through the UI, Metrics API, and Webhooks API, SparkPost Elite provides log files tracking the full disposition status of every message transiting the system.  The Raw Log API enables you to download these raw, compressed logs.
 
