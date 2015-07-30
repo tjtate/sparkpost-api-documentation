@@ -376,7 +376,11 @@ Update an existing recipient list by specifying its ID in the URI path and use a
 Use the **num_rcpt_errors** parameter to limit the number of recipient errors
 returned.
 
-**Note**
+If a non-scheduled transmission contains a recipient list, the recipient list cannot
+be updated if the transmission is submitted or generating.
+
+If a scheduled transmission contains a recipient list, the recipient list cannot be updated if the transmission is
+generating or submitted and within 10 minutes of the scheduled generation time.  
 
 The "id" field is read only and cannot be changed.  If the recipient list "id" is provided in
 the **recipient list object**, it must match the id parameter.
@@ -572,6 +576,9 @@ Permanently delete the specified recipient list.
 Once a recipient list is deleted, it
 cannot be recovered.  Before deleting a list, ensure that it is no longer needed and keep a backup copy.  If a deleted
 list is needed again, the list must be resubmitted with the CREATE API.
+
+If a transmission contains a recipient list, the recipient list cannot be deleted if the transmission is
+submitted or generating.  
 
 + Parameters
     + id (required, string, `unique_id_4_graduate_students_list`) ... Identifier of the recipient list
