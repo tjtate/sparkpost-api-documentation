@@ -30,14 +30,6 @@ Definitions for terms found in Metrics API
 |`count_policy_rejection` | Messages rejected by SparkPost due to policy|
 |`count_generation_failed` | Message generation failed for an intended recipient|
 |`count_generation_rejection` | Messages rejected by SparkPost due to policy|
-|`open_rate` | Percentage of Targeted messages that were rendered or had at least one link selected|
-|`click_through_rate` | Percentage of Targeted messages that had at least one link selected|
-|`bounce_rate` | Percentage of Targeted messages that Bounced|
-|`hard_bounce_rate` | Percentage of Targeted messages that Hard Bounced|
-|`soft_bounce_rate` | Percentage of Targeted messages that Soft Bounced|
-|`block_bounce_rate` | Percentage of Targeted messages that Block Bounced|
-|`admin_bounce_rate` | Percentage of Targeted messages that Admin Bounced|
-|`undetermined_bounce_rate` | Percentage of Targeted messages that Undetermined Bounced|
 |`count_inband_bounce` | Messages that bounced on delivery attempt during the SMTP session|
 |`count_outofband_bounce` | Messages that the ISP bounced subsequent to a successful delivery|
 |`count_delayed` | Total number of delays due to any temporary failure|
