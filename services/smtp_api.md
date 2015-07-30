@@ -17,9 +17,9 @@ The fields supported in the X-MSYS-API header are as follows:
 |-------|------|-------------|----------|-------|
 | campaign_id | string | Name of the campaign to associate with the SMTP message | no | Maximum length - 64 bytes (same restriction as the REST API) |
 | metadata | JSON object | JSON key value pairs associated with the SMTP message | no | A maximum of 200 bytes of metadata is available during click/open events. |
-| cc | JSON array | Array of recipient addresses that will be included in the Cc header (SparkPost.com only) | no | A unique message will be generated for each recipient in this list. |
-| bcc | JSON array | Array of recipient addresses that will be hidden from all other recipients (SparkPost.com only) | no | A unique message will be generated for each recipient in this list. |
-| archive | JSON array | Array of recipient addresses that will be hidden from all other recipients (SparkPost.com only) | no | A unique message will be generated for each recipient in this list. For a full description, see the section "**What is an archive recipient?**" |
+| cc | JSON array | Array of recipient addresses that will be included in the "Cc" header | no | A unique message will be generated for each recipient in this list. |
+| bcc | JSON array | Array of recipient addresses that will be hidden from all other recipients | no | A unique message will be generated for each recipient in this list. |
+| archive | JSON array | Array of recipient addresses that will be hidden from all other recipients | no | A unique message will be generated for each recipient in this list. For a full description, see the "What is an archive recipient?" section.|
 | tags | JSON array | Array of text labels associated with the SMTP message | no | Tags are available in click/open events. Maximum number of tags is 10 per recipient, 100 system wide. |
 | options | JSON object | JSON object in which SMTP API options are defined | no | For a full description, see the Options Attributes. |
 
@@ -43,7 +43,7 @@ When submitting an email via SMTP that includes the X-MSYS-API header, you may s
 
 **What is an archive recipient?**
 
-Recipients in the "archive" list will receive an exact replica of the message that was sent to the RCPT TO address. In particular, any encoded links intended for the RCPT TO recipient will appear "as is" in the archive messages.  In contrast, recipients in the “bcc” list will have links encoded specific to their address. (Note: There will be some differences in headers such as X-MSFBL or List-Unsubscribe headers.)
+Recipients in the "archive" list will receive an exact replica of the message that was sent to the RCPT TO address. In particular, any encoded links intended for the RCPT TO recipient will appear _as is_ in the archive messages.  In contrast, recipients in the "bcc" list will have links encoded specific to their address. (There will be some differences in headers such as X-MSFBL or List-Unsubscribe headers.)
 
 For example:
 
@@ -57,9 +57,9 @@ X-MSYS-API: {
    "options" : {"open_tracking" : false, "click_tracking" : true},
 }
 ```
-NOTE:  You may not specify more than a total of 1000 total recipients in those 3 lists.
+You may not specify more than a total of 1000 total recipients in those 3 lists.
 
-You may also specify name and email keys in the "cc" and "bcc" JSON arrays in order to produce a “friendly Cc or Bcc header”. For example:
+You may also specify name and email keys in the "cc" and "bcc" JSON arrays in order to produce a friendly "Cc" or "Bcc" header. For example:
 
 ```
 X-MSYS-API: {

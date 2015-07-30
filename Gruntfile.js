@@ -6,6 +6,7 @@ var matchdep = require('matchdep')
         'introduction.md',
         'substitutions_reference.md',
         'metrics_api.md',
+        'raw_log_api.md',
         'recipient_list_api.md',
         'relay_webhooks_api.md',
         'sending_domains_api.md',
@@ -13,8 +14,7 @@ var matchdep = require('matchdep')
         'templates_api.md',
         'transmissions_api.md',
         'webhooks_api.md',
-        'smtp_api.md',
-        'raw_log_api.md'
+        'smtp_api.md'
     ];
 
 module.exports = function(grunt) {
