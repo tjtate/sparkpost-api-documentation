@@ -363,32 +363,26 @@ results.  To retrieve recipient details, use the RETRIEVE API for a specified re
 ### Update a Recipient List [PUT]
 
 Update an existing recipient list by specifying its ID in the URI path and use a
-**recipient list object** as the PUT request body.
-
-Use the **num_rcpt_errors** parameter to limit the number of recipient errors
+**recipient list object** as the PUT request body. Use the **num_rcpt_errors** parameter to limit the number of recipient errors
 returned.
 
-If a non-scheduled transmission contains a recipient list, the recipient list cannot
+The following are key points about updating your recipient lists:
+
+* If a non-scheduled transmission contains a recipient list, the recipient list cannot
 be updated if the transmission is submitted or generating.
-
-If a scheduled transmission contains a recipient list, the recipient list cannot be updated if the transmission is
+* If a scheduled transmission contains a recipient list, the recipient list cannot be updated if the transmission is
 generating or submitted and within 10 minutes of the scheduled generation time.  
-
-The "id" field is read only and cannot be changed.  If the recipient list "id" is provided in
+* The "id" field is read only and cannot be changed.  If the recipient list "id" is provided in
 the **recipient list object**, it must match the id parameter.
-
-If a "recipients" array is provided in the update request, it must contain the complete recipient
+* If a "recipients" array is provided in the update request, it must contain the complete recipient
 list and all relevant recipient fields whether they are being changed or not.  The new recipients
 will completely replace the existing recipients.  The number of accepted recipients and the
 number of rejected recipients will only be returned if a "recipients" array is provided in the request.
-
-If a "name" field is provided in the update request, it will replace the existing
+* If a "name" field is provided in the update request, it will replace the existing
 "name" field for the recipient list.
-
-If a "description" field is provided in the update request, it will replace the existing
+* If a "description" field is provided in the update request, it will replace the existing
 "description" field for the recipient list.
-
-If an "attributes" object is provided in the update request, it will completely replace the existing
+* If an "attributes" object is provided in the update request, it will completely replace the existing
 "attributes" object for the recipient list.
 
 + Parameters

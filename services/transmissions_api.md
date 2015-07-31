@@ -85,7 +85,7 @@ Create a transmission using a stored template by specifying the "template_id" in
 
 #### Scheduling Transmissions
 
-Create a scheduled transmission to be generated and sent at a future time by specifying "start_time" in the Options attribute.
+Create a scheduled transmission to be generated and sent at a future time by specifying "start_time" in the "options" attribute.
 
 Scheduling a transmission that specifies a stored template will use the LATEST version of the template available at the time of scheduled generation.  The use of published versus draft versions follows the same logic in all transmission requests, whether scheduled or immediate generation. When "use_draft_template" is not specified (or set to false), the latest published version of the specified stored template is used. If "use_draft_template" is set to true, the latest draft version is used in the transmission instead.
 

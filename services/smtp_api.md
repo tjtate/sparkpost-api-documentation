@@ -17,9 +17,9 @@ The fields supported in the X-MSYS-API header are as follows:
 |-------|------|-------------|----------|-------|
 | campaign_id | string | Name of the campaign to associate with the SMTP message | no | Maximum length - 64 bytes (same restriction as the REST API) |
 | metadata | JSON object | JSON key value pairs associated with the SMTP message | no | A maximum of 200 bytes of metadata is available during click/open events. |
-| cc | JSON array | Array of recipient addresses that will be included in the "Cc" header | no | A unique message will be generated for each recipient in this list. |
-| bcc | JSON array | Array of recipient addresses that will be hidden from all other recipients | no | A unique message will be generated for each recipient in this list. |
-| archive | JSON array | Array of recipient addresses that will be hidden from all other recipients | no | A unique message will be generated for each recipient in this list. For a full description, see the "What is an archive recipient?" section.|
+| cc | JSON array | Array of recipient addresses that will be included in the "Cc" header | no | A unique message with a unique tracking URL will be generated for each recipient in this list. |
+| bcc | JSON array | Array of recipient addresses that will be hidden from all other recipients | no | A unique message with a unique tracking URL will be generated for each recipient in this list. |
+| archive | JSON array | Array of recipient addresses that will be hidden from all other recipients | no | A unique message will be generated for each recipient in this list. The archive copy of the message contains tracking URLs identical to the recipient. For a full description, see the "What is an archive recipient?" section.|
 | tags | JSON array | Array of text labels associated with the SMTP message | no | Tags are available in click/open events. Maximum number of tags is 10 per recipient, 100 system wide. |
 | options | JSON object | JSON object in which SMTP API options are defined | no | For a full description, see the Options Attributes. |
 
@@ -40,6 +40,10 @@ When submitting an email via SMTP that includes the X-MSYS-API header, you may s
 * The "bcc" recipients will each receive a message with the "To" and "Cc" headers described above and, additionally, will see a "Bcc" header with ONLY their own recipient address as the value of the header.
 * The "archive" recipients will each receive a message with the "To" and "Cc" headers described above however, they will not have a "Bcc" header.
 
+The following are key points about reporting and tracking for cc, bcc, and archive messages:
+* Each recipient (To, Cc, Bcc, and archive) is counted as a targeted message.
+* A "rcpt_type" field is available during events through the Webhooks, which designates if the message was a Cc, Bcc, or archive copy.
+* A "transmission_id" field is available during events through the Webhooks, which can be used to correlate the Cc, Bcc, and archive versions of the messages to one another.
 
 **What is an archive recipient?**
 
