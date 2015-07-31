@@ -66,8 +66,6 @@ Whitespace within the braces is ignored.  All of the following are equivalent:
 {{  value   }}
 ```
 
-**Note**
-
 However, no spaces are allowed when substitution data is used in a query string.
 In the following example, no whitespace is allowed within the braces:
 
@@ -145,8 +143,6 @@ Substitution statements that exist on their own line of the template will **not*
 produce a blank line in the resulting output.  This is a convenience to the
 template writer.  In addition, any whitespace after the closing **}}** and before
 the `LF` or `CRLF` will **not** be present in the output. 
-
-**Note**
 
 These rules do not apply to substitution expressions.
 
@@ -445,8 +441,6 @@ The relational and logical operators are as follows:
 The substitution language uses the `each` keyword for iteration.
 The value at each index of an array can be accessed within the each loop by using the `loop_var` variable. When using the `each` keyword to iterate over an array, the `loop_index` variable can be used to get the current index.
 
-**Note**
-
 These examples continue to use the sample data given above.
 
 For example, use the following syntax to iterate over a JSON array of strings
@@ -482,8 +476,6 @@ The following example uses `shopping_cart` and `a_nested_array`:
   {{end}}
 {{end}}
 ```
-
-**Note** 
 
 The preceding example uses indentation for ease of reading.
 The indentation will appear in the rendered content, so it is not advisable to indent a production template. 
@@ -560,8 +552,6 @@ need to be structured as:
 </body>
 ```
 
-**Note**
-
 The dynamic content will be correctly inserted *without* html escaping,
 regardless of whether double or triple curly braces are used.  There is no need to use triple curly braces in this case.
 
@@ -589,7 +579,7 @@ Attempting to insert a chunk of plain text:
 
 Finally, as a more realistic example, render_dynamic_content can also be used inside an 'each' loop. Full transmission json examples follow.
 
-SparkPost.com example:
+**Note:** The following example applies to SparkPost only.
 
 ```
 {
@@ -634,7 +624,7 @@ SparkPost.com example:
 }
 ```
 
-SparkPost Elite example:
+**Note:** The following example applies to SparkPost Elite only.
 
 ```
 {
@@ -738,16 +728,16 @@ The following substitution variables are reserved and automatically available fo
 
 * `address.name`: Recipient's name from the _address.name_ recipient json field
 * `email` and `address.email`: Recipient's email address from the _address_ or _address.email_ recipient json field
-* `return_path`: Return path from the transmission or recipients json field (SparkPost Elite only)
+* `return_path`: Return path from the transmission or recipients json field ( **Note:** SparkPost Elite only )
 
-SparkPost.com example:
+**Note:** The following example applies to SparkPost only.
 
 ```
 Hello {{address.name}}
 Your email is {{address.email}}
 ```
 
-SparkPost Elite example:
+**Note:** The following example applies to SparkPost Elite only.
 
 ```
 Hello {{address.name}}

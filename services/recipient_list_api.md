@@ -23,7 +23,7 @@ Recipients are described in a JSON array with the following fields:
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
 |address | JSON object or string | Address information for a recipient  | yes | See the Address Attributes. |
-|return_path | string |Email to use for envelope FROM (SparkPost Elite only)| no | To support Variable Envelope Return Path (VERP), this field provides a specific recipient a unique envelope MAIL FROM. |
+|return_path | string |Email to use for envelope FROM ( **Note:** SparkPost Elite only )| no | To support Variable Envelope Return Path (VERP), this field provides a specific recipient a unique envelope MAIL FROM. |
 |tags | JSON array |Array of text labels associated with a recipient | no | Tags are available in Webhook events.  Maximum number of tags - 10 per recipient, 100 system wide.  Any tags over the limits are ignored.|
 |metadata | JSON object| Key/value pairs associated with a recipient |no | Metadata is available during events through the Webhooks and is provided to the substitution engine.  A maximum of 200 bytes of merged metadata (transmission level + recipient level) is available with recipient metadata taking precedence over transmission metadata when there are conflicts.  |
 |substitution_data | JSON object | Key/value pairs associated with a recipient that are provided to the substitution engine |no | Recipient substitution data takes precedence over transmission substitution data.  Unlike metadata, substitution data is not included in Webhook events.|
@@ -82,9 +82,7 @@ recipient list "id" is not provided in the POST request body, one will be genera
 in the results body.  Use the **num_rcpt_errors** parameter to limit the number of recipient errors
 returned.
 
-**Note**
-
-The "return_path" in the POST request body applies to SparkPost Elite only.
+**Note:** The "return_path" in the POST request body applies to SparkPost Elite only.
 
 + Parameters
   + num_rcpt_errors (optional, number, `3`) ... Maximum number of recipient errors that this call can return, otherwise all validation errors are returned.
@@ -229,9 +227,7 @@ The "return_path" in the POST request body applies to SparkPost Elite only.
 Retrieve details about a specified recipient list by specifying its id in the URI path.  To
 retrieve the recipients contained in a list, the list must be specified and the **show_recipients** parameter must be set to true.
 
-**Note**
-
-The "return_path" in the POST request body applies to SparkPost Elite only.
+**Note:** The "return_path" in the POST request body applies to SparkPost Elite only.
 
 + Parameters
     + id (required, string, `unique_id_4_graduate_students`) ... Identifier of the recipient list
@@ -366,37 +362,27 @@ results.  To retrieve recipient details, use the RETRIEVE API for a specified re
 
 ### Update a Recipient List [PUT]
 
-**Note**
-
-This endpoint is available in SparkPost.com only. 
-
 Update an existing recipient list by specifying its ID in the URI path and use a
-**recipient list object** as the PUT request body.
-
-Use the **num_rcpt_errors** parameter to limit the number of recipient errors
+**recipient list object** as the PUT request body. Use the **num_rcpt_errors** parameter to limit the number of recipient errors
 returned.
 
-If a non-scheduled transmission contains a recipient list, the recipient list cannot
+The following are key points about updating your recipient lists:
+
+* If a non-scheduled transmission contains a recipient list, the recipient list cannot
 be updated if the transmission is submitted or generating.
-
-If a scheduled transmission contains a recipient list, the recipient list cannot be updated if the transmission is
+* If a scheduled transmission contains a recipient list, the recipient list cannot be updated if the transmission is
 generating or submitted and within 10 minutes of the scheduled generation time.  
-
-The "id" field is read only and cannot be changed.  If the recipient list "id" is provided in
+* The "id" field is read only and cannot be changed.  If the recipient list "id" is provided in
 the **recipient list object**, it must match the id parameter.
-
-If a "recipients" array is provided in the update request, it must contain the complete recipient
+* If a "recipients" array is provided in the update request, it must contain the complete recipient
 list and all relevant recipient fields whether they are being changed or not.  The new recipients
 will completely replace the existing recipients.  The number of accepted recipients and the
 number of rejected recipients will only be returned if a "recipients" array is provided in the request.
-
-If a "name" field is provided in the update request, it will replace the existing
+* If a "name" field is provided in the update request, it will replace the existing
 "name" field for the recipient list.
-
-If a "description" field is provided in the update request, it will replace the existing
+* If a "description" field is provided in the update request, it will replace the existing
 "description" field for the recipient list.
-
-If an "attributes" object is provided in the update request, it will completely replace the existing
+* If an "attributes" object is provided in the update request, it will completely replace the existing
 "attributes" object for the recipient list.
 
 + Parameters
@@ -570,8 +556,6 @@ If an "attributes" object is provided in the update request, it will completely 
 ### Delete a Recipient List [DELETE]
 
 Permanently delete the specified recipient list.
-
-**Note** 
 
 Once a recipient list is deleted, it
 cannot be recovered.  Before deleting a list, ensure that it is no longer needed and keep a backup copy.  If a deleted
