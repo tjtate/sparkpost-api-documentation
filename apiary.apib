@@ -2,11 +2,13 @@ FORMAT: X-1A
 HOST: https://api.sparkpost.com/api/v1
 
 # SparkPost API v1
-SparkPost API enables client applications to integrate with SparkPost and perform actions associated with account management, message generation, and reporting.
+There are two service types available:  [SparkPost](http://sparkpost.com/), our self-service product, and [SparkPost Elite](https://www.sparkpost.com/products/sparkpost-elite), a managed service with guaranteed burst rates and white-glove support. These services have shared and unique aspects, with those unique aspects indicated in our consolidated API documentation as follows:
+* Features specific to **SparkPost** are indicated as "SparkPost only".
+* Features specific to **SparkPost Elite** products are indicated by "SparkPost Elite only".
 
 ## API Endpoints
 * JSON is the basis for its request input and response format.
-* SparkPost.com and SparkPost Elite listen on port 443, so no explicit port number is required.
+* SparkPost and SparkPost Elite listen on port 443, so no explicit port number is required.
 
 ### SparkPost API Endpoint
 **https\://api.sparkpost.com/api/v1**
@@ -635,7 +637,7 @@ Attempting to insert a chunk of plain text:
 
 Finally, as a more realistic example, render_dynamic_content can also be used inside an 'each' loop. Full transmission json examples follow.
 
-**Note** SparkPost.com example:
+**Note:** The following example applies to SparkPost only:
 
 ```
 {
@@ -680,7 +682,7 @@ Finally, as a more realistic example, render_dynamic_content can also be used in
 }
 ```
 
-**Note** SparkPost Elite example:
+**Note:** The following example applies to SparkPost Elite only:
 
 ```
 {
@@ -784,16 +786,16 @@ The following substitution variables are reserved and automatically available fo
 
 * `address.name`: Recipient's name from the _address.name_ recipient json field
 * `email` and `address.email`: Recipient's email address from the _address_ or _address.email_ recipient json field
-* `return_path`: Return path from the transmission or recipients json field (**Note** SparkPost Elite only)
+* `return_path`: Return path from the transmission or recipients json field ( **Note:** SparkPost Elite only )
 
-**Note** SparkPost.com example:
+**Note:** The following example applies to SparkPost only:
 
 ```
 Hello {{address.name}}
 Your email is {{address.email}}
 ```
 
-**Note** SparkPost Elite example:
+**Note:** The following example applies to SparkPost Elite only:
 
 ```
 Hello {{address.name}}
@@ -830,7 +832,7 @@ value will be RFC2047 base64 encoded before being written back to the headers st
 
 # Group Metrics
 
-SparkPost logs copious amounts of statistical, real-time data about message processing, message
+SparkPost and SparkPost Elite log copious amounts of statistical, real-time data about message processing, message
 disposition, and campaign performance.  This reporting data is available in the UI or through the Metrics API.  The Metrics API provides a variety of endpoints enabling you to retrieve a summary of the data, data grouped by a specific qualifier, or data by event type.  Within each endpoint, you can also apply various filters to drill down to the data for your specific reporting needs.
 
 ## Metrics API Deliverability Glossary
@@ -839,9 +841,9 @@ Definitions for terms found in Metrics API
 
 | Term     | Definition    |
 |---------:|:--------------|
-|`count_targeted` | Messages successfully injected into SparkPost as well as rejected by it|
-|`count_injected` | Messages injected to or received by SparkPost|
-|`count_sent` | Messages that SparkPost attempted to deliver, which includes both Deliveries and In-Band Bounces|
+|`count_targeted` | Messages successfully injected into SparkPost and SparkPost Elite as well as rejected by it|
+|`count_injected` | Messages injected to or received by SparkPost and SparkPost Elite|
+|`count_sent` | Messages that SparkPost and SparkPost Elite attempted to deliver, which includes both Deliveries and In-Band Bounces|
 |`count_accepted` | Messages an ISP or other remote domain accepted (less Out-of-Band Bounces)|
 |`count_delivered_first` | Messages delivered on the first attempt|
 |`count_delivered_subsequent` | Messages delivered that required more than one delivery attempt|
@@ -857,9 +859,9 @@ Definitions for terms found in Metrics API
 |`count_admin_bounce` | Total number of Bounced messages due to admin bounce classification reasons, also includes Rejected|
 |`count_undetermined_bounce` | Total number of Bounced messages due to undetermined bounce reasons|
 |`count_rejected` | Messages rejected due to policy or that failed to generate|
-|`count_policy_rejection` | Messages rejected by SparkPost due to policy|
+|`count_policy_rejection` | Messages rejected by SparkPost and SparkPost Elite due to policy|
 |`count_generation_failed` | Message generation failed for an intended recipient|
-|`count_generation_rejection` | Messages rejected by SparkPost due to policy|
+|`count_generation_rejection` | Messages rejected by SparkPost and SparkPost Elite due to policy|
 |`count_inband_bounce` | Messages that bounced on delivery attempt during the SMTP session|
 |`count_outofband_bounce` | Messages that the ISP bounced subsequent to a successful delivery|
 |`count_delayed` | Total number of delays due to any temporary failure|
@@ -967,7 +969,7 @@ list of URIs that exists within the Metrics API.
 
 Provides links to all child URIs within the Metrics API.
 
-**Note** Links in the response for binding-groups, bindings, nodes, and protocols apply to SparkPost Elite only.
+**Note:** Links in the response for binding-groups, bindings, nodes, and protocols apply to SparkPost Elite only.
 
 + Request
 
@@ -1185,10 +1187,10 @@ aggregate data, which can be used as "group by" qualifiers.
     + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
     + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
-    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include (**Note** SparkPost Elite only)
-    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include (**Note** SparkPost Elite only)
-    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include (**Note** SparkPost Elite only)
-    + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (**Note** SparkPost Elite only)
+    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
+    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
+    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
         + Values
             + `smtp`
     + metrics (required, list) ... Comma-delimited list of metrics for filtering
@@ -1424,10 +1426,10 @@ Provides aggregate metrics grouped by domain over the time window specified.
   + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
   + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
-  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include (**Note** SparkPost Elite only)
-  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include (**Note** SparkPost Elite only)
-  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include (**Note** SparkPost Elite only)
-  + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (**Note** SparkPost Elite only)
+  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
+  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
+  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
   + metrics (required, list) ... Comma-delimited list of metrics for filtering
@@ -1656,7 +1658,7 @@ Provides aggregate metrics grouped by domain over the time window specified.
 
 ### Deliverability Metrics by Binding [GET]
 
-**Note** This endpoint is available in SparkPost Elite only.
+**Note:** This endpoint is available in SparkPost Elite only.
 
 Provides aggregate metrics grouped by binding over the time window specified.
 
@@ -1666,10 +1668,10 @@ Provides aggregate metrics grouped by binding over the time window specified.
   + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
   + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
-  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include (**Note** SparkPost Elite only)
-  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include (**Note** SparkPost Elite only)
-  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include (**Note** SparkPost Elite only)
-  + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (**Note** SparkPost Elite only)
+  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
+  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
+  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
   + metrics (required, list, `count_targeted`) ... Comma-delimited list of metrics for filtering
@@ -1894,7 +1896,7 @@ Provides aggregate metrics grouped by binding over the time window specified.
 
 ### Deliverability Metrics by Binding Group [GET]
 
-**Note** This endpoint is available in SparkPost Elite only.
+**Note:** This endpoint is available in SparkPost Elite only.
 
 Provides aggregate metrics grouped by binding group over the time window specified.
 
@@ -1904,10 +1906,10 @@ Provides aggregate metrics grouped by binding group over the time window specifi
   + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
   + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
-  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include (**Note** SparkPost Elite only)
-  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include (**Note** SparkPost Elite only)
-  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include (**Note** SparkPost Elite only)
-  + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (**Note** SparkPost Elite only)
+  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
+  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
+  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
   + metrics (required, list, `count_targeted`) ... Comma-delimited list of metrics for filtering
@@ -2143,10 +2145,10 @@ Provides aggregate metrics grouped by campaign over the time window specified.
     + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
     + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
-    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include (**Note** SparkPost Elite only)
-    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include (**Note** SparkPost Elite only)
-    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include (**Note** SparkPost Elite only)
-    + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (**Note** SparkPost Elite only)
+    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
+    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
+    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
     + metrics (required, list) ... Comma-delimited list of metrics for filtering
@@ -2384,10 +2386,10 @@ Provides aggregate metrics grouped by template over the time window specified.
     + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
     + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
-    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include (**Note** SparkPost Elite only)
-    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include (**Note** SparkPost Elite only)
-    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include (**Note** SparkPost Elite only)
-    + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (**Note** SparkPost Elite only)
+    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
+    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
+    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
         + Values
             + `smtp`
     + metrics (required, list) ... Comma-delimited list of metrics for filtering
@@ -2626,10 +2628,10 @@ in the world.
     + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
     + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
-    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include (**Note** SparkPost Elite only)
-    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include (**Note** SparkPost Elite only)
-    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include (**Note** SparkPost Elite only)
-    + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (**Note** SparkPost Elite only)
+    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
+    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
+    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
         + Values
             + `smtp`
     + metrics (required, list) ... Comma-delimited list of metrics for filtering
@@ -2920,10 +2922,10 @@ The following table describes the validation for the **precision** parameter:
     + domains (optional, list `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains for filtering
     + campaigns (optional, list, `summerSale,promotionX`) ... Comma-delimited list of campaigns for filtering
     + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
-    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes by which to filter (**Note** SparkPost Elite only)
-    + bindings (optional, list, `bindingA,bindingB,bindingC`) ... Comma-delimited list of bindings for filtering (**Note** SparkPost Elite only)
-    + binding_groups (optional, list, `bg1,bg2,bg3`) ... Comma-delimited list of binding groups for filtering (**Note** SparkPost Elite only)
-    + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (**Note** SparkPost Elite only)
+    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes by which to filter ( **Note:** SparkPost Elite only )
+    + bindings (optional, list, `bindingA,bindingB,bindingC`) ... Comma-delimited list of bindings for filtering ( **Note:** SparkPost Elite only )
+    + binding_groups (optional, list, `bg1,bg2,bg3`) ... Comma-delimited list of binding groups for filtering ( **Note:** SparkPost Elite only )
+    + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
     + precision (optional, string, `day`) ... Precision of timeseries data returned
@@ -3086,10 +3088,10 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
     + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
     + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
-    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include (**Note** SparkPost Elite only)
-    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include (**Note** SparkPost Elite only)
-    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include (**Note** SparkPost Elite only)
-    + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols to include (**Note** SparkPost Elite only)
+    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
+    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
+    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols to include ( **Note:** SparkPost Elite only )
         + Values
             + `smtp`
     + metrics (required, list) ... Comma-delimited list of metrics to include
@@ -3220,10 +3222,10 @@ Provides deliverability metrics, specific to bounce events, grouped by the domai
     + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
     + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
-    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include (**Note** SparkPost.com only)
-    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include (**Note** SparkPost.com only)
-    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include (**Note** SparkPost.com only)
-    + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols to include (**Note** SparkPost.com only)
+    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
+    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
+    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols to include ( **Note:** SparkPost Elite only )
         + Values
             + `smtp`
     + metrics (required, list) ... Comma-delimited list of metrics to include
@@ -3340,10 +3342,10 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
     + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
     + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
-    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-5`limited list of nodes to include (**Note** SparkPost Elite only)
-    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include (**Note** SparkPost Elite only)
-    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include (**Note** SparkPost Elite only)
-    + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (**Note** SparkPost Elite only)
+    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-5`limited list of nodes to include ( **Note:** SparkPost Elite only )
+    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
+    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
         + Values
             + `smtp`
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
@@ -3442,10 +3444,10 @@ Provides deliverability metrics, specific to rejection events, grouped by the re
   + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
   + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
-  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include (**Note** SparkPost Elite only)
-  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include (**Note** SparkPost Elite only)
-  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include (**Note** SparkPost Elite only)
-  + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (**Note** SparkPost Elite only)
+  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
+  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
+  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
@@ -3536,10 +3538,10 @@ Provides deliverability metrics, specific to rejection events, grouped by the do
   + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
   + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include  
   + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
-  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include (**Note** SparkPost Elite only)
-  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include (**Note** SparkPost Elite only)
-  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include (**Note** SparkPost Elite only)
-  + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (**Note** SparkPost Elite only)
+  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
+  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
+  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
@@ -3618,10 +3620,10 @@ Provides deliverability metrics, specific to delay events, grouped by the delay 
   + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
   + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include  
   + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
-  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include (**Note** SparkPost Elite only)
-  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include (**Note** SparkPost Elite only)
-  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include (**Note** SparkPost Elite only)
-  + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (**Note** SparkPost Elite only)
+  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
+  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
+  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
@@ -3713,10 +3715,10 @@ Provides deliverability metrics, specific to delay events, grouped by the domain
   + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
   + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include  
   + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
-  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include (**Note** SparkPost Elite only)
-  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include (**Note** SparkPost Elite only)
-  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include (**Note** SparkPost Elite only)
-  + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (**Note** SparkPost Elite only)
+  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
+  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
+  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
@@ -3884,10 +3886,10 @@ Provides aggregate count of deliveries grouped by the attempt number.
   + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
   + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
-  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include (**Note** SparkPost Elite only)
-  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include (**Note** SparkPost Elite only)
-  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include (**Note** SparkPost Elite only)
-  + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering (**Note** SparkPost Elite only)
+  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
+  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
+  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
@@ -3946,7 +3948,7 @@ Provides aggregate count of deliveries grouped by the attempt number.
 
 ### Binding Groups List [GET]
 
-**Note** This endpoint is available in SparkPost Elite only.
+**Note:** This endpoint is available in SparkPost Elite only.
 
 Returns a list of binding groups that the Metrics API contains data on.
 
@@ -4009,7 +4011,7 @@ Returns a list of binding groups that the Metrics API contains data on.
 
 ### Bindings List [GET]
 
-**Note** This endpoint is available in SparkPost Elite only.
+**Note:** This endpoint is available in SparkPost Elite only.
 
 Returns a list of bindings that the Metrics API contains data on.
 
@@ -4192,7 +4194,7 @@ Returns a list of domains that the Metrics API contains data on.
 
 ### Nodes List [GET]
 
-**Note** This endpoint is available in SparkPost Elite only.
+**Note:** This endpoint is available in SparkPost Elite only.
 
 Returns a list of nodes that the Metrics API contains data on.
 
@@ -4250,7 +4252,7 @@ Returns a list of nodes that the Metrics API contains data on.
 
 ### Protocols List [GET]
 
-**Note** This endpoint is available in SparkPost Elite only.
+**Note:** This endpoint is available in SparkPost Elite only.
 
 Returns a list of protocols that the Metrics API contains data on.
 
@@ -4266,7 +4268,7 @@ Returns a list of protocols that the Metrics API contains data on.
 
 # Group Raw Log
 
-**Note** The Raw Log API is available for SparkPost Elite only.
+**Note:** The Raw Log API is available for SparkPost Elite only.
 
 In addition to the analytics data available through the UI, Metrics API, and Webhooks API, SparkPost Elite provides log files tracking the full disposition status of every message transiting the system.  The Raw Log API enables you to download these raw, compressed logs.
 
@@ -4431,7 +4433,7 @@ Recipients are described in a JSON array with the following fields:
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
 |address | JSON object or string | Address information for a recipient  | yes | See the Address Attributes. |
-|return_path | string |Email to use for envelope FROM (**Note** SparkPost Elite only)| no | To support Variable Envelope Return Path (VERP), this field provides a specific recipient a unique envelope MAIL FROM. |
+|return_path | string |Email to use for envelope FROM ( **Note:** SparkPost Elite only )| no | To support Variable Envelope Return Path (VERP), this field provides a specific recipient a unique envelope MAIL FROM. |
 |tags | JSON array |Array of text labels associated with a recipient | no | Tags are available in Webhook events.  Maximum number of tags - 10 per recipient, 100 system wide.  Any tags over the limits are ignored.|
 |metadata | JSON object| Key/value pairs associated with a recipient |no | Metadata is available during events through the Webhooks and is provided to the substitution engine.  A maximum of 200 bytes of merged metadata (transmission level + recipient level) is available with recipient metadata taking precedence over transmission metadata when there are conflicts.  |
 |substitution_data | JSON object | Key/value pairs associated with a recipient that are provided to the substitution engine |no | Recipient substitution data takes precedence over transmission substitution data.  Unlike metadata, substitution data is not included in Webhook events.|
@@ -4490,7 +4492,7 @@ recipient list "id" is not provided in the POST request body, one will be genera
 in the results body.  Use the **num_rcpt_errors** parameter to limit the number of recipient errors
 returned.
 
-**Note** The "return_path" in the POST request body applies to SparkPost Elite only.
+**Note:** The "return_path" in the POST request body applies to SparkPost Elite only.
 
 + Parameters
   + num_rcpt_errors (optional, number, `3`) ... Maximum number of recipient errors that this call can return, otherwise all validation errors are returned.
@@ -4635,7 +4637,7 @@ returned.
 Retrieve details about a specified recipient list by specifying its id in the URI path.  To
 retrieve the recipients contained in a list, the list must be specified and the **show_recipients** parameter must be set to true.
 
-**Note** The "return_path" in the POST request body applies to SparkPost Elite only.
+**Note:** The "return_path" in the POST request body applies to SparkPost Elite only.
 
 + Parameters
     + id (required, string, `unique_id_4_graduate_students`) ... Identifier of the recipient list
@@ -5042,7 +5044,7 @@ submitted or generating.
 
 # Group Relay Webhooks
 
-**Note** The Relay Webhooks API is available for SparkPost.com only.
+**Note:** The Relay Webhooks API is available for SparkPost only.
 
 By configuring a relay webhook for a specified inbound domain, those inbound messages can be forwarded to a specified target over HTTP.  Before you create a relay webhook, be sure to first create an inbound domain that is properly configured. To create an inbound domain for your account, please contact <support@sparkpost.com>. The Relay Webhooks API provides the means to create, list, retrieve, update, and delete a relay webhook.
 
@@ -5444,7 +5446,7 @@ Delete a relay webhook by specifying the webhook ID in the URI path.
 
 # Group Sending Domains
 
-**Note** The Sending Domains API is available for SparkPost.com only.
+**Note:** The Sending Domains API is available for SparkPost only.
 
 A sending domain is a domain that is used to indicate who an email is from via the "From:" header. Using a custom sending domain enables you to control what recipients see as the From value in their email clients. DNS records can be configured for a sending domain, which allows recipient mail servers to authenticate your messages. The Sending Domains API provides the means to create, list, retrieve, update, and verify a custom sending domain.
 
@@ -6005,7 +6007,7 @@ first non-attachment text/html MIME parts only.
 necessary.
 * The provided email_rfc822 should NOT be dot stuff.  The system dot stuffs before sending the outgoing message.
 * The provided email_rfc822 should NOT contain the SMTP terminator `\r\n.\r\n`.  The system always adds this terminator.
-* The provided email_rfc822 in MIME format will be rejected if SparkPost cannot parse the contents into a MIME tree.
+* The provided email_rfc822 in MIME format will be rejected if SparkPost and SparkPost Elite cannot parse the contents into a MIME tree.
 
 ### Options Attributes
 
@@ -6486,7 +6488,7 @@ In addition, engagement tracking options can be set in the transmission to track
 |description | string |Description of the transmission|no | Maximum length - 1024 bytes| 
 |metadata|JSON object|Transmission level metadata containing key/value pairs |no| Metadata is available during events through the Webhooks and is provided to the substitution engine.  A maximum of 200 bytes of merged metadata (transmission level + recipient level) is available with recipient metadata taking precedence over transmission metadata when there are conflicts.  |
 |substitution_data|JSON object|Key/value pairs that are provided to the substitution engine| no | Recipient substitution data takes precedence over transmission substitution data. Unlike metadata, substitution data is not included in Webhook events. |
-|return_path | string |Email to use for envelope FROM (**Note** SparkPost Elite only)| yes | To support Variable Envelope Return Path (VERP), this field can also optionally be specified inside of the address object of a specific recipient in order to give the recipient a unique envelope MAIL FROM. |
+|return_path | string |Email to use for envelope FROM ( **Note:** SparkPost Elite only )| yes | To support Variable Envelope Return Path (VERP), this field can also optionally be specified inside of the address object of a specific recipient in order to give the recipient a unique envelope MAIL FROM. |
 |content| JSON object | Content that will be used to construct a message | yes | Specify a stored template or specify inline template content. When using a stored template, specify the "template_id" as described in Using a Stored Template.  Otherwise, provide the inline content using the fields described in the Templates API documentation for Content Attributes.  Maximum size - 15MBs|
 |total_recipients | number | Computed total recipients | no | Read only|
 |num_generated | number | Computed total number of messages generated | no |Read only|
@@ -6501,8 +6503,8 @@ In addition, engagement tracking options can be set in the transmission to track
 |open_tracking|boolean| Whether open tracking is enabled for this transmission| no |If not specified, the setting at template level is used, or defaults to true. | 
 |click_tracking|boolean| Whether click tracking is enabled for this transmission| no |If not specified, the setting at template level is used, or defaults to true. | 
 |transactional|boolean|Whether message is transactional or non-transactional for unsubscribe and suppression purposes | no |If not specified, the setting at template level is used, or defaults to false. |
-|sandbox|boolean|Whether or not to use the sandbox sending domain (**Note** SparkPost.com only)| no |Defaults to false. |
-|skip_suppression|boolean|Whether or not to ignore customer suppression rules, for this transmission only.  Only applicable if your configuration supports this parameter. (**Note** SparkPost Elite only)| no - Defaults to false |  Unlike most other options, this flag is omitted on a GET transmission response unless the flag's value is true. |
+|sandbox|boolean|Whether or not to use the sandbox sending domain ( **Note:** SparkPost only )| no |Defaults to false. |
+|skip_suppression|boolean|Whether or not to ignore customer suppression rules, for this transmission only.  Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no - Defaults to false |  Unlike most other options, this flag is omitted on a GET transmission response unless the flag's value is true. |
 
 
 
@@ -6533,9 +6535,9 @@ Use the _options.start_time_ attribute to delay generation of messages.  The sch
 
 You can create a transmission in a number of ways. In all cases, you can use the **num_rcpt_errors** parameter to limit the number of recipient errors returned.
 
-**Note** The "return_path" in the POST request body applies to SparkPost Elite only.
+**Note:** The "return_path" in the POST request body applies to SparkPost Elite only.
 
-**Note** Sending limits apply to SparkPost.com only. When a transmission is created in SparkPost.com, the number of messages in the transmission is compared to the sending limit of your account. If the transmission will cause you to exceed your sending limit, the entire transmission results in an error and no messages are sent.  Note that no messages will be sent for the given transmission, regardless of the number of messages that caused you to exceed your sending limit. In this case, the Transmission API will return an HTTP 420 error code with an error detailing whether you would exceed your hourly, daily, or sandbox sending limit. 
+**Note:** Sending limits apply to SparkPost only. When a transmission is created in SparkPost, the number of messages in the transmission is compared to the sending limit of your account. If the transmission will cause you to exceed your sending limit, the entire transmission results in an error and no messages are sent.  Note that no messages will be sent for the given transmission, regardless of the number of messages that caused you to exceed your sending limit. In this case, the Transmission API will return an HTTP 420 error code with an error detailing whether you would exceed your hourly, daily, or sandbox sending limit. 
 
 #### Using Inline Email Part Content
 
@@ -7033,7 +7035,7 @@ Retrieve the details about a transmission by specifying its ID in the URI path.
 
 The response for a transmission using an inline template will include "template_id":"inline".  Inline templates cannot be specifically queried.
 
-**Note** The "return_path" is returned in the response for SparkPost Elite only.
+**Note:** The "return_path" is returned in the response for SparkPost Elite only.
 
 + Parameters
     + id (required, number, `11714265276872`) ... ID of the transmission
@@ -7247,7 +7249,7 @@ Scheduled transmissions cannot be deleted if the transmission is within 10 minut
 # Group Webhooks
 
 The Webhooks API provides the means to create, review, update, and delete webhooks, which enables you to
-receive push updates of the raw events generated by SparkPost.
+receive push updates of the raw events generated by SparkPost and SparkPost Elite.
 
 The following are key operational details: 
 * Any webhook batch that does not receive an HTTP 200 response will be retried for a total of 4 hours before the data is discarded.
@@ -7691,7 +7693,7 @@ are currently in a failed state.
 
 # Group SMTP API
 
-Through use of the X-MSYS-API header in a message sent to SparkPost through SMTP 
+Through use of the X-MSYS-API header in a message sent to SparkPost and SparkPost Elite through SMTP 
 (see ["Sending an Email"](https://www.sparkpost.com/docs/sending-email)), you can now specify a campaign id, metadata,
 tags, Cc, Bcc, and archive recipient lists and enable open and/or click tracking.  Note that to use this option you should be familiar with how to encode
 options as JSON strings, as the value of the header field is a JSON object that specifies the relevant options:
@@ -7704,7 +7706,7 @@ X-MSYS-API: {"options" : {"open_tracking" : false, "click_tracking" : true},
 
 The fields supported in the X-MSYS-API header are as follows:
 
-| field | type | description | required | notes |
+| Field | Type | Description | Required | Notes |
 |-------|------|-------------|----------|-------|
 | campaign_id | string | Name of the campaign to associate with the SMTP message | no | Maximum length - 64 bytes (same restriction as the REST API) |
 | metadata | JSON object | JSON key value pairs associated with the SMTP message | no | A maximum of 200 bytes of metadata is available during click/open events. |
@@ -7716,12 +7718,12 @@ The fields supported in the X-MSYS-API header are as follows:
 
 ## Options Attributes
 
-| field | type | description | required | notes |
+| Field | Type | Description | Required | Notes |
 |-------|------|-------------|----------|-------|
 | open_tracking | boolean | Whether open tracking is enabled for this SMTP message | no | Defaults to false. |
 | click_tracking | boolean | Whether click tracking is enabled for this SMTP message | no | Defaults to false. |
-| sandbox| boolean| Whether or not to use the sandbox sending domain (**Note** SparkPost.com only) | no | Defaults to false. |
-| skip_suppression| boolean| Whether or not to ignore customer suppression rules, for this SMTP message only. Only applicable if your configuration supports this parameter. (**Note** SparkPost Elite only)| no | Defaults to false. |
+| sandbox| boolean| Whether or not to use the sandbox sending domain ( **Note:** SparkPost only ) | no | Defaults to false. |
+| skip_suppression| boolean| Whether or not to ignore customer suppression rules, for this SMTP message only. Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no | Defaults to false. |
 
 ## Sending Messages with cc, bcc, and archive Recipients
 

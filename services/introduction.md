@@ -1,9 +1,11 @@
 # SparkPost API v1
-SparkPost API enables client applications to integrate with SparkPost and perform actions associated with account management, message generation, and reporting.
+There are two service types available:  [SparkPost](http://sparkpost.com/), our self-service product, and [SparkPost Elite](https://www.sparkpost.com/products/sparkpost-elite), a managed service with guaranteed burst rates and white-glove support. These services have shared and unique aspects, with those unique aspects indicated in our consolidated API documentation as follows:
+* Features specific to **SparkPost** are indicated as "SparkPost only".
+* Features specific to **SparkPost Elite** products are indicated by "SparkPost Elite only".
 
 ## API Endpoints
 * JSON is the basis for its request input and response format.
-* SparkPost.com and SparkPost Elite listen on port 443, so no explicit port number is required.
+* SparkPost and SparkPost Elite listen on port 443, so no explicit port number is required.
 
 ### SparkPost API Endpoint
 **https\://api.sparkpost.com/api/v1**

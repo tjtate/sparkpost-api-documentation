@@ -579,7 +579,7 @@ Attempting to insert a chunk of plain text:
 
 Finally, as a more realistic example, render_dynamic_content can also be used inside an 'each' loop. Full transmission json examples follow.
 
-**Note** SparkPost.com example:
+**Note:** The following example applies to SparkPost only:
 
 ```
 {
@@ -624,7 +624,7 @@ Finally, as a more realistic example, render_dynamic_content can also be used in
 }
 ```
 
-**Note** SparkPost Elite example:
+**Note:** The following example applies to SparkPost Elite only:
 
 ```
 {
@@ -728,16 +728,16 @@ The following substitution variables are reserved and automatically available fo
 
 * `address.name`: Recipient's name from the _address.name_ recipient json field
 * `email` and `address.email`: Recipient's email address from the _address_ or _address.email_ recipient json field
-* `return_path`: Return path from the transmission or recipients json field (**Note** SparkPost Elite only)
+* `return_path`: Return path from the transmission or recipients json field ( **Note:** SparkPost Elite only )
 
-**Note** SparkPost.com example:
+**Note:** The following example applies to SparkPost only:
 
 ```
 Hello {{address.name}}
 Your email is {{address.email}}
 ```
 
-**Note** SparkPost Elite example:
+**Note:** The following example applies to SparkPost Elite only:
 
 ```
 Hello {{address.name}}

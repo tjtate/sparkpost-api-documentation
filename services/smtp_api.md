@@ -1,6 +1,6 @@
 # Group SMTP API
 
-Through use of the X-MSYS-API header in a message sent to SparkPost through SMTP 
+Through use of the X-MSYS-API header in a message sent to SparkPost and SparkPost Elite through SMTP 
 (see ["Sending an Email"](https://www.sparkpost.com/docs/sending-email)), you can now specify a campaign id, metadata,
 tags, Cc, Bcc, and archive recipient lists and enable open and/or click tracking.  Note that to use this option you should be familiar with how to encode
 options as JSON strings, as the value of the header field is a JSON object that specifies the relevant options:
@@ -13,7 +13,7 @@ X-MSYS-API: {"options" : {"open_tracking" : false, "click_tracking" : true},
 
 The fields supported in the X-MSYS-API header are as follows:
 
-| field | type | description | required | notes |
+| Field | Type | Description | Required | Notes |
 |-------|------|-------------|----------|-------|
 | campaign_id | string | Name of the campaign to associate with the SMTP message | no | Maximum length - 64 bytes (same restriction as the REST API) |
 | metadata | JSON object | JSON key value pairs associated with the SMTP message | no | A maximum of 200 bytes of metadata is available during click/open events. |
@@ -25,12 +25,12 @@ The fields supported in the X-MSYS-API header are as follows:
 
 ## Options Attributes
 
-| field | type | description | required | notes |
+| Field | Type | Description | Required | Notes |
 |-------|------|-------------|----------|-------|
 | open_tracking | boolean | Whether open tracking is enabled for this SMTP message | no | Defaults to false. |
 | click_tracking | boolean | Whether click tracking is enabled for this SMTP message | no | Defaults to false. |
-| sandbox| boolean| Whether or not to use the sandbox sending domain (**Note** SparkPost.com only) | no | Defaults to false. |
-| skip_suppression| boolean| Whether or not to ignore customer suppression rules, for this SMTP message only. Only applicable if your configuration supports this parameter. (**Note** SparkPost Elite only)| no | Defaults to false. |
+| sandbox| boolean| Whether or not to use the sandbox sending domain ( **Note:** SparkPost only ) | no | Defaults to false. |
+| skip_suppression| boolean| Whether or not to ignore customer suppression rules, for this SMTP message only. Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no | Defaults to false. |
 
 ## Sending Messages with cc, bcc, and archive Recipients
 
