@@ -10,12 +10,15 @@ The following are key operational details:
 
 ## Webhooks Object Properties
 
-| Property   | Type   | Description | Required | Notes |
-|------------|--------|-------------|----------|-------|
-| name       | string | User-friendly name for webhook | yes | example: `Example webhook` |
-| target     | string | URL of the target to which to POST event batches | yes |  When a webhook is created or updated with a change to this property, a test POST request is sent to the given URL. The target URL must accept the connection and respond with HTTP 200; otherwise, your request to the Webhook API will fail with HTTP 400, and the requested change will not be applied.<br />example: `http://client.example.com/example-webhook` |
-| auth_token | string | Authentication token to present in the X-MessageSystems-Webhook-Token header of POST requests to target | no | Use this token in your target application to confirm that data is coming from the Webhooks API. <br />example: `5ebe2294ecd0e0f08eab7690d2a6ee69`|
-| events     | array  | Array of event types this webhook will receive | yes | Use the Webhooks Events endpoint to list the available event types.<br />example: `["delivery", "injection", "open", "click"]`|
+| Property          | Type   | Description | Required | Notes |
+|-------------------|--------|-------------|----------|-------|
+| name              | string | User-friendly name for webhook | yes | example: `Example webhook` |
+| target            | string | URL of the target to which to POST event batches | yes |  When a webhook is created or updated with a change to this property, a test POST request is sent to the given URL. The target URL must accept the connection and respond with HTTP 200; otherwise, your request to the Webhook API will fail with HTTP 400, and the requested change will not be applied.<br />example: `http://client.example.com/example-webhook` |
+| events            | array  | Array of event types this webhook will receive | yes | Use the Webhooks Events endpoint to list the available event types.<br />example: `["delivery", "injection", "open", "click"]`|
+| auth_type         | string | Type of authentication to be used during POST requests to target | no | examples: `token`, `oauth2`, `none` |
+| auth_request_details | JSON | Object containing details needed to request authorization credentials, as necessary | no | example: `{ "url": "https://oauth.myurl.com/tokens", "body": { "client_id": "<oauth client id>", "client_secret": "<oauth client secret>" }}`|
+| auth_credentials         | JSON | Object containing credentials needed to make authorized POST requests to target | no | example: `{ access_token: "lmnop", expires_in: 3600 }` |
+| auth_token        | string | Authentication token to present in the X-MessageSystems-Webhook-Token header of POST requests to target | no | Use this token in your target application to confirm that data is coming from the Webhooks API. <br />example: `5ebe2294ecd0e0f08eab7690d2a6ee69`<br /><br />_Note: This field is deprecated, you should use the auth_data field instead._ |
 
 ## Copyrights
  
@@ -26,9 +29,7 @@ All advertising materials and documentation mentioning features or use of this d
 Redistribution and use with or without modification, are permitted provided that the following conditions are met:
 
 1. Redistributions must retain the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
 2. All advertising materials and documentation mentioning features or use of this database must display the following acknowledgement: "This product includes GeoLite data created by MaxMind, available from http://maxmind.com/"
-
 3. "MaxMind" may not be used to endorse or promote products derived from this database without specific prior written permission.
 
 THIS DATABASE IS PROVIDED BY MAXMIND, INC "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL MAXMIND BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS DATABASE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -105,8 +106,8 @@ List an example of the event data that will be posted by a Webhook for the speci
             "num_retries": "2",
             "rcpt_meta": {},
             "rcpt_tags": [
-                "male",
-                "US"
+              "male",
+              "US"
             ],
             "rcpt_to": "recipient@example.com",
             "reason": "000 Example Remote MTA Bounce Message",
@@ -180,13 +181,25 @@ As described in "Webhooks Object Properties", webhook creation entails a test PO
             "results": {
               "name": "Example webhook",
               "target": "http://client.example.com/example-webhook",
-              "auth_token": "5ebe2294ecd0e0f08eab7690d2a6ee69",
               "events": [
                 "delivery",
                 "injection",
                 "open",
                 "click"
               ],
+              "auth_type": "oauth2",
+              "auth_request_details": {
+                "url": "https://oauth.myurl.com/tokens",
+                "body": {
+                  "client_id": "<oauth client id>",
+                  "client_secret": "<oauth client secret>"
+                }
+              },
+              "auth_credentials": {
+                "access_token": "<oauth token>",
+                "expires_in": 3600
+              },
+              "auth_token": "",
               "links": [
                 {
                   "href": "http://www.messagesystems-api-url.com/api/v1/webhooks/12affc24-f183-11e3-9234-3c15c2c818c2/validate",
@@ -234,13 +247,25 @@ Retrieve details about a webhook by specifying its id in the URI path.
               "id": "12affc24-f183-11e3-9234-3c15c2c818c2",
               "name": "Example webhook",
               "target": "http://client.example.com/example-webhook",
-              "auth_token": "5ebe2294ecd0e0f08eab7690d2a6ee69",
               "events": [
                 "delivery",
                 "injection",
                 "open",
                 "click"
               ],
+              "auth_type": "oauth2",
+              "auth_request_details": {
+                "url": "https://oauth.myurl.com/tokens",
+                "body": {
+                  "client_id": "<oauth client id>",
+                  "client_secret": "<oauth client secret>"
+                }
+              },
+              "auth_credentials": {
+                "access_token": "<oauth token>",
+                "expires_in": 3600
+              },
+              "auth_token": "",
               "last_successful": "2014-07-01 16:09:15",
               "last_failure": "2014-08-01 15:15:45",
               "links": [
@@ -253,13 +278,18 @@ Retrieve details about a webhook by specifying its id in the URI path.
             },
             {
               "id": "123456-abcd-efgh-7890-123445566778",
-              "name": "Better webhook",
+              "name": "Another webhook",
               "target": "http://client.example.com/another-example",
-              "auth_token": "",
               "events": [
                 "generation_rejection",
                 "generation_failure"
               ],
+              "auth_type": "token",
+              "auth_request_details": {},
+              "auth_credentials": {
+                "token": "5ebe2294ecd0e0f08eab7690d2a6ee69"
+              },
+              "auth_token": "5ebe2294ecd0e0f08eab7690d2a6ee69",
               "links": [
                 {
                   "href": "http://www.messagesystems-api-url.com/api/v1/webhooks/123456-abcd-efgh-7890-123445566778",
