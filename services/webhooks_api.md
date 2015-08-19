@@ -142,7 +142,16 @@ As described in "Webhooks Object Properties", webhook creation entails a test PO
     {
       "name": "Example webhook",
       "target": "http://client.example.com/example-webhook",
-      "auth_token": "5ebe2294ecd0e0f08eab7690d2a6ee69",
+      "auth_type": "oauth2",
+      "auth_request_details": {
+        "url": "http://client.example.com/tokens",
+        "body": {
+            "client_id": "CLIENT123",
+            "client_secret": "9sdfj791d2bsbf",
+            "grant_type": "client_credentials"
+        }
+      },
+      "auth_token": "",
       "events": [
         "delivery",
         "injection",
@@ -165,6 +174,17 @@ As described in "Webhooks Object Properties", webhook creation entails a test PO
             "method": ["GET","PUT"]
           }
         ]
+      }
+    }
+    ```
+
++ Response 400 (application/json)
+
+    ```js
+    {
+      "errors": {
+        "code": 400,
+        "message": "POST to webhook tokens URL failed"
       }
     }
     ```
@@ -318,7 +338,8 @@ As described in "Webhooks Object Properties", a change to the _target_ value ent
       "events": [
         "rejection",
         "delay"
-      ]
+      ],
+      "auth_type": "none"
     }
     ```
 
