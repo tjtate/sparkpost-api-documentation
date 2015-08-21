@@ -5076,13 +5076,16 @@ Content for a relay webhook is described in a JSON object with the following fie
 
 | Field     | Type   | Description                                                 | Notes
 |-----------|--------|-------------------------------------------------------------|----------------|
-| cc        | array of strings | "CC" header value (decoded from email), RFC2822 address list |
-| email_rfc822 | string | Raw MIME content for an email | This will approximately double the size of the JSON data sent via the webhook. |
-| headers   | array of objects | Ordered array of email top-level headers | This array preserves ordering and allows for multiple occurrences of a header (e.g.: to support trace headers such as "Received"). |
 | html      | string | Contents of the first text/html part of the message |
-| subject   | string | "Subject" header value (decoded from email) |
 | text      | string | Contents of the first text/plain part of the message |
+| subject   | string | "Subject" header value (decoded from email) |
 | to        | array of strings | "To" header value (decoded from email), RFC2822 address list |
+| cc        | array of strings | "CC" header value (decoded from email), RFC2822 address list |
+| headers   | array of objects | Ordered array of email top-level headers | This array preserves ordering and allows for multiple occurrences of a header (e.g.: to support trace headers such as "Received"). |
+| email_rfc822 | string | Raw MIME content for an email. | If the inbound email body contains at least one non UTF-8 encoded character, the entire "email_rfc822" JSON value will be base64 encoded and the "email_rfc822_is_base64" JSON boolean value will be set to true. | 
+| email_rfc822_is_base64 | boolean | Whether or not the "email_rfc822" value is base64 encoded. |
+
+
 
 ## Create and List [/relay-webhooks]
 
