@@ -15,10 +15,10 @@ The following are key operational details:
 | name              | string | User-friendly name for webhook | yes | example: `Example webhook` |
 | target            | string | URL of the target to which to POST event batches | yes |  When a webhook is created or updated with a change to this property, a test POST request is sent to the given URL. The target URL must accept the connection and respond with HTTP 200; otherwise, your request to the Webhook API will fail with HTTP 400, and the requested change will not be applied.<br />example: `http://client.example.com/example-webhook` |
 | events            | array  | Array of event types this webhook will receive | yes | Use the Webhooks Events endpoint to list the available event types.<br />example: `["delivery", "injection", "open", "click"]`|
-| auth_type         | string | Type of authentication to be used during POST requests to target | no | examples: `token`, `oauth2`, `none` |
+| auth_type         | string | Type of authentication to be used during POST requests to target | no | examples: `oauth2`, `none` |
 | auth_request_details | JSON | Object containing details needed to request authorization credentials, as necessary | no | example: `{ "url": "https://oauth.myurl.com/tokens", "body": { "client_id": "<oauth client id>", "client_secret": "<oauth client secret>" }}`|
 | auth_credentials         | JSON | Object containing credentials needed to make authorized POST requests to target | no | example: `{ access_token: "lmnop", expires_in: 3600 }` |
-| auth_token        | string | Authentication token to present in the X-MessageSystems-Webhook-Token header of POST requests to target | no | Use this token in your target application to confirm that data is coming from the Webhooks API. <br />example: `5ebe2294ecd0e0f08eab7690d2a6ee69`<br /><br />_Note: This field is deprecated, you should use the auth_data field instead._ |
+| auth_token        | string | Authentication token to present in the X-MessageSystems-Webhook-Token header of POST requests to target | no | Use this token in your target application to confirm that data is coming from the Webhooks API. <br />example: `5ebe2294ecd0e0f08eab7690d2a6ee69`<br /><br />_Note: This field is deprecated, you should use the auth_type field instead._ |
 
 ## Copyrights
  
@@ -304,11 +304,9 @@ Retrieve details about a webhook by specifying its id in the URI path.
                 "generation_rejection",
                 "generation_failure"
               ],
-              "auth_type": "token",
+              "auth_type": "none",
               "auth_request_details": {},
-              "auth_credentials": {
-                "token": "5ebe2294ecd0e0f08eab7690d2a6ee69"
-              },
+              "auth_credentials": {},
               "auth_token": "5ebe2294ecd0e0f08eab7690d2a6ee69",
               "links": [
                 {
