@@ -554,6 +554,60 @@ Once message generation has been initiated, all messages in the transmission wil
               }
             }
 
++ Request Create Transmission with attachments (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+    + Body
+
+        ```
+        {
+          "campaign_id" : "attachment_example_sparkpost_elite_only",
+          "recipients": [
+            {
+              "address": "wilma@flintstone.com"
+            }
+          ],
+          "content": {
+            "from": {
+              "email": "billing@company.example",
+              "name": "Example Company"
+            },
+
+            "subject": "Billing statement",
+            "html": "<b>Please see your attached billing statement</b>",
+            "attachments" : [
+              {
+                "type" : "application/pdf",
+                "name" : "billing.pdf",
+                "content" : "Q29uZ3JhdHVsYXRpb25zLCB5b3UgY2FuIGJhc2U2NCBkZWNvZGUh"
+              },
+              {
+                "type" : "text/plain; charset=UTF-8",
+                "name" : "explanation.txt",
+                "content" : "TW92ZSBhbG9uZy4gIE5vdGhpbmcgdG8gc2VlIGhlcmUu"
+              }
+            ]
+          }
+        }
+        ```
+
++ Response 200 (application/json)
+
+    + Body
+
+        ```
+        {
+          "results": {
+            "total_rejected_recipients": 0,
+            "total_accepted_recipients": 1,
+            "id": "11668787484950529"
+          }
+        }
+
+
 
 ## Retrieve [/transmissions/{id}]
 

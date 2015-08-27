@@ -29,6 +29,8 @@ Content for a template is described in a JSON object with the following fields:
 |from |string or JSON  | Address _"from" : "deals@company.com"_ or JSON object composed of the "name" and "email" fields _"from" : { "name" : "My Company", "email" : "deals@company.com" }_ used to compose the email's "From" header| yes | Substitution syntax is supported. |
 |reply_to |string  |Email address used to compose the email's "Reply-To" header | no | Substitution syntax is supported. |
 |headers| JSON | JSON dictionary containing headers other than "Subject", "From", "To", and "Reply-To"  | no |See the Header Notes. |
+|attachments| JSON | JSON array of attachments ( **Note:** SparkPost Elite only ) | no | For a full description, see the Attachment Attributes. |
+|images| JSON | JSON array of inline images ( **Note:** SparkPost Elite only ) | no | For a full description, see the Image Attributes. |
 
 #### Header Notes
 
@@ -37,13 +39,13 @@ Content for a template is described in a JSON object with the following fields:
 * Each header value is expected in the UTF-8 charset without RFC2047 encoding.
 * Substitution syntax is supported.
 
+#### email_rfc822 Notes
+
 Alternately, the content JSON object may contain a single "email_rfc822" field.  email_rfc822 is mutually exclusive with all of the above fields.
 
 | Field         | Type     | Description                           | Required   | Notes   |
 |--------------------|:-:       |---------------------------------------|-----------------------|--------|
 |email_rfc822    |string  |Pre-built message with the format as described by the [message/rfc822 Content-Type](http://tools.ietf.org/html/rfc2046#section-5.2.1) |no   |  See the email_rfc822 Notes. |
-
-#### email_rfc822 Notes
 
 * Substitutions will be applied in the top-level headers and the first non-attachment text/plain and
 first non-attachment text/html MIME parts only.
@@ -62,6 +64,31 @@ Options for a template are described in a JSON object with the following fields:
 |open_tracking |boolean |Enable or disable open tracking | no - defaults to the setting at the transmission level | To override the default for a specific transmission, specify the _options.open_tracking_ field upon creation of the transmission. |
 |click_tracking |boolean |Enable or disable click tracking | no - defaults to the setting at the transmission level | To override the default for a specific transmission, specify the _options.click_tracking_ field upon creation of the transmission. |
 |transactional |boolean |Distinguish between transactional and non-transactional messages for unsubscribe and suppression purposes | no - defaults to the setting at the transmission level | To override the default for a specific transmission, specify the _options.transactional_ field upon creation of the transmission. |
+
+### Attachment Attributes
+
+**Note:** SparkPost Elite only
+
+Attachments for a template are specified in the content.attachments JSON array where each JSON object in the array is described by the following fields:
+
+| Field         | Type     | Description                           | Required   | Notes   |
+|--------------------|:-:       |---------------------------------------|-------------|------------------|
+|type |string |The MIME type of the attachment. E.g. "text/plain", " image/jpeg", "audio/mp3", "video/mp4", "application/msword", "application/pdf", etc, including the "charset" part if needed, e.g. '"text/html; charset="UTF-8"' The value will apply "as-is" to the "Content-Type" header of the generated MIME part for the attachment. | yes |  |
+|name |string |The filename of the attachment (for example, "document.pdf"). This is inserted into the Content-Type and Content-Disposition headers. | yes | Maximum length - TBD |
+|content |string |The content of the attachment as a Base64 encoded string. | yes | |
+
+### Image Attributes
+
+**Note:** SparkPost Elite only
+
+Inline images for a template are specified in the content.images JSON array where each JSON object in the array is described by the following fields:
+
+| Field         | Type     | Description                           | Required   | Notes   |
+|--------------------|:-:       |---------------------------------------|-------------|------------------|
+|type |string |The MIME type of the image – must start with “image/”.  The value will apply "as-is" to the "Content-Type" header of the generated MIME part for the image. | yes |  |
+|name |string |The name of the inline image, which will be inserted into Content-Type, Content-Disposition and Content-ID headers. Use \<img src="cid:THIS_NAME"\> to reference the image in your HTML content. The name must be unique within the content.images array. | yes | Maximum length - TBD |
+|content |string | The content of the image as a Base64 encoded string. | yes | |
+
 
 ## Error Attributes
 
@@ -237,6 +264,87 @@ Fully formed email_rfc822 content may be provided instead of the "text", "html",
         {
           "results": {
             "id": "another_summer_sale"
+          }
+        }
+
++ Request Create with attachments (application/json)
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+  + Body
+
+        ```js
+        {
+          "id" : "attachment_example_sparkpost_elite_only",
+          "content": {
+            "from": {
+              "email": "billing@company.example",
+              "name": "Example Company"
+            },
+
+            "subject": "Billing statement",
+            "html": "<b>Please see your attached billing statement</b>",
+            "attachments" : [
+              {
+                "type" : "application/pdf",
+                "name" : "billing.pdf",
+                "content" : "Q29uZ3JhdHVsYXRpb25zLCB5b3UgY2FuIGJhc2U2NCBkZWNvZGUh"
+              },
+              {
+                "type" : "text/plain; charset=UTF-8",
+                "name" : "explanation.txt",
+                "content" : "TW92ZSBhbG9uZy4gIE5vdGhpbmcgdG8gc2VlIGhlcmUu"
+              }
+            ]
+          }
+        }
+        ```
+
++ Response 200 (application/json)
+
+        {
+          "results": {
+            "id": "attachment_example_sparkpost_elite_only"
+          }
+        }
+
++ Request Create with inline images (application/json)
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+  + Body
+
+        ```js
+        {
+          "id" : "inline_image_example_sparkpost_elite_only",
+          "content": {
+            "from": {
+              "email": "marketing@company.example",
+              "name": "Example Company"
+            },
+
+            "subject": "Inline image example",
+            "html": "<html><body>Here is your inline image!<br> <img src=\"cid:my_image.jpeg\"></body></html>",
+            "images" : [
+              {
+                "type" : "image/jpeg",
+                "name" : "my_image.jpeg",
+                "content" : "VGhpcyBkb2Vzbid0IGxvb2sgbGlrZSBhIGpwZWcgdG8gbWUh"
+              }
+            ]
+          }
+        }
+        ```
+
++ Response 200 (application/json)
+
+        {
+          "results": {
+            "id": "inline_image_example_sparkpost_elite_only"
           }
         }
 
