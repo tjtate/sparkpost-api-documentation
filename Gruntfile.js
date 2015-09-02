@@ -6,7 +6,10 @@ var matchdep = require('matchdep')
         'introduction.md',
         'substitutions_reference.md',
         'metrics_api.md',
+        'message_events_api.md',
+        'raw_log_api.md',
         'recipient_list_api.md',
+        'relay_webhooks_api.md',
         'sending_domains_api.md',
         'suppression_list_api.md',
         'templates_api.md',
@@ -91,17 +94,17 @@ module.exports = function(grunt) {
                 }
             };
 
-        options.body = 'FORMAT: X-1A' + 
-            grunt.util.linefeed + 
-            'HOST: https://api.sparkpost.com/api/v1' + 
-            grunt.util.linefeed + grunt.util.linefeed + 
-            '# SparkPost API v1' + 
+        options.body = 'FORMAT: X-1A' +
+            grunt.util.linefeed +
+            'HOST: https://api.sparkpost.com/api/v1' +
+            grunt.util.linefeed + grunt.util.linefeed +
+            '# SparkPost API v1' +
             grunt.util.linefeed +
             fs.readFileSync('./services/' + file, 'utf-8');
-    
+
         request.post(options, function(err, response, body) {
             var output = file.split('\.')[0] + '.html';
-            
+
             if (err || response.statusCode !== 200) {
                 grunt.log.error('There was an error trying to generate the preview for ' + file, err, response.statusCode, response.body);
                 return deferred.reject(err || response.body);
@@ -115,17 +118,17 @@ module.exports = function(grunt) {
                 });
             }
         });
-        
+
         return deferred.promise;
     }
 
-    // grunt generate-apiary-preview - creates apiary previews for all meta 
+    // grunt generate-apiary-preview - creates apiary previews for all meta
     grunt.registerTask('generate-apiary-preview', 'Creates preview files for all md files in services', function() {
         var done = this.async();
         try {
             fs.mkdirSync('./apiary-previews');
         } catch(e){}
-        
+
         fs.readdir('./services', function(err, files) {
             q.all(files.map(generatePreview)).then(done, done);
         });

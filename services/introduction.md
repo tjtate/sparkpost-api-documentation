@@ -1,10 +1,17 @@
 # SparkPost API v1
-SparkPost API enables client applications to integrate with SparkPost and perform actions associated with account management, message generation, and reporting.
+There are two service types available:  [SparkPost](http://sparkpost.com/), our self-service product, and [SparkPost Elite](https://www.sparkpost.com/products/sparkpost-elite), a managed service with guaranteed burst rates and white-glove support. These services have shared and unique aspects, with those unique aspects indicated in our consolidated API documentation as follows:
+* Features specific to **SparkPost** are indicated as "SparkPost only".
+* Features specific to **SparkPost Elite** products are indicated by "SparkPost Elite only".
 
-## SparkPost API Endpoint
-**https://api.sparkpost.com/api/v1**
+## API Endpoints
+* JSON is the basis for its request input and response format.
+* SparkPost and SparkPost Elite listen on port 443, so no explicit port number is required.
 
-JSON is the basis for its request input and response format.
+### SparkPost API Endpoint
+**https\://api.sparkpost.com/api/v1**
+
+### SparkPost Elite API Endpoint
+**https\://yourdomain.msyscloud.com/api/v1**
 
 ## API Conventions
 * API versioning is handled using a major version number in the URL, e.g. /api/v1/endpoint.
@@ -19,14 +26,10 @@ JSON is the basis for its request input and response format.
 * The JSON number type is bounded to a signed 32-bit integer.
 
 ## Authentication
-All API's require that you authenticate with every request.
-
-To authenticate with the various API's, specify the "Authorization" header with each request.
-The value of the "Authorization" header must be a valid API key or conform to the standard for Basic authentication.
-
-Administrators can generate an API key using the UI. Please take care to record and safeguard your API keys at all times. You cannot retrieve an API key after it has been created.
-
-For examples of supplying the Authorization header, refer to the cURL example below or any of the individual API request examples.
+* All API's require that you authenticate with every request.
+* To authenticate with the various API's, specify the "Authorization" header with each request. The value of the "Authorization" header must be a valid API key or conform to the standard for Basic authentication.
+* Administrators can generate an API key using the UI. Please take care to record and safeguard your API keys at all times. You cannot retrieve an API key after it has been created.
+* For examples of supplying the Authorization header, refer to the cURL example below or any of the individual API request examples.
 
 ## Using cURL
 If you are using cURL to call the API, you must include the resource URI in quotes when you pass in multiple query parameters separated by an **&**.

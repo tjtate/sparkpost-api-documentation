@@ -1,6 +1,8 @@
 # Group Sending Domains
 
-A sending domain is a domain that is used to indicate who an email is from via the "From:" header. Using a custom sending domain enables you to control what recipients see as the From value in their email clients. DNS records can be configured for a sending domain, which allows recipient mail servers to authenticate your messages. The Sending Domain's API provides the means to create, list, retrieve, update, and verify a custom sending domain.
+**Note:** The Sending Domains API is available for SparkPost only.
+
+A sending domain is a domain that is used to indicate who an email is from via the "From:" header. Using a custom sending domain enables you to control what recipients see as the From value in their email clients. DNS records can be configured for a sending domain, which allows recipient mail servers to authenticate your messages. The Sending Domains API provides the means to create, list, retrieve, update, and verify a custom sending domain.
 
 ## Sending Domain Attributes
 

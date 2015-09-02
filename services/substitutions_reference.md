@@ -66,8 +66,6 @@ Whitespace within the braces is ignored.  All of the following are equivalent:
 {{  value   }}
 ```
 
-**Note**
-
 However, no spaces are allowed when substitution data is used in a query string.
 In the following example, no whitespace is allowed within the braces:
 
@@ -145,8 +143,6 @@ Substitution statements that exist on their own line of the template will **not*
 produce a blank line in the resulting output.  This is a convenience to the
 template writer.  In addition, any whitespace after the closing **}}** and before
 the `LF` or `CRLF` will **not** be present in the output. 
-
-**Note**
 
 These rules do not apply to substitution expressions.
 
@@ -445,8 +441,6 @@ The relational and logical operators are as follows:
 The substitution language uses the `each` keyword for iteration.
 The value at each index of an array can be accessed within the each loop by using the `loop_var` variable. When using the `each` keyword to iterate over an array, the `loop_index` variable can be used to get the current index.
 
-**Note**
-
 These examples continue to use the sample data given above.
 
 For example, use the following syntax to iterate over a JSON array of strings
@@ -482,8 +476,6 @@ The following example uses `shopping_cart` and `a_nested_array`:
   {{end}}
 {{end}}
 ```
-
-**Note** 
 
 The preceding example uses indentation for ease of reading.
 The indentation will appear in the rendered content, so it is not advisable to indent a production template. 
@@ -560,7 +552,7 @@ need to be structured as:
 </body>
 ```
 
-Note: The dynamic content will be correctly inserted *without* html escaping,
+The dynamic content will be correctly inserted *without* html escaping,
 regardless of whether double or triple curly braces are used.  There is no need to use triple curly braces in this case.
 
 
@@ -585,8 +577,9 @@ Attempting to insert a chunk of plain text:
 {{ render_dynamic_content(dynamic_plain.my_plain_text_chunk) }}
 ```
 
-Finally, as a more realistic example, render_dynamic_content can also be used inside an 'each' loop.
-A full transmission json example follows:
+Finally, as a more realistic example, render_dynamic_content can also be used inside an 'each' loop. Full transmission json examples follow.
+
+**Note:** The following example applies to SparkPost only.
 
 ```
 {
@@ -628,6 +621,52 @@ A full transmission json example follows:
     "from": "test@example.com",
     "subject": "offers"
   }
+}
+```
+
+**Note:** The following example applies to SparkPost Elite only.
+
+```
+{
+  "recipients": [
+    {
+      "address": {
+        "email": "foo@example.com"
+      },
+      "substitution_data": {
+        "name": "The A-Team",
+        "offers": [ "offer2", "offer1" ]
+      }
+    },
+    {
+      "address": {
+        "email": "bar@example.com"
+      },
+      "substitution_data": {
+        "name": "Johnnie Rico",
+        "offers": [ "offer3" ]
+      }
+    }
+  ],
+  "substitution_data": {
+    "dynamic_html": {
+      "offer1": "<a href=\"http://t.com/offer/1?name={{name}}\">Premium-brand wirecutters</a>",
+      "offer2": "<a href=\"http://t.com/offer/2?name={{name}}\">Corks</a>",
+      "offer3": "<a href=\"http://t.com/offer/3?name={{name}}\">Super-effective bug spray</a>"
+    },
+    "dynamic_plain": {
+      "offer1": "Premium-brand wirecutters -- http://t.com/offer/1?name={{name}}",
+      "offer2": "Corks -- http://t.com/offer/2?name={{name}}",
+      "offer3": "Super-effective bug spray -- http://t.com/offer/3?name={{name}}"
+    }
+  }
+  "content": {
+    "text": "Today's special offers:\n\n{{each offers}}\n* {{render_dynamic_content(dynamic_plain[loop_var])}}\n{{end}}\n",
+    "html": "<p>Today's special offers</p><ul>\n{{each offers}}\n<li>{{render_dynamic_content(dynamic_html[loop_var])}}</li>\n{{end}}\n</ul>",
+    "from": "test@example.com",
+    "subject": "offers"
+  },
+  "return_path": "test@example.com"
 }
 ```
 
@@ -685,17 +724,24 @@ The four macros for outputting braces are listed below followed by their output:
 
 ###  Reserved Recipient Substitution Variables
 
-The following substitution variables are reserved
-automatically available for each recipient:
+The following substitution variables are reserved and automatically available for each recipient:
 
 * `address.name`: Recipient's name from the _address.name_ recipient json field
 * `email` and `address.email`: Recipient's email address from the _address_ or _address.email_ recipient json field
+* `return_path`: Return path from the transmission or recipients json field ( **Note:** SparkPost Elite only )
 
-Example:
+**Note:** The following example applies to SparkPost only.
 
 ```
 Hello {{address.name}}
 Your email is {{address.email}}
+```
+
+**Note:** The following example applies to SparkPost Elite only.
+
+```
+Hello {{address.name}}
+Your email is {{address.email}} and your return path is {{return_path}}
 ```
 
 ### Substitutions in email_rfc822 Headers
