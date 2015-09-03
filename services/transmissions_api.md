@@ -47,7 +47,7 @@ The following attributes are used when specifying inline content in the transmis
 |reply_to |string  |Email address used to compose the email's "Reply-To" header | no | Substitution syntax is supported. |
 |headers| JSON | JSON dictionary containing headers other than "Subject", "From", "To", and "Reply-To"  | no |See the Header Notes. |
 |attachments| JSON | JSON array of attachments ( **Note:** SparkPost Elite only ) | no | For a full description, see Attachment Attributes. |
-|images| JSON | JSON array of inline images ( **Note:** SparkPost Elite only ) | no | For a full description, see Image Attributes. |
+|inline_images| JSON | JSON array of inline images ( **Note:** SparkPost Elite only ) | no | For a full description, see Inline Image Attributes. |
 
 #### Header Notes
 
@@ -82,19 +82,19 @@ Attachments for a transmission are specified in the content.attachments JSON arr
 |--------------------|:-:       |---------------------------------------|-------------|------------------|
 |type |string |The MIME type of the attachment. E.g. "text/plain", " image/jpeg", "audio/mp3", "video/mp4", "application/msword", "application/pdf", etc, including the "charset" part if needed, e.g. '"text/html; charset="UTF-8"' The value will apply "as-is" to the "Content-Type" header of the generated MIME part for the attachment. | yes |  |
 |name |string |The filename of the attachment (for example, "document.pdf"). This is inserted into the Content-Type and Content-Disposition headers. | yes | Maximum length - 255 bytes |
-|content |string |The content of the attachment as a Base64 encoded string. | yes | |
+|data |string |The content of the attachment as a Base64 encoded string. | yes | |
 
-### Image Attributes
+### Inline Image Attributes
 
 **Note:** SparkPost Elite only
 
-Inline images for a transmission are specified in the content.images JSON array where each JSON object in the array is described by the following fields:
+Inline images for a transmission are specified in the content.inline_images JSON array where each JSON object in the array is described by the following fields:
 
 | Field         | Type     | Description                           | Required   | Notes   |
 |--------------------|:-:       |---------------------------------------|-------------|------------------|
 |type |string |The MIME type of the image.  E.g. "image/jpeg".  The value will apply "as-is" to the "Content-Type" header of the generated MIME part for the image. | yes |  |
-|name |string |The name of the inline image, which will be inserted into Content-Type, Content-Disposition and Content-ID headers. The image should be referenced in your HTML content using \<img src="cid:THIS_NAME"\>. The name must be unique within the content.images array. | yes | Maximum length - 255 bytes |
-|content |string | The content of the image as a Base64 encoded string. | yes | |
+|name |string |The name of the inline image, which will be inserted into Content-Type, Content-Disposition and Content-ID headers. The image should be referenced in your HTML content using \<img src="cid:THIS_NAME"\>. The name must be unique within the content.inline_images array. | yes | Maximum length - 255 bytes |
+|data |string | The content of the image as a Base64 encoded string. | yes | |
 
 ### Using a Stored Template
 
@@ -642,12 +642,12 @@ Once message generation has been initiated, all messages in the transmission wil
               {
                 "type" : "application/pdf",
                 "name" : "billing.pdf",
-                "content" : "Q29uZ3JhdHVsYXRpb25zLCB5b3UgY2FuIGJhc2U2NCBkZWNvZGUh"
+                "data" : "Q29uZ3JhdHVsYXRpb25zLCB5b3UgY2FuIGJhc2U2NCBkZWNvZGUh"
               },
               {
                 "type" : "text/plain; charset=UTF-8",
                 "name" : "explanation.txt",
-                "content" : "TW92ZSBhbG9uZy4gIE5vdGhpbmcgdG8gc2VlIGhlcmUu"
+                "data" : "TW92ZSBhbG9uZy4gIE5vdGhpbmcgdG8gc2VlIGhlcmUu"
               }
             ]
           }
@@ -691,11 +691,11 @@ Once message generation has been initiated, all messages in the transmission wil
 
             "subject": "Inline image example",
             "html": "<html><body>Here is your inline image!<br> <img src=\"cid:my_image.jpeg\"></body></html>",
-            "images" : [
+            "inline_images" : [
               {
                 "type" : "image/jpeg",
                 "name" : "my_image.jpeg",
-                "content" : "VGhpcyBkb2Vzbid0IGxvb2sgbGlrZSBhIGpwZWcgdG8gbWUh"
+                "data" : "VGhpcyBkb2Vzbid0IGxvb2sgbGlrZSBhIGpwZWcgdG8gbWUh"
               }
             ]
           }
