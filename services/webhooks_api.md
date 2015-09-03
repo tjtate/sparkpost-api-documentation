@@ -20,7 +20,7 @@ The following are key operational details:
 | auth_credentials         | JSON | Object containing credentials needed to make authorized POST requests to target | no | example: `{ access_token: "<oauth token>", expires_in: 3600 }` |
 | auth_token        | string | Authentication token to present in the X-MessageSystems-Webhook-Token header of POST requests to target | no | Use this token in your target application to confirm that data is coming from the Webhooks API. <br />example: `5ebe2294ecd0e0f08eab7690d2a6ee69`<br /><br />_Note: This field is deprecated, you should use the auth_type field instead._ |
 
-__**Sparkpost Webhooks use MaxMinds software [MaxMinds License](/docs/3RD_PARTY_LICENSES.md)**__
+__**SparkPost webhooks use MaxMind software [MaxMind License](/docs/3RD_PARTY_LICENSES.md)**__
  
 ## Events Documentation [/webhooks/events/documentation]
 

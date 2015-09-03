@@ -1,6 +1,6 @@
 # 3rd Party Licenses
 
-## MaxMinds
+## MaxMind
 Copyright (c) 2008 MaxMind, Inc. All Rights Reserved.
 
 All advertising materials and documentation mentioning features or use of this database must display the following acknowledgment: "This product includes GeoLite data created by MaxMind, available from http://maxmind.com/"
