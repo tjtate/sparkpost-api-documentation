@@ -8,7 +8,7 @@ The following are key operational details:
 * Each webhook batch contains the header X-MessageSystems-Batch-ID, which is useful for auditing and prevention of processing duplicate batches.
 * Webhooks posting to your endpoint will timeout after 10 seconds. For best results, write webhook batches to disk and then process asynchronously to minimize data loss if you have a problem with your database.
 * When using 'oauth2', auth_request_details must be set by the user (example: `{ "url": "https://oauth.myurl.com/tokens", "body": { "client_id": "<oauth client id>", "client_secret": "<oauth client secret>" }}`). Additionally, auth_credentials is set by the system and cannot be configured by the user.
-* When using 'basic' auth, auth_credentials must be set by the user and should be an object containing "username" and "password" (example: `{ "username": "basicauthuser", "password": "mypassword" }`)
+* When using 'basic' auth, auth_credentials must be set by the user and should be an object containing "username" (required) and "password" (optional). (example: `{ "username": "basicauthuser", "password": "mypassword" }`)
 
 ## Webhooks Object Properties
 
