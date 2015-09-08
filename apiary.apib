@@ -7845,7 +7845,7 @@ The following are key operational details:
 * Each webhook batch contains the header X-MessageSystems-Batch-ID, which is useful for auditing and prevention of processing duplicate batches.
 * Webhooks posting to your endpoint will timeout after 10 seconds. For best results, write webhook batches to disk and then process asynchronously to minimize data loss if you have a problem with your database.
 * When using 'oauth2', auth_request_details must be set by the user (example: `{ "url": "https://oauth.myurl.com/tokens", "body": { "client_id": "<oauth client id>", "client_secret": "<oauth client secret>" }}`). Additionally, auth_credentials is set by the system and cannot be configured by the user.
-* When using 'basic' auth, auth_credentials must be set by the user and should be an object containing "user_id" and "password" (example: `{ "user_id": "basicauthuser", "password": "mypassword" }`)
+* When using 'basic' auth, auth_credentials must be set by the user and should be an object containing "username" and "password" (example: `{ "username": "basicauthuser", "password": "mypassword" }`)
 
 ## Webhooks Object Properties
 
@@ -7856,7 +7856,7 @@ The following are key operational details:
 | events            | array  | Array of event types this webhook will receive | yes | Use the Webhooks Events endpoint to list the available event types.<br />example: `["delivery", "injection", "open", "click"]`|
 | auth_type         | string | Type of authentication to be used during POST requests to target | no | examples: `none`, `basic`, `oauth2` |
 | auth_request_details | JSON | Object containing details needed to request authorization credentials, as necessary | no | example: `{ "url": "https://oauth.myurl.com/tokens", "body": { "client_id": "<oauth client id>", "client_secret": "<oauth client secret>" }}`|
-| auth_credentials         | JSON | Object containing credentials needed to make authorized POST requests to target | no | examples: `{ "access_token": "<oauth token>", expires_in: 3600 }`, `{ "user_id": "basicauthuser", "password": "mypassword" }` |
+| auth_credentials         | JSON | Object containing credentials needed to make authorized POST requests to target | no | examples: `{ "access_token": "<oauth token>", expires_in: 3600 }`, `{ "username": "basicauthuser", "password": "mypassword" }` |
 | auth_token        | string | Authentication token to present in the X-MessageSystems-Webhook-Token header of POST requests to target | no | Use this token in your target application to confirm that data is coming from the Webhooks API. <br />example: `5ebe2294ecd0e0f08eab7690d2a6ee69`<br /><br />_Note: This field is deprecated, you should use the auth_type field instead._ |
 
 __**The SparkPost webhooks API uses MaxMind software [MaxMind License](/docs/3RD_PARTY_LICENSES.md)**__
@@ -8103,7 +8103,7 @@ Retrieve details about a webhook by specifying its id in the URI path.
               "auth_type": "basic",
               "auth_request_details": {},
               "auth_credentials": {
-                "user_id": "basicuser",
+                "username": "basicuser",
                 "password": "somepass"
               },
               "auth_token": "",
