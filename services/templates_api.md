@@ -10,7 +10,7 @@ to produce recipient specific email messages.  The Templates API provides the me
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
 |id    |string  |Short, unique, alphanumeric ID used to reference the template   | At a minimum, id or name is required upon creation.  It is auto generated if not provided. |After a template has been created, this property cannot be changed.  Maximum length - 64 bytes   |
-|content              |JSON  |Content that will be used to construct a message  |  yes  |  For a full description, see the Content Attributes. Maximum length - 15 MBs  |
+|content              |JSON  |Content that will be used to construct a message  |  yes  |  For a full description, see the Content Attributes. Maximum length - 10 MBs  |
 |published |boolean |Whether the template is published or is a draft version|no - defaults to false|A template cannot be changed from published to draft.|
 |name |string  |Editable display name  | At a minimum, id or name is required upon creation.   |The name does not have to be unique.  Maximum length - 1024 bytes   |
 |description |string  |Detailed description of the template  |no    | Maximum length - 1024 bytes |
