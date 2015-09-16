@@ -1,10 +1,14 @@
 # Group Sending Domains
 
-**Note:** The Sending Domains API is available for SparkPost only.
+**Note:** The Sending Domains API has reduced functionality in SparkPost Elite.
 
 A sending domain is a domain that is used to indicate who an email is from via the "From:" header. Using a custom sending domain enables you to control what recipients see as the From value in their email clients. DNS records can be configured for a sending domain, which allows recipient mail servers to authenticate your messages. The Sending Domains API provides the means to create, list, retrieve, update, and verify a custom sending domain.
 
+In SparkPost Elite, the Sending Domains API can be used to associate a tracking domain with a sending domain. None of the other attributes are currently used in SparkPost Elite. It is currently optional to register a sending domain with the Sending Domains API in SparkPost Elite. Sending domains are not currently verified in SparkPost Elite.
+
 ## Sending Domain Attributes
+
+**Note:** "dkim" and "status" are currently ignored in SparkPost Elite.
 
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
@@ -14,6 +18,8 @@ A sending domain is a domain that is used to indicate who an email is from via t
 |dkim | JSON object| JSON object in which DKIM key configuration is defined|no| For a full description, see the DKIM Attributes.|
 
 ### DKIM Attributes
+
+**Note:** "dkim" is currently ignored in SparkPost Elite.
 
 DKIM uses a pair of public and private keys to authenticate your emails. The DKIM key configuration is described in a JSON object with the following fields:
 
@@ -25,6 +31,8 @@ DKIM uses a pair of public and private keys to authenticate your emails. The DKI
 |headers | string| Header fields to be included in the DKIM signature |no | Header fields are separated by a colon.  Example: `"from:to:subject:date"`|
 
 ### Status Attributes
+
+**Note:** SparkPost Elite does not currently verify sending domains, and these fields are ignored.
 
 Detailed status for this sending domain is described in a JSON object with the following fields:
 
@@ -245,6 +253,9 @@ If a dkim object is provided in the update request, it must contain all relevant
 ## Verify [/sending-domains/{domain_name}/verify]
 
 ### Verify a Sending Domain [POST]
+
+**Note:** While it is possible to call this endpoint in SparkPost Elite, the verification status of a sending domain is currently ignored.
+
 The verify resource validates the specified verification field types. Including the fields "dkim_verify" and "spf_verify" in the request initiates a check against the associated DNS record type for the specified sending domain. The domain's "status" object is returned on success.
 
 + Request (application/json)
