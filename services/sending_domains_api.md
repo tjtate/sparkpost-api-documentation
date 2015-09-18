@@ -4,11 +4,15 @@
 
 A sending domain is a domain that is used to indicate who an email is from via the "From:" header. Using a custom sending domain enables you to control what recipients see as the From value in their email clients. DNS records can be configured for a sending domain, which allows recipient mail servers to authenticate your messages. The Sending Domains API provides the means to create, list, retrieve, update, and verify a custom sending domain.
 
-In SparkPost Elite, the Sending Domains API can be used to associate a tracking domain with a sending domain. None of the other attributes are currently used in SparkPost Elite. It is currently optional to register a sending domain with the Sending Domains API in SparkPost Elite. Sending domains are not currently verified in SparkPost Elite.
+## Sending Domains in SparkPost Elite
+
+In SparkPost Elite, the Sending Domains API can only be used to associate a tracking domain with a sending domain. None of the other attributes are currently used in SparkPost Elite.
+
+It is currently optional to register a sending domain with the Sending Domains API in SparkPost Elite. Sending domains are not currently verified in SparkPost Elite, and it is currently possible to send from an unverified sending domain.
 
 ## Sending Domain Attributes
 
-**Note:** "dkim" and "status" are currently ignored in SparkPost Elite.
+**Note:** "dkim" is currently ignored in SparkPost Elite. "status" will not currently affect whether messages can be sent from a sending domain in SparkPost Elite.
 
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
@@ -19,7 +23,7 @@ In SparkPost Elite, the Sending Domains API can be used to associate a tracking 
 
 ### DKIM Attributes
 
-**Note:** "dkim" is currently ignored in SparkPost Elite.
+**Note:** "dkim" is currently ignored in SparkPost Elite. DKIM keypairs are currently configured by the Operations team. DKIM keys that are specified via the API are not currently used.
 
 DKIM uses a pair of public and private keys to authenticate your emails. The DKIM key configuration is described in a JSON object with the following fields:
 
@@ -32,7 +36,7 @@ DKIM uses a pair of public and private keys to authenticate your emails. The DKI
 
 ### Status Attributes
 
-**Note:** SparkPost Elite does not currently verify sending domains, and these fields are ignored.
+**Note:** SparkPost Elite does not currently verify sending domains. The verification status of a sending domain will not affect sending. It is currently possible to send from an unverified domain in SparkPost Elite.
 
 Detailed status for this sending domain is described in a JSON object with the following fields:
 
@@ -254,7 +258,7 @@ If a dkim object is provided in the update request, it must contain all relevant
 
 ### Verify a Sending Domain [POST]
 
-**Note:** While it is possible to call this endpoint in SparkPost Elite, the verification status of a sending domain is currently ignored.
+**Note:** While it is possible to call this endpoint in SparkPost Elite, the verification status of a sending domain will not affect sending. It is currently possible to send from an unverified domain in SparkPost Elite.
 
 The verify resource validates the specified verification field types. Including the fields "dkim_verify" and "spf_verify" in the request initiates a check against the associated DNS record type for the specified sending domain. The domain's "status" object is returned on success.
 
