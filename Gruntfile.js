@@ -13,6 +13,7 @@ var matchdep = require('matchdep')
         'sending_domains_api.md',
         'suppression_list_api.md',
         'templates_api.md',
+        'tracking_domains_api.md',
         'transmissions_api.md',
         'webhooks_api.md',
         'smtp_api.md'
