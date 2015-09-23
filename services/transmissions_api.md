@@ -82,7 +82,7 @@ Attachments for a transmission are specified in the content.attachments JSON arr
 |--------------------|:-:       |---------------------------------------|-------------|------------------|
 |type |string |The MIME type of the attachment. E.g. "text/plain", " image/jpeg", "audio/mp3", "video/mp4", "application/msword", "application/pdf", etc, including the "charset" parameter if needed, e.g. '"text/html; charset="UTF-8"' The value will apply "as-is" to the "Content-Type" header of the generated MIME part for the attachment. | yes |  |
 |name |string |The filename of the attachment (for example, "document.pdf"). This is inserted into the filename parameter of the Content-Disposition header. | yes | Maximum length - 255 bytes |
-|data |string |The content of the attachment as a Base64 encoded string.  The string should not contain \r\n line breaks.  The SparkPost systems will add line breaks as necessary to ensure the Base64 encoded lines contain no more than 76 characters each. | yes | The entirety of transmission content (text + html + attachments + inline images) is limited to 10 MBs |
+|data |string |The content of the attachment as a Base64 encoded string.  The string should not contain \r\n line breaks.  The SparkPost systems will add line breaks as necessary to ensure the Base64 encoded lines contain no more than 76 characters each. | yes | The entirety of transmission content (text + html + attachments + inline images) is limited to 20 MBs |
 
 ### Inline Image Attributes
 
@@ -94,7 +94,7 @@ Inline images for a transmission are specified in the content.inline_images JSON
 |--------------------|:-:       |---------------------------------------|-------------|------------------|
 |type |string |The MIME type of the image.  E.g. "image/jpeg".  The value will apply "as-is" to the "Content-Type" header of the generated MIME part for the image. | yes |  |
 |name |string |The name of the inline image, which will be inserted into the Content-ID header. The image should be referenced in your HTML content using \<img src="cid:THIS_NAME"\>. The name must be unique within the content.inline_images array. | yes | Maximum length - 255 bytes |
-|data |string | The content of the image as a Base64 encoded string.  The string should not contain \r\n line breaks.  The SparkPost systems will add line breaks as necessary to ensure the Base64 encoded lines contain no more than 76 characters each. | yes | The entirety of transmission content (text + html + attachments + inline images) is limited to 10 MBs |
+|data |string | The content of the image as a Base64 encoded string.  The string should not contain \r\n line breaks.  The SparkPost systems will add line breaks as necessary to ensure the Base64 encoded lines contain no more than 76 characters each. | yes | The entirety of transmission content (text + html + attachments + inline images) is limited to 20 MBs |
 
 ### Using a Stored Template
 
