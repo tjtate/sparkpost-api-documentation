@@ -7234,6 +7234,62 @@ Create a tracking domain. If default is set to true and there is already a defau
             {
               "errors": [
                 {
+                  "code": "1300",
+                  "message": "invalid data format/type",
+                  "description": "Error validating domain name syntax for domain: 'example..domain.com'"
+                }
+              ]
+            }
+
++ Response 422 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "code": "1300",
+                  "message": "invalid data format/type",
+                  "description": "Error domain name length too short for domain: 'ex'"
+                }
+              ]
+            }
+
++ Response 422 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "code": "1300",
+                  "message": "invalid data format/type",
+                  "description": "Error domain name contains no '.'(s) for domain: 'exampledomaincom'"
+                }
+              ]
+            }
+
++ Response 422 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "code": "1300",
+                  "message": "invalid data format/type",
+                  "description": "Error domain name contains invalid characters or spaces for domain: 'example*&#.domain.com'"
+                }
+              ]
+            }
+
++ Response 422 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
                   "code": "1400",
                   "message": "required field is missing",
                   "description": "field 'domain' is required"
