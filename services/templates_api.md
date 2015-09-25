@@ -32,7 +32,7 @@ Content for a template is described in a JSON object with the following fields:
 
 #### Header Notes
 
-* Headers such as "Content-Type" and "Content-Transfer-Encoding" are not allowed here as these are auto generated upon construction of the email.
+* Headers such as "Content-Type" and "Content-Transfer-Encoding" are not allowed here as they are auto generated upon construction of the email.
 * The "To" header should not be specified here, since it is generated from each recipient's _address.name_ and _address.email_.
 * Each header value is expected in the UTF-8 charset without RFC2047 encoding.
 * Substitution syntax is supported.
@@ -49,7 +49,7 @@ Alternately, the content JSON object may contain a single "email_rfc822" field. 
 first non-attachment text/html MIME parts only.
 * Lone `LF`s and lone `CR`s are allowed. The system will convert line endings to `CRLF` where
 necessary.
-* The provided email_rfc822 should NOT be dot stuff.  The system dot stuffs before sending the outgoing message.
+* The provided email_rfc822 should NOT be dot stuffed.  The system dot stuffs before sending the outgoing message.
 * The provided email_rfc822 should NOT contain the SMTP terminator `\r\n.\r\n`.  The system always adds this terminator.
 * The provided email_rfc822 in MIME format will be rejected if SparkPost and SparkPost Elite cannot parse the contents into a MIME tree.
 
