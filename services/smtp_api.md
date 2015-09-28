@@ -16,7 +16,7 @@ The fields supported in the X-MSYS-API header are as follows:
 | Field | Type | Description | Required | Notes |
 |-------|------|-------------|----------|-------|
 | campaign_id | string | Name of the campaign to associate with the SMTP message | no | Maximum length - 64 bytes (same restriction as the REST API) |
-| metadata | JSON object | JSON key value pairs associated with the SMTP message | no | A maximum of 200 bytes of metadata is available during click/open events. |
+| metadata | JSON object | JSON key value pairs associated with the SMTP message | no | A maximum of 1000 bytes of metadata is available in click/open events. |
 | cc | JSON array | Array of recipient addresses that will be included in the "Cc" header | no | A unique message with a unique tracking URL will be generated for each recipient in this list. |
 | bcc | JSON array | Array of recipient addresses that will be hidden from all other recipients | no | A unique message with a unique tracking URL will be generated for each recipient in this list. |
 | archive | JSON array | Array of recipient addresses that will be hidden from all other recipients | no | A unique message will be generated for each recipient in this list. The archive copy of the message contains tracking URLs identical to the recipient. For a full description, see the "What is an archive recipient?" section.|
