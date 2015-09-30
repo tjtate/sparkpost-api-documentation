@@ -17,7 +17,7 @@ In addition, engagement tracking options can be set in the transmission to track
 |metadata|JSON object|Transmission level metadata containing key/value pairs |no| Metadata is available during events through the Webhooks and is provided to the substitution engine.  A maximum of 1000 bytes of merged metadata (transmission level + recipient level) is available with recipient metadata taking precedence over transmission metadata when there are conflicts.  |
 |substitution_data|JSON object|Key/value pairs that are provided to the substitution engine| no | Recipient substitution data takes precedence over transmission substitution data. Unlike metadata, substitution data is not included in Webhook events. |
 |return_path | string |Email to use for envelope FROM ( **Note:** SparkPost Elite only )| yes | To support Variable Envelope Return Path (VERP), this field can also optionally be specified inside of the address object of a specific recipient in order to give the recipient a unique envelope MAIL FROM. |
-|content| JSON object | Content that will be used to construct a message | yes | Specify a stored template or specify inline template content. When using a stored template, specify the "template_id" as described in Using a Stored Template.  Otherwise, provide the inline content using the fields described in the Templates API documentation for Content Attributes.  Maximum size - 15MBs|
+|content| JSON object | Content that will be used to construct a message | yes | Specify a stored template or specify inline template content. When using a stored template, specify the "template_id" as described in Using a Stored Template.  Otherwise, provide the inline content using the fields described in Inline Content Attributes.  Maximum size - 10MBs|
 |total_recipients | number | Computed total recipients | no | Read only|
 |num_generated | number | Computed total number of messages generated | no |Read only|
 |num_failed_generation| number| Computed total number of failed messages | no | Read only|
@@ -34,11 +34,71 @@ In addition, engagement tracking options can be set in the transmission to track
 |sandbox|boolean|Whether or not to use the sandbox sending domain ( **Note:** SparkPost only )| no |Defaults to false. |
 |skip_suppression|boolean|Whether or not to ignore customer suppression rules, for this transmission only.  Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no - Defaults to false |  Unlike most other options, this flag is omitted on a GET transmission response unless the flag's value is true. |
 
+### Inline Content Attributes
 
+The following attributes are used when specifying inline content in the transmission's "content" JSON object. Note that these attributes should not be present if using a stored template.
+
+| Field         | Type     | Description                           | Required   | Notes   |
+|------------------------|:-:       |---------------------------------------|-------------|--------|
+|html    |string  |HTML content for the email's text/html MIME part|At a minimum, html or text is required.  |Expected in the UTF-8 charset with no Content-Transfer-Encoding applied.  Substitution syntax is supported. |
+|text    |string  |Text content for the email's text/plain MIME part|At a minimum, html or text is required. |Expected in the UTF-8 charset with no Content-Transfer-Encoding applied.  Substitution syntax is supported.|
+|subject |string  |Email subject line   | yes |Expected in the UTF-8 charset without RFC2047 encoding.  Substitution syntax is supported. |
+|from |string or JSON  | Address _"from" : "deals@company.com"_ or JSON object composed of the "name" and "email" fields _"from" : { "name" : "My Company", "email" : "deals@company.com" }_ used to compose the email's "From" header| yes | Substitution syntax is supported. |
+|reply_to |string  |Email address used to compose the email's "Reply-To" header | no | Substitution syntax is supported. |
+|headers| JSON | JSON dictionary containing headers other than "Subject", "From", "To", and "Reply-To"  | no |See the Header Notes. |
+|attachments| JSON | JSON array of attachments ( **Note:** SparkPost Elite only ) | no | For a full description, see Attachment Attributes. |
+|inline_images| JSON | JSON array of inline images ( **Note:** SparkPost Elite only ) | no | For a full description, see Inline Image Attributes. |
+
+#### Header Notes
+
+* Headers such as "Content-Type" and "Content-Transfer-Encoding" are not allowed here as they are auto generated upon construction of the email.
+* The "To" header should not be specified here, since it is generated from each recipient's _address.name_ and _address.email_.
+* Each header value is expected in the UTF-8 charset without RFC2047 encoding.
+* Substitution syntax is supported.
+
+#### email_rfc822 Notes
+
+Alternately, the content JSON object may contain a single "email_rfc822" field.  email_rfc822 is mutually exclusive with all of the above fields.
+
+| Field         | Type     | Description                           | Required   | Notes   |
+|--------------------|:-:       |---------------------------------------|-----------------------|--------|
+|email_rfc822    |string  |Pre-built message with the format as described by the [message/rfc822 Content-Type](http://tools.ietf.org/html/rfc2046#section-5.2.1) |no   |  See the email_rfc822 Notes. |
+
+* Substitutions will be applied in the top-level headers and the first non-attachment text/plain and
+first non-attachment text/html MIME parts only.
+* Lone `LF`s and lone `CR`s are allowed. The system will convert line endings to `CRLF` where
+necessary.
+* The provided email_rfc822 should NOT be dot stuffed.  The system dot stuffs before sending the outgoing message.
+* The provided email_rfc822 should NOT contain the SMTP terminator `\r\n.\r\n`.  The system always adds this terminator.
+* The provided email_rfc822 in MIME format will be rejected if SparkPost and SparkPost Elite cannot parse the contents into a MIME tree.
+
+### Attachment Attributes
+
+**Note:** SparkPost Elite only
+
+Attachments for a transmission are specified in the content.attachments JSON array where each JSON object in the array is described by the following fields:
+
+| Field         | Type     | Description                           | Required   | Notes   |
+|--------------------|:-:       |---------------------------------------|-------------|------------------|
+|type |string |The MIME type of the attachment; e.g., "text/plain", "image/jpeg", "audio/mp3", "video/mp4", "application/msword", "application/pdf", etc., including the "charset" parameter (text/html; charset="UTF-8") if needed. The value will apply "as-is" to the "Content-Type" header of the generated MIME part for the attachment. | yes |  |
+|name |string |The filename of the attachment (for example, "document.pdf"). This is inserted into the filename parameter of the Content-Disposition header. | yes | Maximum length - 255 bytes |
+|data |string |The content of the attachment as a Base64 encoded string.  The string should not contain \r\n line breaks.  The SparkPost systems will add line breaks as necessary to ensure the Base64 encoded lines contain no more than 76 characters each. | yes | The entirety of transmission content (text + html + attachments + inline images) is limited to 20 MBs |
+
+### Inline Image Attributes
+
+**Note:** SparkPost Elite only
+
+Inline images for a transmission are specified in the content.inline_images JSON array where each JSON object in the array is described by the following fields:
+
+| Field         | Type     | Description                           | Required   | Notes   |
+|--------------------|:-:       |---------------------------------------|-------------|------------------|
+|type |string |The MIME type of the image; e.g., "image/jpeg".  The value will apply "as-is" to the "Content-Type" header of the generated MIME part for the image. | yes |  |
+|name |string |The name of the inline image, which will be inserted into the Content-ID header. The image should be referenced in your HTML content using \<img src="cid:THIS_NAME"\>. The name must be unique within the content.inline_images array. | yes | Maximum length - 255 bytes |
+|data |string | The content of the image as a Base64 encoded string.  The string should not contain \r\n line breaks.  The SparkPost systems will add line breaks as necessary to ensure the Base64 encoded lines contain no more than 76 characters each. | yes | The entirety of transmission content (text + html + attachments + inline images) is limited to 20 MBs |
 
 ### Using a Stored Template
 
-The following content attributes are used when specifying a stored template in the transmission. Note that these attributes should not be present when using inline templates.
+The following attributes are used when specifying a stored template in the transmission's "content" JSON object. Note that these attributes should not be present when using inline content.
 
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
@@ -553,6 +613,108 @@ Once message generation has been initiated, all messages in the transmission wil
                 "id": "11668787484950529"
               }
             }
+
++ Request Create Transmission with attachments (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+    + Body
+
+        ```
+        {
+          "campaign_id" : "attachment_example_sparkpost_elite_only",
+          "recipients": [
+            {
+              "address": "wilma@flintstone.com"
+            }
+          ],
+          "content": {
+            "from": {
+              "email": "billing@company.example",
+              "name": "Example Company"
+            },
+
+            "subject": "Billing statement",
+            "html": "<b>Please see your attached billing statement</b>",
+            "attachments" : [
+              {
+                "type" : "application/pdf",
+                "name" : "billing.pdf",
+                "data" : "Q29uZ3JhdHVsYXRpb25zLCB5b3UgY2FuIGJhc2U2NCBkZWNvZGUh"
+              },
+              {
+                "type" : "text/plain; charset=UTF-8",
+                "name" : "explanation.txt",
+                "data" : "TW92ZSBhbG9uZy4gIE5vdGhpbmcgdG8gc2VlIGhlcmUu"
+              }
+            ]
+          }
+        }
+        ```
+
++ Response 200 (application/json)
+
+    + Body
+
+        ```
+        {
+          "results": {
+            "total_rejected_recipients": 0,
+            "total_accepted_recipients": 1,
+            "id": "11668787484950529"
+          }
+        }
+
++ Request Create Transmission with inline images (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+    + Body
+
+        ```
+        {
+          "campaign_id" : "inline_image_example_sparkpost_elite_only",
+          "recipients": [
+            {
+              "address": "wilma@flintstone.com"
+            }
+          ],
+          "content": {
+            "from": {
+              "email": "marketing@company.example",
+              "name": "Example Company"
+            },
+
+            "subject": "Inline image example",
+            "html": "<html><body>Here is your inline image!<br> <img src=\"cid:my_image.jpeg\"></body></html>",
+            "inline_images" : [
+              {
+                "type" : "image/jpeg",
+                "name" : "my_image.jpeg",
+                "data" : "VGhpcyBkb2Vzbid0IGxvb2sgbGlrZSBhIGpwZWcgdG8gbWUh"
+              }
+            ]
+          }
+        }
+        ```
+
++ Response 200 (application/json)
+
+    + Body
+
+        ```
+        {
+          "results": {
+            "total_rejected_recipients": 0,
+            "total_accepted_recipients": 1,
+            "id": "11668787484950529"
+          }
+        }
+
 
 
 ## Retrieve [/transmissions/{id}]
