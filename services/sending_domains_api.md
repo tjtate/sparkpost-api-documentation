@@ -1,18 +1,29 @@
 # Group Sending Domains
 
-**Note:** The Sending Domains API is available for SparkPost only.
+**Note:** The Sending Domains API has reduced functionality in SparkPost Elite.
 
 A sending domain is a domain that is used to indicate who an email is from via the "From:" header. Using a custom sending domain enables you to control what recipients see as the From value in their email clients. DNS records can be configured for a sending domain, which allows recipient mail servers to authenticate your messages. The Sending Domains API provides the means to create, list, retrieve, update, and verify a custom sending domain.
 
+## Sending Domains in SparkPost Elite
+
+In SparkPost Elite, the Sending Domains API can only be used to associate a tracking domain with a sending domain. None of the other attributes are currently used in SparkPost Elite.
+
+It is currently optional to register a sending domain with the Sending Domains API in SparkPost Elite. Sending domains are not currently verified in SparkPost Elite, and it is currently possible to send from an unverified sending domain.
+
 ## Sending Domain Attributes
+
+**Note:** "dkim" is currently ignored in SparkPost Elite. "status" will not currently affect whether messages can be sent from a sending domain in SparkPost Elite.
 
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
 |domain    |string  |Name of the sending domain   | yes |The domain name will be used as the "From:" header address in the email.|
+|tracking_domain | string | Associated tracking domain | no | example: "click.example1.com" |
 |status | JSON object| JSON object containing status details, including whether this domain's ownership has been verified  | no | Read only. For a full description, see the Status Attributes.|
 |dkim | JSON object| JSON object in which DKIM key configuration is defined|no| For a full description, see the DKIM Attributes.|
 
 ### DKIM Attributes
+
+**Note:** "dkim" is currently ignored in SparkPost Elite. DKIM keypairs are currently configured by the Operations team. DKIM keys that are specified via the API are not currently used.
 
 DKIM uses a pair of public and private keys to authenticate your emails. The DKIM key configuration is described in a JSON object with the following fields:
 
@@ -24,6 +35,8 @@ DKIM uses a pair of public and private keys to authenticate your emails. The DKI
 |headers | string| Header fields to be included in the DKIM signature |no | Header fields are separated by a colon.  Example: `"from:to:subject:date"`|
 
 ### Status Attributes
+
+**Note:** SparkPost Elite does not currently verify sending domains. The verification status of a sending domain will not affect sending. It is currently possible to send from an unverified domain in SparkPost Elite.
 
 Detailed status for this sending domain is described in a JSON object with the following fields:
 
@@ -71,6 +84,7 @@ Create a sending domain by providing a **sending domain object** as the POST req
         ```
         {
             "domain" : "example1.com",
+            "tracking_domain" : "click.example1.com",
             "dkim" : {  "private" : "MIICXgIBAAKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQABAoGBAITb3BCRPBi5lGhHdn+1RgC7cjUQEbSb4eFHm+ULRwQ0UIPWHwiVWtptZ09usHq989fKp1g/PfcNzm8c78uTS6gCxfECweFCRK6EdO6cCCr1cfWvmBdSjzYhODUdQeyWZi2ozqd0FhGWoV4VHseh4iLj36DzleTLtOZj3FhAo1WJAkEA68T+KkGeDyWwvttYtuSiQCCTrXYAWTQnkIUxduCp7Ap6tVeIDn3TaXTj74UbEgaNgLhjG4bX//fdeDW6PaK9YwJBAM6xJmwHLPMgwNVjiz3u/6fhY3kaZTWcxtMkXCjh1QE82KzDwqyrCg7EFjTtFysSHCAZxXZMcivGl4TZLHnydJUCQQCx16+M+mAatuiCnvxlQUMuMiSTNK6Amzm45u9v53nlZeY3weYMYFdHdfe1pebMiwrT7MI9clKebz6svYJVmdtXAkApDAc8VuR3WB7TgdRKNWdyGJGfoD1PO1ZE4iinOcoKV+IT1UCY99Kkgg6C7j62n/8T5OpRBvd5eBPpHxP1F9BNAkEA5Nf2VO9lcTetksHdIeKK+F7sio6UZn0Rv7iUo3ALrN1D1cGfWIh2dj3ko1iSreyNVSwGW0ePP27qDmU+u6/Y1g==",
                 "public" : "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
                 "selector" : "brisbane",
@@ -89,6 +103,30 @@ Create a sending domain by providing a **sending domain object** as the POST req
             }
         }
 
++ Response 400 (application/json)
+
+      { 
+        "errors": [
+          {
+            "message": "invalid params",
+            "description": "Tracking domain '(domain)' is not a registered tracking domain",
+            "code": "1200"
+          }
+        ]
+      }
+
++ Response 422 (application/json)
+
+    {
+      "errors" : [
+        {
+          "message": "invalid data format/type",
+          "description": "Error validating domain name syntax for domain: '(domain)'",
+          "code": "1300"
+        }
+      ]
+    }
+
 ### List all Sending Domains [GET]
 
 List an overview of all sending domains in the system.
@@ -105,7 +143,8 @@ List an overview of all sending domains in the system.
         {
             "results" : [
                 {
-                    "domain": "example1.com"
+                    "domain": "example1.com",
+                    "tracking_domain": "click.example1.com"
                 },
                 {
                     "domain": "example2.com"
@@ -133,6 +172,7 @@ Retrieve a sending domain by specifying its domain name in the URI path.  The re
 
         {
             "results": {
+                "tracking_domain": "click.example1.com",
                 "status": {
                     "ownership_verified": false,
                     "spf_status": "pending",
@@ -155,6 +195,8 @@ Retrieve a sending domain by specifying its domain name in the URI path.  The re
 
 Update the attributes of an existing sending domain by specifying its domain name in the URI path and use a **sending domain object** as the PUT request body.
 
+If a tracking domain is specified, it will replace any currently specified tracking domain.  If the supplied tracking domain is a blank string, it will clear any currently specified tracking domain. Note that if a tracking domain is not specified, any currently specified tracking domain will remain intact.
+
 If a dkim object is provided in the update request, it must contain all relevant fields whether they are being changed or not.  The new dkim object will completely overwrite the existing one.
 
 + Parameters
@@ -170,6 +212,7 @@ If a dkim object is provided in the update request, it must contain all relevant
 
         ```
         {
+            "tracking_domain": "click.example1.com",
             "dkim" : {  "private" : "MIICXgIBAAKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQABAoGBAITb3BCRPBi5lGhHdn+1RgC7cjUQEbSb4eFHm+ULRwQ0UIPWHwiVWtptZ09usHq989fKp1g/PfcNzm8c78uTS6gCxfECweFCRK6EdO6cCCr1cfWvmBdSjzYhODUdQeyWZi2ozqd0FhGWoV4VHseh4iLj36DzleTLtOZj3FhAo1WJAkEA68T+KkGeDyWwvttYtuSiQCCTrXYAWTQnkIUxduCp7Ap6tVeIDn3TaXTj74UbEgaNgLhjG4bX//fdeDW6PaK9YwJBAM6xJmwHLPMgwNVjiz3u/6fhY3kaZTWcxtMkXCjh1QE82KzDwqyrCg7EFjTtFysSHCAZxXZMcivGl4TZLHnydJUCQQCx16+M+mAatuiCnvxlQUMuMiSTNK6Amzm45u9v53nlZeY3weYMYFdHdfe1pebMiwrT7MI9clKebz6svYJVmdtXAkApDAc8VuR3WB7TgdRKNWdyGJGfoD1PO1ZE4iinOcoKV+IT1UCY99Kkgg6C7j62n/8T5OpRBvd5eBPpHxP1F9BNAkEA5Nf2VO9lcTetksHdIeKK+F7sio6UZn0Rv7iUo3ALrN1D1cGfWIh/Y1g==",
                 "public" : "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
                 "selector" : "hello_selector",
@@ -187,9 +230,36 @@ If a dkim object is provided in the update request, it must contain all relevant
             }
         }
 
++ Response 400 (application/json)
+
+      {
+        "errors": [
+          {
+            "message": "invalid params",
+            "description": "Tracking domain '(domain)' is not a registered tracking domain",
+            "code": "1200"
+          }
+        ]
+      }
+
++ Response 422 (application/json)
+
+    {
+      "errors" : [
+        {
+          "message": "invalid data format/type",
+          "description": "Error validating domain name syntax for domain: '(domain)'",
+          "code": "1300"
+        }
+      ]
+    }
+
 ## Verify [/sending-domains/{domain_name}/verify]
 
 ### Verify a Sending Domain [POST]
+
+**Note:** While it is possible to call this endpoint in SparkPost Elite, the verification status of a sending domain will not affect sending. It is currently possible to send from an unverified domain in SparkPost Elite.
+
 The verify resource validates the specified verification field types. Including the fields "dkim_verify" and "spf_verify" in the request initiates a check against the associated DNS record type for the specified sending domain. The domain's "status" object is returned on success.
 
 + Request (application/json)

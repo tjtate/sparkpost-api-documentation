@@ -42,13 +42,14 @@ Once all the dependencies are installed, you can execute the Apiary Blueprint Va
 * Concatenate ALL /services/ files into a single apiary.apib file, then test the compiled file
   ```grunt compile```
 
-### Deploying to Production
-
-For complete directions on how to deploy to production, please view this [Confluence page on how to deploy our docs](https://confluence.int.messagesystems.com/display/PD/SparkPost.com+API+Documentation+on+Github)
-
 ### Contributing
 [Guidelines for adding issues](docs/ADDING_ISSUES.markdown)
 
 [Apiary Blueprint Specification](https://github.com/apiaryio/api-blueprint/blob/master/API%20Blueprint%20Specification.md)
 
 [Submitting pull requests](docs/CONTRIBUTING.markdown)
+
+## License
+
+Read the [complete license](/LICENSE) information for our Sparkpost API documentation.
+

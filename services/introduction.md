@@ -13,6 +13,7 @@ There are two service types available:  [SparkPost](http://sparkpost.com/), our 
 ### SparkPost Elite API Endpoint
 **https\://yourdomain.msyscloud.com/api/v1**
 
+
 ## API Conventions
 * API versioning is handled using a major version number in the URL, e.g. /api/v1/endpoint.
 * /something is equivalent to /something/.
@@ -52,3 +53,14 @@ curl -v \
 -X GET "https://api.sparkpost.com/api/v1/metrics/deliverability/aggregate?campaigns=testjob&from=2014-01-23T14:00&metrics=count_targeted,count_sent,count_accepted&protocols=smtp&timezone=America%2FNew_York&to=2014-06-23T15:50"
 ```
 
+## SMTP Relay Endpoints
+
+### SparkPost SMTP Endpoint
+To use SparkPost as an SMTP relay you need to point your SMTP client (or local MTA) to the following endpoint:
+
+* Host: smtp.sparkpostmail.com
+* Port: 587  (requires STARTTLS)
+* User: SMTP_Injection
+* Password: Any API key with Send via SMTP permission
+
+The SMTP relay optionally supports advanced API features using the [SMTP API](#smtp-api).  To create an API key, login to your SparkPost [Account Credentials](https://app.sparkpost.com/account/credentials) page.
