@@ -63,4 +63,4 @@ To use SparkPost as an SMTP relay you need to point your SMTP client (or local M
 * User: SMTP_Injection
 * Password: Any API key with Send via SMTP permission
 
-The SMTP relay optionally supports advanced API features using the [SMTP API](#smtp-api).  To create an API key, login into your SparkPost [Account Credentials](https://app.sparkpost.com/account/credentials) page.
+The SMTP relay optionally supports advanced API features using the [SMTP API](#smtp-api).  To create an API key, login to your SparkPost [Account Credentials](https://app.sparkpost.com/account/credentials) page.
