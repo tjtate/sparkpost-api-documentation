@@ -6304,8 +6304,7 @@ If a dkim object is provided in the update request, it must contain all relevant
 
 Delete an existing sending domain.
 
-**Note:** Deletion of a sending domain while the system is processing messages which use that sending domain may result
-in messages being rejected.  It is advisable to finish all transmissions associated with the sending domain before deleting it.
+**Warning:** Before deleting a sending domain please ensure you are no longer using it. After deleting a sending domain any new transmissions that use it will result in a rejection, including any transmissions that are in progress, transmissions scheduled for the future or that use a stored template referencing the sending domain.
 
 + Parameters
   + domain (required, string, `example1.com`) ... Name of the domain
