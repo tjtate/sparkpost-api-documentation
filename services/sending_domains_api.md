@@ -152,14 +152,14 @@ List an overview of all sending domains in the system.
             ]
         }
 
-## Retrieve [/sending-domains/{domain_name}]
+## Retrieve, Update, and Delete [/sending-domains/{domain}]
 
 ### Retrieve a Sending Domain [GET]
 
 Retrieve a sending domain by specifying its domain name in the URI path.  The response includes details about its DKIM key configuration.
 
 + Parameters
-  + domain_name (required, string, `example1.com`) ... Name of the domain
+  + domain (required, string, `example1.com`) ... Name of the domain
 
 + Request
 
@@ -189,7 +189,6 @@ Retrieve a sending domain by specifying its domain name in the URI path.  The re
             }
         }
 
-## Update [/sending-domains/{domain}]
 
 ### Update a Sending Domain [PUT]
 
@@ -253,6 +252,38 @@ If a dkim object is provided in the update request, it must contain all relevant
         }
       ]
     }
+
+### Delete a Sending Domain [DELETE]
+
+Delete an existing sending domain.
+
+**Warning:** Before deleting a sending domain please ensure you are no longer using it. After deleting a sending domain, any new transmissions that use it will result in a rejection. This includes any transmissions that are in progress, scheduled for the future, or use a stored template referencing the sending domain.
+
++ Parameters
+  + domain (required, string, `example1.com`) ... Name of the domain
+
++ Request
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
++ Response 204
+
++ Response 404 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "code": "1600",
+                  "message": "resource not found",
+                  "description": "Domain 'wrong.domain' does not exist"
+                }
+              ]
+            }
+
 
 ## Verify [/sending-domains/{domain_name}/verify]
 
