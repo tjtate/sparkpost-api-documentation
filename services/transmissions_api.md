@@ -46,8 +46,8 @@ The following attributes are used when specifying inline content in the transmis
 |from |string or JSON  | Address _"from" : "deals@company.com"_ or JSON object composed of the "name" and "email" fields _"from" : { "name" : "My Company", "email" : "deals@company.com" }_ used to compose the email's "From" header| yes | Substitution syntax is supported. |
 |reply_to |string  |Email address used to compose the email's "Reply-To" header | no | Substitution syntax is supported. |
 |headers| JSON | JSON dictionary containing headers other than "Subject", "From", "To", and "Reply-To"  | no |See the Header Notes. |
-|attachments| JSON | JSON array of attachments ( **Note:** SparkPost Elite only ) | no | For a full description, see Attachment Attributes. |
-|inline_images| JSON | JSON array of inline images ( **Note:** SparkPost Elite only ) | no | For a full description, see Inline Image Attributes. |
+|attachments| JSON | JSON array of attachments | no | For a full description, see Attachment Attributes. |
+|inline_images| JSON | JSON array of inline images | no | For a full description, see Inline Image Attributes. |
 
 #### Header Notes
 
@@ -74,8 +74,6 @@ necessary.
 
 ### Attachment Attributes
 
-**Note:** SparkPost Elite only
-
 Attachments for a transmission are specified in the content.attachments JSON array where each JSON object in the array is described by the following fields:
 
 | Field         | Type     | Description                           | Required   | Notes   |
@@ -85,8 +83,6 @@ Attachments for a transmission are specified in the content.attachments JSON arr
 |data |string |The content of the attachment as a Base64 encoded string.  The string should not contain \r\n line breaks.  The SparkPost systems will add line breaks as necessary to ensure the Base64 encoded lines contain no more than 76 characters each. | yes | The entirety of transmission content (text + html + attachments + inline images) is limited to 20 MBs |
 
 ### Inline Image Attributes
-
-**Note:** SparkPost Elite only
 
 Inline images for a transmission are specified in the content.inline_images JSON array where each JSON object in the array is described by the following fields:
 
@@ -624,7 +620,7 @@ Once message generation has been initiated, all messages in the transmission wil
 
         ```
         {
-          "campaign_id" : "attachment_example_sparkpost_elite_only",
+          "campaign_id" : "attachment_example",
           "recipients": [
             {
               "address": "wilma@flintstone.com"
@@ -677,7 +673,7 @@ Once message generation has been initiated, all messages in the transmission wil
 
         ```
         {
-          "campaign_id" : "inline_image_example_sparkpost_elite_only",
+          "campaign_id" : "inline_image_example",
           "recipients": [
             {
               "address": "wilma@flintstone.com"
