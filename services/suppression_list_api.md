@@ -143,60 +143,7 @@ Perform a filtered search for entries in your customer-specific exclusion list.
         }
 
 
-## Insert/Update, Retrieve, Delete [/suppression-list/{recipient_email}]
-
-### Insert or Update a List Entry [PUT]
-
-Insert or update an entry in the customer-specific exclusion list by specifying the recipient's email address in the URI path and providing a **list entry object** as the PUT request body. At a minimum, the **list entry object** must have at least one of the following keys: "transactional" or "non_transactional". 
-
-If the recipient entry was added to the list by Compliance, it cannot be updated.
-
-+ Parameters
-    + recipient_email (required, string, `rcpt_1@example.com`) ... Recipient email address
-
-+ Request (application/json)
-
-    + Headers
-
-            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-    + Body
-
-        ```
-        {
-        "transactional" : false,
-            "non_transactional" : true,
-            "description" : "User requested to not receive any non-transactional emails."
-        }
-        ```
-
-+ Response 404 (application/json; charset=utf-8)
-
-        {
-            "errors": [
-                {
-                    "message": "Recipient could not be found"
-                }
-            ]
-        }
-
-+ Response 403 (application/json; charset=utf-8)
-
-        {
-            "errors": [
-                {
-                    "message": "Recipient could not be updated - Compliance"
-                }
-            ]
-        }
-
-+ Response 200 (application/json; charset=utf-8)
-
-        {
-            "results" :
-                {
-                    "message": "Recipient successfully created|updated"
-                }
-        }
+## Retrieve, Delete [/suppression-list/{recipient_email}]
 
 ### Retrieve a Recipient Suppression Status [GET]
 
@@ -281,3 +228,11 @@ If the recipient is not in the customer-specific exclusion list, an HTTP status 
         }
 
 + Response 204 (application/json; charset=utf-8)
+
+### Insert or Update a List Entry [PUT]
+
+The PUT method on this endpoint has been removed in favor of the Bulk Insert/Update method. 
+
++ Response 405 (application/json; charset=utf-8)
+
+        {}
