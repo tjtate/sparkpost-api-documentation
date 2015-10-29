@@ -59,8 +59,8 @@ These are the valid request options for verifying a Sending Domain:
 |spf_verify | boolean | Request verification of SPF record | no |
 |postmaster_at_verify | boolean | Request an email with a verification link to be sent to the sending domain's postmaster@ mailbox. | no |
 |abuse_at_verify | boolean | Request an email with a verification link to be sent to the sending domain's abuse@ mailbox. | no |
-|postmaster_at_token | string | A token retrieved from the verification link contained in the postmaster@ verification email.  In general, this is populated by the SparkPost UI when the verification link is clicked. | no |
-|abuse_at_token | string | A token retrieved from the verification link contained in the abuse@ verification email.  In general, this is populated by the SparkPost UI when the verification link is clicked. | no |
+|postmaster_at_token | string | A token retrieved from the verification link contained in the postmaster@ verification email. | no |
+|abuse_at_token | string | A token retrieved from the verification link contained in the abuse@ verification email. | no |
 
 ### DNS Attributes
 
@@ -302,7 +302,7 @@ The verify resource operates differently depending on the provided request field
 
 The domain's "status" object is returned on success.
 
-+ Request (application/json)
++ Request Verify DKIM and SPF (application/json)
 
     + Headers
 
@@ -334,7 +334,7 @@ The domain's "status" object is returned on success.
             }
         }
 
-+ Request (application/json)
++ Request Initiate postmaster@ email (application/json)
 
     + Headers
 
@@ -353,18 +353,14 @@ The domain's "status" object is returned on success.
             "results": {
                 "ownership_verified": false,
                 "spf_status": "unverified",
-                "dns": {
-                    "dkim_record": "k=rsa; h=sha256; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
-                    "spf_record": "v=spf1 include:sparkpostmail.com ~all"
-                },
                 "compliance_status": "valid",
                 "dkim_status": "unverified",
                 "abuse_at_status": "unverified",
-                "postmaster_at_status": "pending"
+                "postmaster_at_status": "unverified"
             }
         }
 
-+ Request (application/json)
++ Request Verify postmaster@ correct token (application/json)
 
     + Headers
 
@@ -383,13 +379,35 @@ The domain's "status" object is returned on success.
             "results": {
                 "ownership_verified": true,
                 "spf_status": "unverified",
-                "dns": {
-                    "dkim_record": "k=rsa; h=sha256; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
-                    "spf_record": "v=spf1 include:sparkpostmail.com ~all"
-                },
                 "compliance_status": "valid",
                 "dkim_status": "unverified",
                 "abuse_at_status": "unverified",
                 "postmaster_at_status": "valid"
+            }
+        }
+
++ Request Verify abuse@ incorrect token (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+    + Body
+
+        ```
+        {
+            "abuse_at_token" : "AN_INCORRECT_OR_EXPIRED_TOKEN"
+        }
+        ```
+
++ Response 200 (application/json; charset=utf-8)
+
+        {
+            "results": {
+                "ownership_verified": false,
+                "spf_status": "unverified",
+                "compliance_status": "valid",
+                "dkim_status": "unverified",
+                "abuse_at_status": "unverified",
+                "postmaster_at_status": "unverified"
             }
         }
