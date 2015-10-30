@@ -235,4 +235,11 @@ The PUT method on this endpoint has been removed in favor of the Bulk Insert/Upd
 
 + Response 405 (application/json; charset=utf-8)
 
-        {}
+        {
+            "errors": [
+                {
+                    "message": "Method Not Allowed"
+                }
+            ]
+        }
+        
