@@ -6404,10 +6404,10 @@ In addition to the customer-specific exclusion list, Message Systems maintains a
 
 ### Insert or Update List Entries [PUT]
 
-Bulk insert or update entries in the customer-specific exclusion list by providing a JSON object, with a "recipients" key containing an array of recipients to insert or update, as the PUT request body. Maximum size of the JSON object is 50mb. At a minimum, each recipient must have a valid "email" address and at least one of the following keys: "transactional" or "non_transactional". The optional "description" key can be used to include an explanation of what type of message should be suppressed. 
+Bulk insert or update entries in the customer-specific exclusion list by providing a JSON object, with a "recipients" key containing an array of recipients to insert or update, as the PUT request body. Maximum size of the JSON object is 50mb. At a minimum, each recipient must have a valid "email" address and at least one of the following keys: "transactional" or "non_transactional". The optional "description" key can be used to include an explanation of what type of message should be suppressed.
 
 If the recipient entry was added to the list by Compliance, it cannot be updated.
- 
+
 If an email address is duplicated in a single request, only the first instance will be processed.
 
 + Request (application/json)
@@ -6473,8 +6473,8 @@ If an email address is duplicated in a single request, only the first instance w
 Perform a filtered search for entries in your customer-specific exclusion list.
 
 + Parameters
-    + to = `now` (optional, datetime, `2014-07-20T09:00:00+0000`) ... Datetime the entries were last updated, in the format of YYYY-MM-DDTHH:mm:ssZ
-    + from (optional, datetime, `2014-07-20T09:00:00+0000`) ... Datetime the entries were last updated, in the format YYYY-MM-DDTHH:mm:ssZ
+    + to = `now` (optional, datetime, `2014-07-20T09:00:00%2B0000`) ... Datetime the entries were last updated, in the format of YYYY-MM-DDTHH:mm:ssZ
+    + from (optional, datetime, `2014-07-20T09:00:00%2B0000`) ... Datetime the entries were last updated, in the format YYYY-MM-DDTHH:mm:ssZ
     + types (optional, list) ... Types of entries to include in the search, i.e. entries with "transactional" and/or "non_transactional" keys set to true
     + sources (optional, list) ... Source(s) of the entries to include in the search, i.e. entries that were added by this source
     + limit (optional, int, `5`) ... Maximum number of results to return.  Must be between 1 and 100000. Default value is 100000.
@@ -6611,7 +6611,7 @@ If the recipient is not in the customer-specific exclusion list, an HTTP status 
 
 ### Insert or Update a List Entry [PUT]
 
-The PUT method on this endpoint has been removed in favor of the Bulk Insert/Update method. 
+The PUT method on this endpoint has been removed in favor of the Bulk Insert/Update method.
 
 + Response 405 (application/json; charset=utf-8)
 
@@ -6622,7 +6622,8 @@ The PUT method on this endpoint has been removed in favor of the Bulk Insert/Upd
                 }
             ]
         }
-        
+
+
 # Group Templates
 
 A template is a named collection of content stored on the server side.  Templates are used
@@ -8996,6 +8997,7 @@ The fields supported in the X-MSYS-API header are as follows:
 |-------|------|-------------|----------|-------|
 | open_tracking | boolean | Whether open tracking is enabled for this SMTP message | no | Defaults to false. |
 | click_tracking | boolean | Whether click tracking is enabled for this SMTP message | no | Defaults to false. |
+| transactional | boolean | Whether message is transactional or non-transactional for unsubscribe and suppression purposes | no | Defaults to false. |
 | sandbox| boolean| Whether or not to use the sandbox sending domain ( **Note:** SparkPost only ) | no | Defaults to false. |
 | skip_suppression| boolean| Whether or not to ignore customer suppression rules, for this SMTP message only. Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no | Defaults to false. |
 
