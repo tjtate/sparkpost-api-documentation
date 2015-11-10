@@ -53,14 +53,14 @@ Detailed status for this sending domain is described in a JSON object with the f
 
 These are the valid request options for verifying a Sending Domain:
 
-| Field         | Type     | Description                           | Required  |
-|------------------------|:-:       |---------------------------------------|-------------|
-|dkim_verify | boolean | Request verification of DKIM record | no |
-|spf_verify | boolean | Request verification of SPF record | no |
-|postmaster_at_verify | boolean | Request an email with a verification link to be sent to the sending domain's postmaster@ mailbox. | no |
-|abuse_at_verify | boolean | Request an email with a verification link to be sent to the sending domain's abuse@ mailbox. | no |
-|postmaster_at_token | string | A token retrieved from the verification link contained in the postmaster@ verification email. | no |
-|abuse_at_token | string | A token retrieved from the verification link contained in the abuse@ verification email. | no |
+| Field         | Type     | Description                           | Required  | Notes   |
+|------------------------|:-:       |---------------------------------------|-------------|--------|
+|dkim_verify | boolean | Request verification of DKIM record | no | |
+|spf_verify | boolean | Request verification of SPF record | no | |
+|postmaster_at_verify | boolean | Request an email with a verification link to be sent to the sending domain's postmaster@ mailbox. | no | SparkPost.com only |
+|abuse_at_verify | boolean | Request an email with a verification link to be sent to the sending domain's abuse@ mailbox. | no | SparkPost.com only |
+|postmaster_at_token | string | A token retrieved from the verification link contained in the postmaster@ verification email. | no | SparkPost.com only |
+|abuse_at_token | string | A token retrieved from the verification link contained in the abuse@ verification email. | no | SparkPost.com only |
 
 ### DNS Attributes
 
@@ -369,7 +369,7 @@ The domain's "status" object is returned on success.
 
         ```
         {
-            "postmaster_at_token" : "TODO: example of an actual token"
+            "postmaster_at_token" : "rcayptmrczdnrnqfsxyrzljmtsxvjzxb"
         }
         ```
 
@@ -410,4 +410,29 @@ The domain's "status" object is returned on success.
                 "abuse_at_status": "unverified",
                 "postmaster_at_status": "unverified"
             }
+        }
+
++ Request Unable to process abuse@ request (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+    + Body
+
+        ```
+        {
+            "abuse_at_verify" : true
+        }
+        ```
+
++ Response 400 (application/json; charset=utf-8)
+
+        {
+           "errors": [
+              {
+                 "message": "Failed to generate message",
+                 "description": "Failed to generate verification email",
+                 "code": "1901"
+              }
+           ]
         }
