@@ -54,16 +54,19 @@ curl -v \
 ```
 
 ## SMTP Relay Endpoints
+<a name="smtp-relay-endpoints"></a>
 
 ### SparkPost SMTP Endpoint
 To use SparkPost as an SMTP relay you need to point your SMTP client (or local MTA) to the following endpoint:
 
 * Host: smtp.sparkpostmail.com
-* Port: 587
+* Port: 587 or 2525
 * Encryption: STARTTLS
 * Authentication: AUTH LOGIN
 * User: SMTP_Injection
 * Password: Any API key with Send via SMTP permission
+
+**Note**: Port 2525 is provided as an alternate port for cases where port 587 is blocked (such as a Google Compute Engine environment).
 
 ### SparkPost Elite SMTP Endpoint
 
