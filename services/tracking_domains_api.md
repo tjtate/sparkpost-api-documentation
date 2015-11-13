@@ -54,7 +54,7 @@ Detailed status for this tracking domain is described in a JSON object with the 
 
 ### Create a Tracking Domain [POST]
 
-Create a tracking domain. If default is set to true and there is already a default domain, the default is changed.
+Create a tracking domain. A tracking domain cannot be set as the default until it is verified.
 
 **NOTE:** For SparkPost, only domain is required in the POST request body. The values for port (80) and secure (false) are not configurable.
 
@@ -69,8 +69,7 @@ Create a tracking domain. If default is set to true and there is already a defau
             {
               "domain": "example.domain.com",
               "port": 8080,
-              "secure": true,
-              "default": true
+              "secure": true
             }
 
 + Response 200
@@ -110,6 +109,21 @@ Create a tracking domain. If default is set to true and there is already a defau
                 }
               ]
             }
+
++ Response 422 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "code": "1300",
+                  "message": "invalid data format/type",
+                  "description": "Tracking domain unverified"
+                }
+              ]
+            }
+
 
 + Response 422 (application/json)
 
@@ -281,7 +295,9 @@ Retrieve an existing tracking domain.
 
 ### Update a Tracking Domain [PUT]
 
-Update the attributes of an existing tracking domain.
+Update the attributes of an existing tracking domain.  A tracking domain cannot be
+set as the default until it is verified.  If a tracking domain is set to the default,
+and there is already a default domain, the default is changed.
 
 **NOTE:** For SparkPost, port and secure cannot be updated.
 
@@ -326,6 +342,20 @@ Update the attributes of an existing tracking domain.
                   "code": "1600",
                   "message": "resource not found",
                   "description": "Resource not found: example.domain.com"
+                }
+              ]
+            }
+
++ Response 422 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "code": "1300",
+                  "message": "invalid data format/type",
+                  "description": "Tracking domain unverified"
                 }
               ]
             }
