@@ -119,7 +119,7 @@ Create a tracking domain. A tracking domain cannot be set as the default until i
                 {
                   "code": "1300",
                   "message": "invalid data format/type",
-                  "description": "Tracking domain 'example.domain.com' unverified"
+                  "description": "Tracking domain 'example.domain.com' unverified."
                 }
               ]
             }
@@ -355,7 +355,7 @@ and there is already a default domain, the default is changed.
                 {
                   "code": "1300",
                   "message": "invalid data format/type",
-                  "description": "Tracking domain 'example.domain.com' unverified"
+                  "description": "Tracking domain 'example.domain.com' unverified."
                 }
               ]
             }
