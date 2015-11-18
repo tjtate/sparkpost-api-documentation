@@ -7,7 +7,7 @@ Through use of the X-MSYS-API header in a message sent to SparkPost and SparkPos
 you can now specify a campaign id, metadata,
 tags, Cc, Bcc, and archive recipient lists and disable open and/or click tracking.
 
-Note that to use this option you should be familiar with how to encode
+**Note**: To use this option you should be familiar with how to encode
 options as JSON strings, as the value of the header field is a JSON object that specifies the relevant options:
 
 ```
@@ -42,6 +42,7 @@ The fields supported in the X-MSYS-API header are as follows:
 |-------|------|-------------|----------|-------|
 | open_tracking | boolean | Whether open tracking is enabled for this SMTP message | no | Defaults to true. |
 | click_tracking | boolean | Whether click tracking is enabled for this SMTP message | no | Defaults to true. |
+| transactional | boolean | Whether message is transactional or non-transactional for unsubscribe and suppression purposes | no | Defaults to false. |
 | sandbox| boolean| Whether or not to use the sandbox sending domain ( **Note:** SparkPost only ) | no | Defaults to false. |
 | skip_suppression| boolean| Whether or not to ignore customer suppression rules, for this SMTP message only. Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no | Defaults to false. |
 
