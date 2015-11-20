@@ -7,6 +7,8 @@ The following are key operational details:
 * Any webhook batch that does not receive an HTTP 200 response will be retried for a total of 4 hours before the data is discarded.
 * Each webhook batch contains the header X-MessageSystems-Batch-ID, which is useful for auditing and prevention of processing duplicate batches.
 * Webhooks posting to your endpoint will timeout after 10 seconds. For best results, write webhook batches to disk and then process asynchronously to minimize data loss if you have a problem with your database.
+* When using 'oauth2', auth_request_details must be set by the user (example: `{ "url": "https://oauth.myurl.com/tokens", "body": { "client_id": "<oauth client id>", "client_secret": "<oauth client secret>" }}`). Additionally, auth_credentials is set by the system and cannot be configured by the user.
+* When using 'basic' auth, auth_credentials must be set by the user and should be an object containing "username" (required) and "password" (optional). (example: `{ "username": "basicauthuser", "password": "mypassword" }`)
 
 ## Webhooks Object Properties
 
@@ -15,9 +17,9 @@ The following are key operational details:
 | name              | string | User-friendly name for webhook | yes | example: `Example webhook` |
 | target            | string | URL of the target to which to POST event batches | yes |  When a webhook is created or updated with a change to this property, a test POST request is sent to the given URL. The target URL must accept the connection and respond with HTTP 200; otherwise, your request to the Webhook API will fail with HTTP 400, and the requested change will not be applied.<br />example: `http://client.example.com/example-webhook` |
 | events            | array  | Array of event types this webhook will receive | yes | Use the Webhooks Events endpoint to list the available event types.<br />example: `["delivery", "injection", "open", "click"]`|
-| auth_type         | string | Type of authentication to be used during POST requests to target | no | examples: `oauth2`, `none` |
+| auth_type         | string | Type of authentication to be used during POST requests to target | no | examples: `none`, `basic`, `oauth2` |
 | auth_request_details | JSON | Object containing details needed to request authorization credentials, as necessary | no | example: `{ "url": "https://oauth.myurl.com/tokens", "body": { "client_id": "<oauth client id>", "client_secret": "<oauth client secret>" }}`|
-| auth_credentials         | JSON | Object containing credentials needed to make authorized POST requests to target | no | example: `{ access_token: "<oauth token>", expires_in: 3600 }` |
+| auth_credentials         | JSON | Object containing credentials needed to make authorized POST requests to target | no | examples: `{ "access_token": "<oauth token>", expires_in: 3600 }`, `{ "username": "basicauthuser", "password": "mypassword" }` |
 | auth_token        | string | Authentication token to present in the X-MessageSystems-Webhook-Token header of POST requests to target | no | Use this token in your target application to confirm that data is coming from the Webhooks API. <br />example: `5ebe2294ecd0e0f08eab7690d2a6ee69`<br /><br />_Note: This field is deprecated, you should use the auth_type field instead._ |
 
 __**The SparkPost webhooks API uses MaxMind software [MaxMind License](/docs/3RD_PARTY_LICENSES.md)**__
@@ -254,6 +256,33 @@ Retrieve details about a webhook by specifying its id in the URI path.
         {
           "results": [
             {
+              "id": "a2b83490-10df-11e4-b670-c1ffa86371ff",
+              "name": "Some webhook",
+              "target": "http://client.example.com/some-webhook",
+              "events": [
+                "delivery",
+                "injection",
+                "open",
+                "click"
+              ],
+              "auth_type": "basic",
+              "auth_request_details": {},
+              "auth_credentials": {
+                "username": "basicuser",
+                "password": "somepass"
+              },
+              "auth_token": "",
+              "last_successful": "2014-08-01 16:09:15",
+              "last_failure": "2014-06-01 15:15:45",
+              "links": [
+                {
+                  "href": "http://www.messagesystems-api-url.com/api/v1/webhooks/a2b83490-10df-11e4-b670-c1ffa86371ff",
+                  "rel": "urn.msys.webhooks.webhook",
+                  "method": ["GET","PUT"]
+                }
+              ]
+            },
+            {
               "id": "12affc24-f183-11e3-9234-3c15c2c818c2",
               "name": "Example webhook",
               "target": "http://client.example.com/example-webhook",
@@ -280,7 +309,7 @@ Retrieve details about a webhook by specifying its id in the URI path.
               "last_failure": "2014-08-01 15:15:45",
               "links": [
                 {
-                  "href": "http://www.messagesystems-api-url.com/api/v1/webhooks/a2b83490-10df-11e4-b670-c1ffa86371ff",
+                  "href": "http://www.messagesystems-api-url.com/api/v1/webhooks/12affc24-f183-11e3-9234-3c15c2c818c2",
                   "rel": "urn.msys.webhooks.webhook",
                   "method": ["GET","PUT"]
                 }
