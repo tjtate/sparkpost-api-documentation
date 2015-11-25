@@ -53,10 +53,14 @@ Detailed status for this sending domain is described in a JSON object with the f
 
 These are the valid request options for verifying a Sending Domain:
 
-| Field         | Type     | Description                           | Required  |
-|------------------------|:-:       |---------------------------------------|-------------|
-|dkim_verify | boolean | Request verification of DKIM record | no |
-|spf_verify | boolean | Request verification of SPF record | no |
+| Field         | Type     | Description                           | Required  | Notes   |
+|------------------------|:-:       |---------------------------------------|-------------|--------|
+|dkim_verify | boolean | Request verification of DKIM record | no | |
+|spf_verify | boolean | Request verification of SPF record | no | |
+|postmaster_at_verify | boolean | Request an email with a verification link to be sent to the sending domain's postmaster@ mailbox. | no | SparkPost.com only |
+|abuse_at_verify | boolean | Request an email with a verification link to be sent to the sending domain's abuse@ mailbox. | no | SparkPost.com only |
+|postmaster_at_token | string | A token retrieved from the verification link contained in the postmaster@ verification email. | no | SparkPost.com only |
+|abuse_at_token | string | A token retrieved from the verification link contained in the abuse@ verification email. | no | SparkPost.com only |
 
 ### DNS Attributes
 
@@ -291,9 +295,14 @@ Delete an existing sending domain.
 
 **Note:** While it is possible to call this endpoint in SparkPost Elite, the verification status of a sending domain will not affect sending. It is currently possible to send from an unverified domain in SparkPost Elite.
 
-The verify resource validates the specified verification field types. Including the fields "dkim_verify" and "spf_verify" in the request initiates a check against the associated DNS record type for the specified sending domain. The domain's "status" object is returned on success.
+The verify resource operates differently depending on the provided request fields:
+  * Including the fields "dkim_verify" and/or "spf_verify" in the request initiates a check against the associated DNS record type for the specified sending domain.
+  * Including the fields "postmaster_at_verify" and/or "abuse_at_verify" in the request results in an email sent to the specified sending domain's postmaster@ and/or abuse@ mailbox where a verification link can be clicked.
+  * Including the fields "postmaster_at_token" and/or "abuse_at_token" in the request initiates a check of the provided token(s) against the stored token(s) for the specified sending domain.
 
-+ Request (application/json)
+The domain's "status" object is returned on success.
+
++ Request Verify DKIM and SPF (application/json)
 
     + Headers
 
@@ -323,4 +332,107 @@ The verify resource validates the specified verification field types. Including 
                 "abuse_at_status": "unverified",
                 "postmaster_at_status": "unverified"
             }
+        }
+
++ Request Initiate postmaster@ email (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+    + Body
+
+        ```
+        {
+            "postmaster_at_verify" : true
+        }
+        ```
+
++ Response 200 (application/json; charset=utf-8)
+
+        {
+            "results": {
+                "ownership_verified": false,
+                "spf_status": "unverified",
+                "compliance_status": "valid",
+                "dkim_status": "unverified",
+                "abuse_at_status": "unverified",
+                "postmaster_at_status": "unverified"
+            }
+        }
+
++ Request Verify postmaster@ correct token (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+    + Body
+
+        ```
+        {
+            "postmaster_at_token" : "rcayptmrczdnrnqfsxyrzljmtsxvjzxb"
+        }
+        ```
+
++ Response 200 (application/json; charset=utf-8)
+
+        {
+            "results": {
+                "ownership_verified": true,
+                "spf_status": "unverified",
+                "compliance_status": "valid",
+                "dkim_status": "unverified",
+                "abuse_at_status": "unverified",
+                "postmaster_at_status": "valid"
+            }
+        }
+
++ Request Verify abuse@ incorrect token (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+    + Body
+
+        ```
+        {
+            "abuse_at_token" : "AN_INCORRECT_OR_EXPIRED_TOKEN"
+        }
+        ```
+
++ Response 200 (application/json; charset=utf-8)
+
+        {
+            "results": {
+                "ownership_verified": false,
+                "spf_status": "unverified",
+                "compliance_status": "valid",
+                "dkim_status": "unverified",
+                "abuse_at_status": "unverified",
+                "postmaster_at_status": "unverified"
+            }
+        }
+
++ Request Unable to process abuse@ request (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+    + Body
+
+        ```
+        {
+            "abuse_at_verify" : true
+        }
+        ```
+
++ Response 400 (application/json; charset=utf-8)
+
+        {
+           "errors": [
+              {
+                 "message": "Failed to generate message",
+                 "description": "Failed to generate verification email",
+                 "code": "1901"
+              }
+           ]
         }

@@ -5968,10 +5968,14 @@ Detailed status for this sending domain is described in a JSON object with the f
 
 These are the valid request options for verifying a Sending Domain:
 
-| Field         | Type     | Description                           | Required  |
-|------------------------|:-:       |---------------------------------------|-------------|
-|dkim_verify | boolean | Request verification of DKIM record | no |
-|spf_verify | boolean | Request verification of SPF record | no |
+| Field         | Type     | Description                           | Required  | Notes   |
+|------------------------|:-:       |---------------------------------------|-------------|--------|
+|dkim_verify | boolean | Request verification of DKIM record | no | |
+|spf_verify | boolean | Request verification of SPF record | no | |
+|postmaster_at_verify | boolean | Request an email with a verification link to be sent to the sending domain's postmaster@ mailbox. | no | SparkPost.com only |
+|abuse_at_verify | boolean | Request an email with a verification link to be sent to the sending domain's abuse@ mailbox. | no | SparkPost.com only |
+|postmaster_at_token | string | A token retrieved from the verification link contained in the postmaster@ verification email. | no | SparkPost.com only |
+|abuse_at_token | string | A token retrieved from the verification link contained in the abuse@ verification email. | no | SparkPost.com only |
 
 ### DNS Attributes
 
@@ -6206,9 +6210,14 @@ Delete an existing sending domain.
 
 **Note:** While it is possible to call this endpoint in SparkPost Elite, the verification status of a sending domain will not affect sending. It is currently possible to send from an unverified domain in SparkPost Elite.
 
-The verify resource validates the specified verification field types. Including the fields "dkim_verify" and "spf_verify" in the request initiates a check against the associated DNS record type for the specified sending domain. The domain's "status" object is returned on success.
+The verify resource operates differently depending on the provided request fields:
+  * Including the fields "dkim_verify" and/or "spf_verify" in the request initiates a check against the associated DNS record type for the specified sending domain.
+  * Including the fields "postmaster_at_verify" and/or "abuse_at_verify" in the request results in an email sent to the specified sending domain's postmaster@ and/or abuse@ mailbox where a verification link can be clicked.
+  * Including the fields "postmaster_at_token" and/or "abuse_at_token" in the request initiates a check of the provided token(s) against the stored token(s) for the specified sending domain.
 
-+ Request (application/json)
+The domain's "status" object is returned on success.
+
++ Request Verify DKIM and SPF (application/json)
 
     + Headers
 
@@ -6238,6 +6247,109 @@ The verify resource validates the specified verification field types. Including 
                 "abuse_at_status": "unverified",
                 "postmaster_at_status": "unverified"
             }
+        }
+
++ Request Initiate postmaster@ email (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+    + Body
+
+        ```
+        {
+            "postmaster_at_verify" : true
+        }
+        ```
+
++ Response 200 (application/json; charset=utf-8)
+
+        {
+            "results": {
+                "ownership_verified": false,
+                "spf_status": "unverified",
+                "compliance_status": "valid",
+                "dkim_status": "unverified",
+                "abuse_at_status": "unverified",
+                "postmaster_at_status": "unverified"
+            }
+        }
+
++ Request Verify postmaster@ correct token (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+    + Body
+
+        ```
+        {
+            "postmaster_at_token" : "rcayptmrczdnrnqfsxyrzljmtsxvjzxb"
+        }
+        ```
+
++ Response 200 (application/json; charset=utf-8)
+
+        {
+            "results": {
+                "ownership_verified": true,
+                "spf_status": "unverified",
+                "compliance_status": "valid",
+                "dkim_status": "unverified",
+                "abuse_at_status": "unverified",
+                "postmaster_at_status": "valid"
+            }
+        }
+
++ Request Verify abuse@ incorrect token (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+    + Body
+
+        ```
+        {
+            "abuse_at_token" : "AN_INCORRECT_OR_EXPIRED_TOKEN"
+        }
+        ```
+
++ Response 200 (application/json; charset=utf-8)
+
+        {
+            "results": {
+                "ownership_verified": false,
+                "spf_status": "unverified",
+                "compliance_status": "valid",
+                "dkim_status": "unverified",
+                "abuse_at_status": "unverified",
+                "postmaster_at_status": "unverified"
+            }
+        }
+
++ Request Unable to process abuse@ request (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+    + Body
+
+        ```
+        {
+            "abuse_at_verify" : true
+        }
+        ```
+
++ Response 400 (application/json; charset=utf-8)
+
+        {
+           "errors": [
+              {
+                 "message": "Failed to generate message",
+                 "description": "Failed to generate verification email",
+                 "code": "1901"
+              }
+           ]
         }
 
 # Group Suppression List
@@ -7123,7 +7235,7 @@ Create a tracking domain. A tracking domain cannot be set as the default until i
                 {
                   "code": "1300",
                   "message": "invalid data format/type",
-                  "description": "Tracking domain 'example.domain.com' unverified"
+                  "description": "Tracking domain 'example.domain.com' unverified."
                 }
               ]
             }
@@ -7359,7 +7471,7 @@ and there is already a default domain, the default is changed.
                 {
                   "code": "1300",
                   "message": "invalid data format/type",
-                  "description": "Tracking domain 'example.domain.com' unverified"
+                  "description": "Tracking domain 'example.domain.com' unverified."
                 }
               ]
             }
@@ -7483,8 +7595,8 @@ The following attributes are used when specifying inline content in the transmis
 |from |string or JSON  | Address _"from" : "deals@company.com"_ or JSON object composed of the "name" and "email" fields _"from" : { "name" : "My Company", "email" : "deals@company.com" }_ used to compose the email's "From" header| yes | Substitution syntax is supported. |
 |reply_to |string  |Email address used to compose the email's "Reply-To" header | no | Substitution syntax is supported. |
 |headers| JSON | JSON dictionary containing headers other than "Subject", "From", "To", and "Reply-To"  | no |See the Header Notes. |
-|attachments| JSON | JSON array of attachments.  **Note:** Please contact support@sparkpost.com to request enablement of attachments and inline images on your account (enabled by default on SparkPost Elite accounts) | no | For a full description, see Attachment Attributes. |
-|inline_images| JSON | JSON array of inline images.  **Note:** Please contact support@sparkpost.com to request enablement of attachments and inline images on your account (enabled by default on SparkPost Elite accounts) | no | For a full description, see Inline Image Attributes. |
+|attachments| JSON | JSON array of attachments. | no | For a full description, see Attachment Attributes. |
+|inline_images| JSON | JSON array of inline images. | no | For a full description, see Inline Image Attributes. |
 
 #### Header Notes
 
@@ -7511,8 +7623,6 @@ necessary.
 
 ### Attachment Attributes
 
-**Note:** Please contact support@sparkpost.com to request enablement of attachments and inline images on your account (enabled by default on SparkPost Elite accounts)
-
 Attachments for a transmission are specified in the content.attachments JSON array where each JSON object in the array is described by the following fields:
 
 | Field         | Type     | Description                           | Required   | Notes   |
@@ -7522,8 +7632,6 @@ Attachments for a transmission are specified in the content.attachments JSON arr
 |data |string |The content of the attachment as a Base64 encoded string.  The string should not contain \r\n line breaks.  The SparkPost systems will add line breaks as necessary to ensure the Base64 encoded lines contain no more than 76 characters each. | yes | The entirety of transmission content (text + html + attachments + inline images) is limited to 20 MBs |
 
 ### Inline Image Attributes
-
-**Note:** Please contact support@sparkpost.com to request enablement of attachments and inline images on your account (enabled by default on SparkPost Elite accounts)
 
 Inline images for a transmission are specified in the content.inline_images JSON array where each JSON object in the array is described by the following fields:
 
@@ -8382,6 +8490,8 @@ The following are key operational details:
 * Any webhook batch that does not receive an HTTP 200 response will be retried for a total of 4 hours before the data is discarded.
 * Each webhook batch contains the header X-MessageSystems-Batch-ID, which is useful for auditing and prevention of processing duplicate batches.
 * Webhooks posting to your endpoint will timeout after 10 seconds. For best results, write webhook batches to disk and then process asynchronously to minimize data loss if you have a problem with your database.
+* When using 'oauth2', auth_request_details must be set by the user (example: `{ "url": "https://oauth.myurl.com/tokens", "body": { "client_id": "<oauth client id>", "client_secret": "<oauth client secret>" }}`). Additionally, auth_credentials is set by the system and cannot be configured by the user.
+* When using 'basic' auth, auth_credentials must be set by the user and should be an object containing "username" (required) and "password" (optional). (example: `{ "username": "basicauthuser", "password": "mypassword" }`)
 
 ## Webhooks Object Properties
 
@@ -8390,9 +8500,9 @@ The following are key operational details:
 | name              | string | User-friendly name for webhook | yes | example: `Example webhook` |
 | target            | string | URL of the target to which to POST event batches | yes |  When a webhook is created or updated with a change to this property, a test POST request is sent to the given URL. The target URL must accept the connection and respond with HTTP 200; otherwise, your request to the Webhook API will fail with HTTP 400, and the requested change will not be applied.<br />example: `http://client.example.com/example-webhook` |
 | events            | array  | Array of event types this webhook will receive | yes | Use the Webhooks Events endpoint to list the available event types.<br />example: `["delivery", "injection", "open", "click"]`|
-| auth_type         | string | Type of authentication to be used during POST requests to target | no | examples: `oauth2`, `none` |
+| auth_type         | string | Type of authentication to be used during POST requests to target | no | examples: `none`, `basic`, `oauth2` |
 | auth_request_details | JSON | Object containing details needed to request authorization credentials, as necessary | no | example: `{ "url": "https://oauth.myurl.com/tokens", "body": { "client_id": "<oauth client id>", "client_secret": "<oauth client secret>" }}`|
-| auth_credentials         | JSON | Object containing credentials needed to make authorized POST requests to target | no | example: `{ access_token: "<oauth token>", expires_in: 3600 }` |
+| auth_credentials         | JSON | Object containing credentials needed to make authorized POST requests to target | no | examples: `{ "access_token": "<oauth token>", expires_in: 3600 }`, `{ "username": "basicauthuser", "password": "mypassword" }` |
 | auth_token        | string | Authentication token to present in the X-MessageSystems-Webhook-Token header of POST requests to target | no | Use this token in your target application to confirm that data is coming from the Webhooks API. <br />example: `5ebe2294ecd0e0f08eab7690d2a6ee69`<br /><br />_Note: This field is deprecated, you should use the auth_type field instead._ |
 
 __**The SparkPost webhooks API uses MaxMind software [MaxMind License](/docs/3RD_PARTY_LICENSES.md)**__
@@ -8629,6 +8739,33 @@ Retrieve details about a webhook by specifying its id in the URI path.
         {
           "results": [
             {
+              "id": "a2b83490-10df-11e4-b670-c1ffa86371ff",
+              "name": "Some webhook",
+              "target": "http://client.example.com/some-webhook",
+              "events": [
+                "delivery",
+                "injection",
+                "open",
+                "click"
+              ],
+              "auth_type": "basic",
+              "auth_request_details": {},
+              "auth_credentials": {
+                "username": "basicuser",
+                "password": "somepass"
+              },
+              "auth_token": "",
+              "last_successful": "2014-08-01 16:09:15",
+              "last_failure": "2014-06-01 15:15:45",
+              "links": [
+                {
+                  "href": "http://www.messagesystems-api-url.com/api/v1/webhooks/a2b83490-10df-11e4-b670-c1ffa86371ff",
+                  "rel": "urn.msys.webhooks.webhook",
+                  "method": ["GET","PUT"]
+                }
+              ]
+            },
+            {
               "id": "12affc24-f183-11e3-9234-3c15c2c818c2",
               "name": "Example webhook",
               "target": "http://client.example.com/example-webhook",
@@ -8655,7 +8792,7 @@ Retrieve details about a webhook by specifying its id in the URI path.
               "last_failure": "2014-08-01 15:15:45",
               "links": [
                 {
-                  "href": "http://www.messagesystems-api-url.com/api/v1/webhooks/a2b83490-10df-11e4-b670-c1ffa86371ff",
+                  "href": "http://www.messagesystems-api-url.com/api/v1/webhooks/12affc24-f183-11e3-9234-3c15c2c818c2",
                   "rel": "urn.msys.webhooks.webhook",
                   "method": ["GET","PUT"]
                 }
