@@ -620,7 +620,7 @@ Once message generation has been initiated, all messages in the transmission wil
 
         ```
         {
-          "campaign_id" : "attachment_example_sparkpost_elite_only",
+          "campaign_id" : "attachment_example",
           "recipients": [
             {
               "address": "wilma@flintstone.com"
@@ -673,7 +673,7 @@ Once message generation has been initiated, all messages in the transmission wil
 
         ```
         {
-          "campaign_id" : "inline_image_example_sparkpost_elite_only",
+          "campaign_id" : "inline_image_example",
           "recipients": [
             {
               "address": "wilma@flintstone.com"
