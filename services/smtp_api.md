@@ -1,9 +1,13 @@
 # Group SMTP API
 <a name="smtp-api"></a>
 
+**Note**: See [SMTP Relay Endpoints](#smtp-relay-endpoints) for the SMTP client configuration needed to use SparkPost or SparkPost Elite as an SMTP relay.
+
 Through use of the X-MSYS-API header in a message sent to SparkPost and SparkPost Elite through SMTP,
 you can now specify a campaign id, metadata,
-tags, Cc, Bcc, and archive recipient lists and enable open and/or click tracking.  Note that to use this option you should be familiar with how to encode
+tags, Cc, Bcc, and archive recipient lists and disable open and/or click tracking.
+
+**Note**: To use this option you should be familiar with how to encode
 options as JSON strings, as the value of the header field is a JSON object that specifies the relevant options:
 
 ```
@@ -11,6 +15,14 @@ X-MSYS-API: {"options" : {"open_tracking" : false, "click_tracking" : true},
    "metadata" : {"key" : "value"}, "tags" : ["cat", "dog"], "campaign_id" :
    "my_campaign"}
 ```
+
+Click and open tracking are enabled by default in messages sent through SparkPost.  To disable click and open tracking in SMTP messages, add the X-MSYS-API header as follows:
+```
+X-MSYS-API: { "options" : { "open_tracking" : false, "click_tracking" : false } }
+```
+
+**Note**: Key-Value [Substitutions](#substitutions-reference) are not supported in SMTP API.
+substitution_data provided in the X-MSYS-API header will be ignored.
 
 The fields supported in the X-MSYS-API header are as follows:
 
@@ -28,8 +40,8 @@ The fields supported in the X-MSYS-API header are as follows:
 
 | Field | Type | Description | Required | Notes |
 |-------|------|-------------|----------|-------|
-| open_tracking | boolean | Whether open tracking is enabled for this SMTP message | no | Defaults to false. |
-| click_tracking | boolean | Whether click tracking is enabled for this SMTP message | no | Defaults to false. |
+| open_tracking | boolean | Whether open tracking is enabled for this SMTP message | no | Defaults to true. |
+| click_tracking | boolean | Whether click tracking is enabled for this SMTP message | no | Defaults to true. |
 | transactional | boolean | Whether message is transactional or non-transactional for unsubscribe and suppression purposes | no | Defaults to false. |
 | sandbox| boolean| Whether or not to use the sandbox sending domain ( **Note:** SparkPost only ) | no | Defaults to false. |
 | skip_suppression| boolean| Whether or not to ignore customer suppression rules, for this SMTP message only. Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no | Defaults to false. |

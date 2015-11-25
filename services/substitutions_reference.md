@@ -1,8 +1,9 @@
 ## Substitutions Reference
+<a name="substitutions-reference"></a>
 
 ### Key Features
 
-* Substitutions applied in top-level headers, text/plain, and text/html parts
+* Substitutions applied in top-level headers, text/plain, and text/html parts of REST API injected messages (SMTP message substitutions currently not supported)
 * Key/value substitutions using substitution data provided in an arbitrary JSON object format
 * Conditional statements such as if, then, else, elseif
 * Looping over JSON arrays using each
