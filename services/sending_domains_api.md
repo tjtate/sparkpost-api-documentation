@@ -1,18 +1,8 @@
 # Group Sending Domains
 
-**Note:** The Sending Domains API has reduced functionality in SparkPost Elite.
-
 A sending domain is a domain that is used to indicate who an email is from via the "From:" header. Using a custom sending domain enables you to control what recipients see as the From value in their email clients. DNS records can be configured for a sending domain, which allows recipient mail servers to authenticate your messages. The Sending Domains API provides the means to create, list, retrieve, update, and verify a custom sending domain.
 
-## Sending Domains in SparkPost Elite
-
-In SparkPost Elite, the Sending Domains API can only be used to associate a tracking domain with a sending domain. None of the other attributes are currently used in SparkPost Elite.
-
-It is currently optional to register a sending domain with the Sending Domains API in SparkPost Elite. Sending domains are not currently verified in SparkPost Elite, and it is currently possible to send from an unverified sending domain.
-
 ## Sending Domain Attributes
-
-**Note:** "dkim" is currently ignored in SparkPost Elite. "status" will not currently affect whether messages can be sent from a sending domain in SparkPost Elite.
 
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
@@ -23,20 +13,17 @@ It is currently optional to register a sending domain with the Sending Domains A
 
 ### DKIM Attributes
 
-**Note:** "dkim" is currently ignored in SparkPost Elite. DKIM keypairs are currently configured by the Operations team. DKIM keys that are specified via the API are not currently used.
-
 DKIM uses a pair of public and private keys to authenticate your emails. The DKIM key configuration is described in a JSON object with the following fields:
 
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
+|signing_domain| string | Signing Domain Identifier (SDID) | no | This will be used in the d= field of the DKIM Signature. If signing_domain is not specified, then the Sending Domain will be used. |
 |private | string | DKIM private key | yes | The private key will be used to create the DKIM Signature.|
 |public | string |DKIM public key  | yes | The public key will be retrieved from DNS of the sending domain.|
 |selector | string |DomainKey selector | yes | The DomainKey selector will be used to indicate the DKIM public key location.|
 |headers | string| Header fields to be included in the DKIM signature |no | Header fields are separated by a colon.  Example: `"from:to:subject:date"`|
 
 ### Status Attributes
-
-**Note:** SparkPost Elite does not currently verify sending domains. The verification status of a sending domain will not affect sending. It is currently possible to send from an unverified domain in SparkPost Elite.
 
 Detailed status for this sending domain is described in a JSON object with the following fields:
 
@@ -76,6 +63,8 @@ These are the valid request options for verifying a Sending Domain:
 ### Create a Sending Domain [POST]
 
 Create a sending domain by providing a **sending domain object** as the POST request body.
+
+**Note**: For some SparkPost Elite customers, Sending Domains will be set to verified automatically when they are created, and can be used to send messages immediately. For these customers, there is no need to use the "verify" endpoint to verify Sending Domains.
 
 + Request (application/json)
 
@@ -292,8 +281,6 @@ Delete an existing sending domain.
 ## Verify [/sending-domains/{domain_name}/verify]
 
 ### Verify a Sending Domain [POST]
-
-**Note:** While it is possible to call this endpoint in SparkPost Elite, the verification status of a sending domain will not affect sending. It is currently possible to send from an unverified domain in SparkPost Elite.
 
 The verify resource operates differently depending on the provided request fields:
   * Including the fields "dkim_verify" and/or "spf_verify" in the request initiates a check against the associated DNS record type for the specified sending domain.
