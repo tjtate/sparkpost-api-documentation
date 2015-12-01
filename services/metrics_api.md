@@ -3073,7 +3073,7 @@ Provides aggregate count of deliveries grouped by the attempt number.
 
   [Deliveries By Attempt][]
 
-## Binding Groups List [/metrics/binding-groups]
+## Binding Groups List [/metrics/binding-groups{?from,to,timezone,limit,match}]
 
 + Model (application/json)
 
@@ -3123,6 +3123,9 @@ Returns a list of binding groups that the Metrics API contains data on.
 + Parameters
     + match (optional, string, `example`) ... Only return results containing this string
     + limit (optional, int, `5`) ... Maximum number of results to return
+    + from (optional, datetime, `2015-12-01T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + to = `now` (optional, datetime, `2014-12-01T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
 
 + Request
 
@@ -3136,7 +3139,7 @@ Returns a list of binding groups that the Metrics API contains data on.
     [Binding Groups List][]
 
 
-## Bindings List [/metrics/bindings]
+## Bindings List [/metrics/bindings{?from,to,timezone,limit,match}]
 
 + Model (application/json)
 
@@ -3186,6 +3189,9 @@ Returns a list of bindings that the Metrics API contains data on.
 + Parameters
     + match (optional, string, `example`) ... Only return results containing this string
     + limit (optional, int, `5`) ... Maximum number of results to return
+    + from (optional, datetime, `2015-12-01T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + to = `now` (optional, datetime, `2014-12-01T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
 
 + Request
 
@@ -3198,7 +3204,7 @@ Returns a list of bindings that the Metrics API contains data on.
  [Bindings List][]
 
 
-## Campaigns List [/metrics/campaigns]
+## Campaigns List [/metrics/campaigns{?from,to,timezone,limit,match}]
 
 + Model (application/json)
 
@@ -3246,6 +3252,9 @@ Returns a list of campaigns that the Metrics API contains data on.
 + Parameters
     + match (optional, string, `example`) ... Only return results containing this string
     + limit (optional, int, `5`) ... Maximum number of results to return
+    + from (optional, datetime, `2015-12-01T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + to = `now` (optional, datetime, `2014-12-01T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
 
 + Request
 
@@ -3259,7 +3268,7 @@ Returns a list of campaigns that the Metrics API contains data on.
   [Campaigns List][]
 
 
-## Domains List [/metrics/domains]
+## Domains List [/metrics/domains{?from,to,timezone,limit,match}]
 
 + Model (application/json)
 
@@ -3307,6 +3316,9 @@ Returns a list of domains that the Metrics API contains data on.
 + Parameters
     + match (optional, string, `example`) ... Only return results containing this string
     + limit (optional, int, `5`) ... Maximum number of results to return
+    + from (optional, datetime, `2015-12-01T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + to = `now` (optional, datetime, `2014-12-01T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
 
 + Request
 
@@ -3319,7 +3331,7 @@ Returns a list of domains that the Metrics API contains data on.
 
   [Domains List][]
 
-## Nodes List [/metrics/nodes]
+## Nodes List [/metrics/nodes{?from,to,timezone,limit,match}]
 
 + Model (application/json)
 
@@ -3366,6 +3378,13 @@ Returns a list of domains that the Metrics API contains data on.
 
 Returns a list of nodes that the Metrics API contains data on.
 
++ Parameters
+    + match (optional, string, `example`) ... Only return results containing this string
+    + limit (optional, int, `5`) ... Maximum number of results to return
+    + from (optional, datetime, `2015-12-01T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + to = `now` (optional, datetime, `2014-12-01T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
+
 + Request
 
   + Headers
@@ -3377,7 +3396,7 @@ Returns a list of nodes that the Metrics API contains data on.
  [Nodes List][]
 
 
-## Protocols List [/metrics/protocols]
+## Protocols List [/metrics/protocols{?from,to,timezone,limit,match}]
 
 + Model (application/json)
 
@@ -3423,6 +3442,13 @@ Returns a list of nodes that the Metrics API contains data on.
 **Note:** This endpoint is available in SparkPost Elite only.
 
 Returns a list of protocols that the Metrics API contains data on.
+
++ Parameters
+    + match (optional, string, `example`) ... Only return results containing this string
+    + limit (optional, int, `5`) ... Maximum number of results to return
+    + from (optional, datetime, `2015-12-01T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + to = `now` (optional, datetime, `2014-12-01T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
 
 + Request
 
