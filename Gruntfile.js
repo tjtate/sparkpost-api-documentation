@@ -95,29 +95,19 @@ module.exports = function(grunt) {
             '# SparkPost API v1' +
             grunt.util.linefeed +
             fs.readFileSync('./services/' + file, 'utf-8');
-
-        blueprint = blueprint.replace(new RegExp('"', 'g'), '\\"');
-        blueprint = blueprint.replace(new RegExp('\n', 'g'), '\\n');
-        blueprint = blueprint.replace(new RegExp('\r', 'g'), '\\r');
-        blueprint = blueprint.replace(new RegExp('\t', 'g'), '\\t');
+        var embedOptions = { apiBlueprint: blueprint };
 
         var body = '\
 <!DOCTYPE html>\n\
 <html lang="en">\n\
 <head>\n\
   <meta charset="UTF-8">\n\
-  <title>apiary</title>\n\
+  <title>' + file + '</title>\n\
 </head>\n\
 <body>\n\
   <script src="https://api.apiary.io/seeds/embed.js"></script>\n\
   <script>\n\
-    var embed = new Apiary.Embed({\n\
-      apiBlueprint: "'
-
-        + blueprint
-
-        + '"\
-    });\n\
+    var embed = new Apiary.Embed(' + JSON.stringify(embedOptions) + ');\n\
   </script>\n\
 </body>\n\
 </html>\
