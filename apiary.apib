@@ -9012,9 +9012,9 @@ X-MSYS-API: {"options" : {"open_tracking" : false, "click_tracking" : true},
    "my_campaign"}
 ```
 
-Click and open tracking are enabled by default in messages sent through SparkPost.  To disable click and open tracking in SMTP messages, add the X-MSYS-API header as follows:
+Click and open tracking are disabled by default in SMTP messages sent through SparkPost.  To enable click and open tracking in SMTP messages, add the X-MSYS-API header as follows:
 ```
-X-MSYS-API: { "options" : { "open_tracking" : false, "click_tracking" : false } }
+X-MSYS-API: { "options" : { "open_tracking" : true, "click_tracking" : true } }
 ```
 
 **Note**: Key-Value [Substitutions](#substitutions-reference) are not supported in SMTP API.
@@ -9036,8 +9036,8 @@ The fields supported in the X-MSYS-API header are as follows:
 
 | Field | Type | Description | Required | Notes |
 |-------|------|-------------|----------|-------|
-| open_tracking | boolean | Whether open tracking is enabled for this SMTP message | no | Defaults to true. |
-| click_tracking | boolean | Whether click tracking is enabled for this SMTP message | no | Defaults to true. |
+| open_tracking | boolean | Whether open tracking is enabled for this SMTP message | no | Defaults to false. |
+| click_tracking | boolean | Whether click tracking is enabled for this SMTP message | no | Defaults to false. |
 | transactional | boolean | Whether message is transactional or non-transactional for unsubscribe and suppression purposes | no | Defaults to false. |
 | sandbox| boolean| Whether or not to use the sandbox sending domain ( **Note:** SparkPost only ) | no | Defaults to false. |
 | skip_suppression| boolean| Whether or not to ignore customer suppression rules, for this SMTP message only. Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no | Defaults to false. |
