@@ -71,7 +71,7 @@ module.exports = function(grunt) {
         },
         watch: {
             apiaryDocs: {
-                files: [ 'services/*.md' ],
+                files: [ 'services/*.md', 'Gruntfile.js' ],
                 tasks: [ 'generate-apiary-preview' ],
                 options: {
                     livereload: true
@@ -87,37 +87,40 @@ module.exports = function(grunt) {
      */
     function generatePreview(file) {
         var deferred = q.defer()
-            , options = {
-                url: 'https://api.apiary.io/blueprint/generate',
-                headers: {
-                    'Accept': 'text/html',
-                    'Content-Type': 'text/plain'
-                }
-            };
 
-        options.body = 'FORMAT: X-1A' +
+        var blueprint = 'FORMAT: X-1A' +
             grunt.util.linefeed +
             'HOST: https://api.sparkpost.com/api/v1' +
             grunt.util.linefeed + grunt.util.linefeed +
             '# SparkPost API v1' +
             grunt.util.linefeed +
             fs.readFileSync('./services/' + file, 'utf-8');
+        var embedOptions = { apiBlueprint: blueprint };
 
-        request.post(options, function(err, response, body) {
-            var output = file.split('\.')[0] + '.html';
+        var body = '\
+<!DOCTYPE html>\n\
+<html lang="en">\n\
+<head>\n\
+  <meta charset="UTF-8">\n\
+  <title>' + file + '</title>\n\
+</head>\n\
+<body>\n\
+  <script src="https://api.apiary.io/seeds/embed.js"></script>\n\
+  <script>\n\
+    var embed = new Apiary.Embed(' + JSON.stringify(embedOptions) + ');\n\
+  </script>\n\
+</body>\n\
+</html>\
+';
 
-            if (err || response.statusCode !== 200) {
-                grunt.log.error('There was an error trying to generate the preview for ' + file, err, response.statusCode, response.body);
-                return deferred.reject(err || response.body);
-            } else {
-                fs.writeFile('./apiary-previews/' + output, body, function(err) {
-                    if (err) {
-                        grunt.log.error('There was an error trying to write to apiary.html', err);
-                        return deferred.reject(err);
-                    }
-                    return deferred.resolve();
-                });
+        var output = file.split('\.')[0] + '.html';
+
+        fs.writeFile('./apiary-previews/' + output, body, function(err) {
+            if (err) {
+                grunt.log.error('There was an error trying to write to ' + output, err);
+                return deferred.reject(err);
             }
+            return deferred.resolve();
         });
 
         return deferred.promise;
