@@ -5,13 +5,13 @@ Inbound domains are used in conjunction with Relay Webhooks.
 You can have multiple inbound domains but each domain must be globally unique. 
 
 
-Before you can use your inbound domain, you will need to add the following MX records to your DNS settings:
+Before you can use your inbound domain (e.g. `inbounddomain.test.com`), you will need to add the following MX records to your DNS settings:
 
-| Name                  | Type | Data                  | Priority |
-|-----------------------|------|-----------------------|----------|
-| <your.inbound.domain> | MX   | rx1.sparkpostmail.com | 10       |
-| <your.inbound.domain> | MX   | rx2.sparkpostmail.com | 10       |
-| <your.inbound.domain> | MX   | rx3.sparkpostmail.com | 10       |
+| Name                     | Type | Data                  | Priority |
+|--------------------------|------|-----------------------|----------|
+| `inbounddomain.test.com` | MX   | rx1.sparkpostmail.com | 10       |
+| `inbounddomain.test.com` | MX   | rx2.sparkpostmail.com | 10       |
+| `inbounddomain.test.com` | MX   | rx3.sparkpostmail.com | 10       |
 
 
 #### Inbound Domains Attributes
@@ -30,7 +30,7 @@ Create an inbound domain by providing an **inbound domains object** as the POST 
 
   + Headers
 
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
 
@@ -81,19 +81,15 @@ Create an inbound domain by providing an **inbound domains object** as the POST 
               ]
             }
 
-+ Response 409 (application/json)
++ Request Missing Domain (application/json)
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
 
-            { 
-              "errors": [
-                {
-                  "message": "resource conflict",
-                  "description": "A bounce domain with similar attributes already exists",
-                  "code": "1602"
-                }
-              ]
-            }
+            {}
 
 + Response 422 (application/json)
 
@@ -107,6 +103,18 @@ Create an inbound domain by providing an **inbound domains object** as the POST 
                   "code": "1400"
                 }
               ]
+            }
+
++ Request Invalid Domain (application/json)
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+  + Body
+
+            {
+                "domain": "inbounddomain"
             }
 
 + Response 422 (application/json)
@@ -131,8 +139,8 @@ List all your inbound domains.
 
   + Headers
 
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200 (application/json)
 
@@ -174,9 +182,9 @@ Retrieve an inbound domain by specifying its domain name in the URI path.
 + Request
 
   + Headers
-
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+  
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200 (application/json)
 
@@ -227,8 +235,8 @@ Delete an inbound domain by specifying its domain name in the URI path.
 + Request
 
   + Headers
-
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+  
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
 + Response 200
 

@@ -77,280 +77,6 @@ To use SparkPost as an SMTP relay you need to point your SMTP client (or local M
 
 The SMTP relay optionally supports advanced API features using the [SMTP API](#smtp-api).  To create an API key, login to your SparkPost [Account Credentials](https://app.sparkpost.com/account/credentials) page.
 
-# Group Inbound Domains
-
-Specifying an inbound domain enables you to customize the address to which inbound messages are sent. 
-Inbound domains are used in conjunction with Relay Webhooks.
-You can have multiple inbound domains but each domain must be globally unique. 
-
-
-Before you can use your inbound domain, you will need to add the following MX records to your DNS settings:
-
-| Name                  | Type | Data                  | Priority |
-|-----------------------|------|-----------------------|----------|
-| <your.inbound.domain> | MX   | rx1.sparkpostmail.com | 10       |
-| <your.inbound.domain> | MX   | rx2.sparkpostmail.com | 10       |
-| <your.inbound.domain> | MX   | rx3.sparkpostmail.com | 10       |
-
-
-#### Inbound Domains Attributes
-
-| Field   | Type   | Description | Required | Notes |
-|------------|--------|-------------|----------|-------|
-| domain     | string | Domain (or subdomain) name for which SparkPost will receive inbound emails | yes | Your DNS provider's MX record for this domain must point back to SparkPost. (Example: `inbounddomain.test.com`) |
-
-## Create and List [/inbound-domains]
-
-### Create an Inbound Domain [POST]
-
-Create an inbound domain by providing an **inbound domains object** as the POST request body.
-
-+ Request (application/json)
-
-  + Headers
-
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-
-  + Body
-
-            {
-              "domain": "inbounddomain.test.com"
-            }
-
-+ Response 200
-
-+ Response 400 (application/json)
-
-  + Body
-
-            { 
-              "errors" : [
-                {
-                  "message" : "Restricted domain",
-                  "description" : "Please contact us at support@sparkpost.com to get this domain authorized for your account.",
-                  "code" : "7000"
-                }
-              ]
-            }
-
-+ Response 401 (application/json)
-
-  + Body
-
-            { 
-              "errors": [
-                {
-                  "message": "Unauthorized Tenant",
-                  "code": "1303"
-                }
-              ]
-            }
-
-+ Response 409 (application/json)
-
-  + Body
-
-            { 
-              "errors": [
-                {
-                  "message": "resource conflict",
-                  "description": "An inbound domain with similar attributes already exists",
-                  "code": "1602"
-                }
-              ]
-            }
-
-+ Response 409 (application/json)
-
-  + Body
-
-            { 
-              "errors": [
-                {
-                  "message": "resource conflict",
-                  "description": "A bounce domain with similar attributes already exists",
-                  "code": "1602"
-                }
-              ]
-            }
-
-+ Response 422 (application/json)
-
-  + Body
-
-            { 
-              "errors": [
-                {
-                  "message": "required field is missing",
-                  "description": "Missing required field: (domain) is required",
-                  "code": "1400"
-                }
-              ]
-            }
-
-+ Response 422 (application/json)
-
-  + Body
-
-            { 
-              "errors": [
-                {
-                  "message": "invalid data format\/type",
-                  "description": "Error domain name contains no '.'(s) for domain: {domain}",
-                  "code": "1300"
-                }
-              ]
-            }
-
-### List all Inbound Domains [GET]
-
-List all your inbound domains.
-
-+ Request
-
-  + Headers
-
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
-
-+ Response 200 (application/json)
-
-  + Body
-
-            { 
-              "results": [
-                {
-                  "domain": "inbounddomain.test.com"
-                },
-                {
-                  "domain": "inbounddomain2.test.com"
-                }
-              ]
-            }
-
-+ Response 401 (application/json)
-
-  + Body
-
-            {
-              "errors": [
-                {
-                  "message": "Unauthorized Tenant",
-                  "code": "1303"
-                }
-              ]
-            }
-
-## Retrieve and Delete [/inbound-domains/{domain}]
-
-### Retrieve an Inbound Domain [GET]
-
-Retrieve an inbound domain by specifying its domain name in the URI path.
-
-+ Parameters
-  + domain (required, string, `inbounddomain.test.com`) ... Domain name
-
-+ Request
-
-  + Headers
-
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
-
-+ Response 200 (application/json)
-
-  + Body
-
-            {
-              "results": {
-                "domain": "inbounddomain.test.com"
-              }
-            }
-
-+ Response 401 (application/json)
-
-  + Body
-
-            {
-              "errors": [
-                {
-                  "message": "Unauthorized Tenant",
-                  "code": "1303"
-                }
-              ]
-            }
-
-+ Response 404 (application/json)
-
-  + Body
-
-            {
-              "errors": [
-                {
-                  "message": "resource not found",
-                  "code": "1600"
-                }
-              ]
-            }
-
-
-## Delete [/inbound-domains/{domain}]
-
-### Delete an Inbound Domain [DELETE]
-
-Delete an inbound domain by specifying its domain name in the URI path.
-
-+ Parameters
-  + domain (required, string, `inbounddomain.test.com`) ... Domain name
-
-+ Request
-
-  + Headers
-
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-
-+ Response 200
-
-+ Response 401 (application/json)
-
-  + Body
-
-            {
-              "errors": [
-                {
-                  "message": "Unauthorized Tenant",
-                  "code": "1303"
-                }
-              ]
-            }
-
-+ Response 404 (application/json)
-
-  + Body
-
-            {
-              "errors": [
-                {
-                  "message": "resource not found",
-                  "code": "1600"
-                }
-              ]
-            }
-
-+ Response 409 (application/json)
-
-  + Body
-
-            {
-              "errors": [
-                {
-                  "message": "resource conflict",
-                  "description": "Domain currently being used in a relay-webhook. Please delete the relay-webhook first.",
-                  "code": "1602"
-                }
-              ]
-            }
-
 ## Substitutions Reference
 <a name="substitutions-reference"></a>
 
@@ -1125,6 +851,288 @@ then that part will be quoted-printable encoded before being placed back into th
 MIME structure.  The Content-Type will be updated appropriately.
 * If after substitution, a header value contains 8-bit data, then the header
 value will be RFC2047 base64 encoded before being written back to the headers structure.
+
+# Group Inbound Domains
+
+Specifying an inbound domain enables you to customize the address to which inbound messages are sent. 
+Inbound domains are used in conjunction with Relay Webhooks.
+You can have multiple inbound domains but each domain must be globally unique. 
+
+
+Before you can use your inbound domain, you will need to add the following MX records to your DNS settings:
+
+| Name                  | Type | Data                  | Priority |
+|-----------------------|------|-----------------------|----------|
+| <your.inbound.domain> | MX   | rx1.sparkpostmail.com | 10       |
+| <your.inbound.domain> | MX   | rx2.sparkpostmail.com | 10       |
+| <your.inbound.domain> | MX   | rx3.sparkpostmail.com | 10       |
+
+
+#### Inbound Domains Attributes
+
+| Field   | Type   | Description | Required | Notes |
+|------------|--------|-------------|----------|-------|
+| domain     | string | Domain (or subdomain) name for which SparkPost will receive inbound emails | yes | Your DNS provider's MX record for this domain must point back to SparkPost. (Example: `inbounddomain.test.com`) |
+
+## Create and List [/inbound-domains]
+
+### Create an Inbound Domain [POST]
+
+Create an inbound domain by providing an **inbound domains object** as the POST request body.
+
++ Request (application/json)
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+  + Body
+
+            {
+              "domain": "inbounddomain.test.com"
+            }
+
++ Response 200
+
++ Response 400 (application/json)
+
+  + Body
+
+            { 
+              "errors" : [
+                {
+                  "message" : "Restricted domain",
+                  "description" : "Please contact us at support@sparkpost.com to get this domain authorized for your account.",
+                  "code" : "7000"
+                }
+              ]
+            }
+
++ Response 401 (application/json)
+
+  + Body
+
+            { 
+              "errors": [
+                {
+                  "message": "Unauthorized Tenant",
+                  "code": "1303"
+                }
+              ]
+            }
+
++ Response 409 (application/json)
+
+  + Body
+
+            { 
+              "errors": [
+                {
+                  "message": "resource conflict",
+                  "description": "An inbound domain with similar attributes already exists",
+                  "code": "1602"
+                }
+              ]
+            }
+
++ Request Missing Domain (application/json)
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+  + Body
+
+            {}
+
++ Response 422 (application/json)
+
+  + Body
+
+            { 
+              "errors": [
+                {
+                  "message": "required field is missing",
+                  "description": "Missing required field: (domain) is required",
+                  "code": "1400"
+                }
+              ]
+            }
+
++ Request Invalid Domain (application/json)
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+  + Body
+
+            {
+                "domain": "inbounddomain"
+            }
+
++ Response 422 (application/json)
+
+  + Body
+
+            { 
+              "errors": [
+                {
+                  "message": "invalid data format\/type",
+                  "description": "Error domain name contains no '.'(s) for domain: {domain}",
+                  "code": "1300"
+                }
+              ]
+            }
+
+### List all Inbound Domains [GET]
+
+List all your inbound domains.
+
++ Request
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Response 200 (application/json)
+
+  + Body
+
+            { 
+              "results": [
+                {
+                  "domain": "inbounddomain.test.com"
+                },
+                {
+                  "domain": "inbounddomain2.test.com"
+                }
+              ]
+            }
+
++ Response 401 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "message": "Unauthorized Tenant",
+                  "code": "1303"
+                }
+              ]
+            }
+
+## Retrieve and Delete [/inbound-domains/{domain}]
+
+### Retrieve an Inbound Domain [GET]
+
+Retrieve an inbound domain by specifying its domain name in the URI path.
+
++ Parameters
+  + domain (required, string, `inbounddomain.test.com`) ... Domain name
+
++ Request
+
+  + Headers
+  
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Response 200 (application/json)
+
+  + Body
+
+            {
+              "results": {
+                "domain": "inbounddomain.test.com"
+              }
+            }
+
++ Response 401 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "message": "Unauthorized Tenant",
+                  "code": "1303"
+                }
+              ]
+            }
+
++ Response 404 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "message": "resource not found",
+                  "code": "1600"
+                }
+              ]
+            }
+
+
+## Delete [/inbound-domains/{domain}]
+
+### Delete an Inbound Domain [DELETE]
+
+Delete an inbound domain by specifying its domain name in the URI path.
+
++ Parameters
+  + domain (required, string, `inbounddomain.test.com`) ... Domain name
+
++ Request
+
+  + Headers
+  
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
++ Response 200
+
++ Response 401 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "message": "Unauthorized Tenant",
+                  "code": "1303"
+                }
+              ]
+            }
+
++ Response 404 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "message": "resource not found",
+                  "code": "1600"
+                }
+              ]
+            }
+
++ Response 409 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "message": "resource conflict",
+                  "description": "Domain currently being used in a relay-webhook. Please delete the relay-webhook first.",
+                  "code": "1602"
+                }
+              ]
+            }
 
 # Group Metrics
 

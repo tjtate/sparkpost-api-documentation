@@ -4,8 +4,8 @@ var matchdep = require('matchdep')
     , request = require('request')
     , services = [
         'introduction.md',
-        'inbound_domains_api.md',
         'substitutions_reference.md',
+        'inbound_domains_api.md',
         'metrics_api.md',
         'message_events_api.md',
         'raw_log_api.md',
