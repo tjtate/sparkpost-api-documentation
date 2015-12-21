@@ -859,13 +859,13 @@ Inbound domains are used in conjunction with Relay Webhooks.
 You can have multiple inbound domains but each domain must be globally unique. 
 
 
-Before you can use your inbound domain, you will need to add the following MX records to your DNS settings:
+Before you can use your inbound domain (e.g. `inbounddomain.test.com`), you will need to add the following MX records to your DNS settings:
 
-| Name                  | Type | Data                  | Priority |
-|-----------------------|------|-----------------------|----------|
-| <your.inbound.domain> | MX   | rx1.sparkpostmail.com | 10       |
-| <your.inbound.domain> | MX   | rx2.sparkpostmail.com | 10       |
-| <your.inbound.domain> | MX   | rx3.sparkpostmail.com | 10       |
+| Name                     | Type | Data                  | Priority |
+|--------------------------|------|-----------------------|----------|
+| `inbounddomain.test.com` | MX   | rx1.sparkpostmail.com | 10       |
+| `inbounddomain.test.com` | MX   | rx2.sparkpostmail.com | 10       |
+| `inbounddomain.test.com` | MX   | rx3.sparkpostmail.com | 10       |
 
 
 #### Inbound Domains Attributes
