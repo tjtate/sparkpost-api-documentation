@@ -2,7 +2,7 @@
 
 **Note:** The Relay Webhooks API is available for SparkPost only.
 
-By configuring a relay webhook for a specified inbound domain, those inbound messages can be forwarded to a specified target over HTTP.  Before you create a relay webhook, be sure to first create an inbound domain that is properly configured. To create an inbound domain for your account, please contact <support@sparkpost.com>. The Relay Webhooks API provides the means to create, list, retrieve, update, and delete a relay webhook.
+By configuring a relay webhook for a specified inbound domain, those inbound messages can be forwarded to a specified target over HTTP.  Before you create a relay webhook, be sure to first create an inbound domain that is properly configured. To create an inbound domain for your account, please use our Inbound Domains API. The Relay Webhooks API provides the means to create, list, retrieve, update, and delete a relay webhook.
 
 ## Relay Webhooks Object Properties
 
@@ -18,7 +18,7 @@ By configuring a relay webhook for a specified inbound domain, those inbound mes
 | Property  | Type   | Description                                                 | Required               | Notes 
 |-----------|--------|-----------------------------------------------------------------------|--------------|----------------------|
 | protocol  | string | Inbound messaging protocol associated with this webhook | no - defaults to "SMTP" |                      |
-| domain    | string | Inbound domain associated with this webhook             | yes | To create an inbound domain for your account, please contact <support@sparkpost.com>. |
+| domain    | string | Inbound domain associated with this webhook             | yes | To create an inbound domain for your account, please use the Inbound Domains API. |
 
 ## Field Defintions
 
