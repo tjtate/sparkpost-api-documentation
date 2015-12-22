@@ -17,7 +17,7 @@
     "grunt-shell": "^1.1.2",
     "jsonlint": "^1.6.2",
     "matchdep": "^0.3.0",
-    "protagonist": "^0.19.3",
+    "protagonist": "^1.2.2",
     "q": "^1.2.0",
     "request": "^2.55.0",
     "yargs": "^3.8.0"
