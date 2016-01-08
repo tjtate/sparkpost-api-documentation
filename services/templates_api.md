@@ -134,14 +134,14 @@ Fully formed email_rfc822 content may be provided instead of the "text", "html",
           }
         }
 
-+ Response 403 (application/json)
++ Response 400 (application/json)
 
         {
           "errors" : [
             {
               "description" : "Unconfigured or unverified sending domain.",
-              "code" : "1100",
-              "message" : "permission denied"
+              "code" : "7001",
+              "message" : "Invalid domain"
             }
           ]
         }
