@@ -233,21 +233,17 @@ Once message generation has been initiated, all messages in the transmission wil
         }
         ```
 
-+ Response 403 (application/json)
++ Response 400 (application/json)
 
-    + Body
-
-        ```
         {
           "errors" : [
             {
               "description" : "Unconfigured or unverified sending domain.",
-              "code" : "1100",
-              "message" : "permission denied"
+              "code" : "7001",
+              "message" : "Invalid domain"
             }
           ]
         }
-        ```
 
 + Request Create Transmission with Inline RFC822 Content (application/json)
 
@@ -326,19 +322,17 @@ Once message generation has been initiated, all messages in the transmission wil
               }
             }
 
-+ Response 403 (application/json)
++ Response 400 (application/json)
 
-  + Body
-
+        {
+          "errors" : [
             {
-              "errors" : [
-                {
-                  "description" : "Unconfigured or unverified sending domain.",
-                  "code" : "1100",
-                  "message" : "permission denied"
-                }
-              ]
+              "description" : "Unconfigured or unverified sending domain.",
+              "code" : "7001",
+              "message" : "Invalid domain"
             }
+          ]
+        }
 
 
 + Request Create Transmission with Stored Recipient List (application/json)
