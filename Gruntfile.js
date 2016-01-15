@@ -87,7 +87,7 @@ module.exports = function(grunt) {
      * @returns {*|promise}
      */
     function generatePreview(file) {
-        var deferred = q.defer()
+        var deferred = q.defer();
 
         var blueprint = 'FORMAT: X-1A' +
             grunt.util.linefeed +

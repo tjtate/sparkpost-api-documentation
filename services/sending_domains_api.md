@@ -32,7 +32,7 @@ DKIM uses a pair of public and private keys to authenticate your emails. The DKI
 |private | string | DKIM private key | yes | The private key will be used to create the DKIM Signature.|
 |public | string |DKIM public key  | yes | The public key will be retrieved from DNS of the sending domain.|
 |selector | string |DomainKey selector | yes | The DomainKey selector will be used to indicate the DKIM public key location.|
-|headers | string| Header fields to be included in the DKIM signature |no | Header fields are separated by a colon.  Example: `"from:to:subject:date"`|
+|headers | string| Header fields to be included in the DKIM signature |no | **This field is currently ignored.** |
 
 ### Status Attributes
 
