@@ -148,10 +148,16 @@ List an overview of all sending domains in the system.
             "results" : [
                 {
                     "domain": "example1.com",
-                    "tracking_domain": "click.example1.com"
+                    "tracking_domain": "click.example1.com",
+                    "status": {
+                        "ownership_verified": true
+                    }
                 },
                 {
-                    "domain": "example2.com"
+                    "domain": "example2.com",
+                    "status": {
+                        "ownership_verified": false
+                    }
                 }
             ]
         }
