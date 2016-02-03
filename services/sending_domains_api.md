@@ -150,13 +150,23 @@ List an overview of all sending domains in the system.
                     "domain": "example1.com",
                     "tracking_domain": "click.example1.com",
                     "status": {
-                        "ownership_verified": true
+                        "ownership_verified": true,
+                        "spf_status": "valid",
+                        "abuse_at_status": "valid",
+                        "dkim_status": "valid",
+                        "compliance_status": "valid",
+                        "postmaster_at_status": "valid"
                     }
                 },
                 {
                     "domain": "example2.com",
                     "status": {
-                        "ownership_verified": false
+                        "ownership_verified": false,
+                        "spf_status": "pending",
+                        "abuse_at_status": "pending",
+                        "dkim_status": "pending",
+                        "compliance_status": "pending",
+                        "postmaster_at_status": "pending"
                     }
                 }
             ]
