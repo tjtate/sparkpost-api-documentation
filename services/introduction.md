@@ -10,6 +10,8 @@ There are two service types available:  [SparkPost](http://sparkpost.com/), our 
 ### SparkPost API Endpoint
 **https\://api.sparkpost.com/api/v1**
 
+Note: to prevent abuse, our servers enforce several layers of rate limiting, which trigger responses with the http code 429.
+
 ### SparkPost Elite API Endpoint
 **https\://yourdomain.msyscloud.com/api/v1**
 
