@@ -437,6 +437,10 @@ The relational and logical operators are as follows:
 | or |
 | not |
 
+**The Length Operator**
+
+The length operator `#` gives the length of an array. From the sample data above: `#shopping_cart` produces `2`.
+
 ### Array Iteration
 
 The substitution language uses the `each` keyword for iteration.
