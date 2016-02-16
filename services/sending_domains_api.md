@@ -6,10 +6,11 @@ A sending domain is a domain that is used to indicate who an email is from via t
 
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
-|domain    |string  |Name of the sending domain   | yes |The domain name will be used as the "From:" header address in the email.|
+|domain    | string | Name of the sending domain | yes |The domain name will be used as the "From:" header address in the email.|
 |tracking_domain | string | Associated tracking domain | no | example: "click.example1.com" |
-|status | JSON object| JSON object containing status details, including whether this domain's ownership has been verified  | no | Read only. For a full description, see the Status Attributes.|
-|dkim | JSON object| JSON object in which DKIM key configuration is defined|no| For a full description, see the DKIM Attributes.|
+|status | JSON object | JSON object containing status details, including whether this domain's ownership has been verified  | no | Read only. For a full description, see the Status Attributes.|
+|dkim | JSON object | JSON object in which DKIM key configuration is defined | no | For a full description, see the DKIM Attributes.|
+|subaccount | int | The subaccount ID to which the domain belongs | no | Zero (`0`) is the default value and is the master account. Values greater than zero are the subaccounts. Negative is invalid.|
 
 ### DKIM Attributes
 
@@ -58,7 +59,7 @@ These are the valid request options for verifying a Sending Domain:
 |dkim_error | string | Error message describing reason for DKIM verification failure |
 |spf_error | string | Error message describing reason for SPF verification failure |
 
-## Create and List [/sending-domains{?subaccount}]
+## Create [/sending-domains]
 
 ### Create a Sending Domain [POST]
 
@@ -82,7 +83,8 @@ Create a sending domain by providing a **sending domain object** as the POST req
                 "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
                 "selector": "brisbane",
                 "headers": "from:to:subject:date"
-            }
+            },
+            "subaccount": 12
         }
         ```
 
@@ -91,14 +93,14 @@ Create a sending domain by providing a **sending domain object** as the POST req
         {
             "results": {
                 "message": "Successfully Created domain.",
-                "domain": "example1.com"
-                "subaccount_id": "123"
+                "domain": "example1.com",
+                "subaccount": 12
             }
         }
 
 + Response 400 (application/json)
 
-      { 
+      {
         "errors": [
           {
             "message": "invalid params",
@@ -120,9 +122,26 @@ Create a sending domain by providing a **sending domain object** as the POST req
       ]
     }
 
++ Response 422 (application/json)
+
+      {
+        "errors": [
+          {
+            "message": "invalid params",
+            "description": "Subaccount '(subaccount)' does not exist",
+            "code": "1306"
+          }
+        ]
+      }
+
+## List [/sending-domains{?subaccount}]
+
 ### List all Sending Domains [GET]
 
 List an overview of all sending domains in the system.
+
++ Parameters
+  + subaccount =`0` (optional, int, `12`) ... Subaccount ID filter. Will only return domains belonging to the subaccount. The master account (`0`) owns all subaccount domains.
 
 + Request
 
@@ -138,7 +157,7 @@ List an overview of all sending domains in the system.
                 {
                     "domain": "example1.com",
                     "tracking_domain": "click.example1.com",
-                    "subaccount_id": "123"
+                    "subaccount": 12
                 },
                 {
                     "domain": "example2.com"
@@ -180,7 +199,7 @@ Retrieve a sending domain by specifying its domain name in the URI path.  The re
                     "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
                     "selector": "hello_selector"
                 },
-                "subaccount_id": "123"
+                "subaccount": 12
             }
         }
 
@@ -213,7 +232,8 @@ To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty
                 "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
                 "selector": "hello_selector",
                 "headers": "from:to:subject:date"
-            }
+            },
+            "subaccount": 12
         }
         ```
 
@@ -222,8 +242,8 @@ To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty
         {
             "results": {
                 "message": "Successfully Updated Domain.",
-                "domain": "example1.com"
-                "subaccount_id": "123"
+                "domain": "example1.com",
+                "subaccount": 12
             }
         }
 
@@ -250,6 +270,18 @@ To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty
         }
       ]
     }
+
++ Response 422 (application/json)
+
+      {
+        "errors": [
+          {
+            "message": "invalid params",
+            "description": "Subaccount '(subaccount)' does not exist",
+            "code": "1306"
+          }
+        ]
+      }
 
 ### Delete a Sending Domain [DELETE]
 
