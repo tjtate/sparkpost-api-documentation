@@ -10,7 +10,7 @@ A sending domain is a domain that is used to indicate who an email is from via t
 |tracking_domain | string | Associated tracking domain | no | example: "click.example1.com" |
 |status | JSON object | JSON object containing status details, including whether this domain's ownership has been verified  | no | Read only. For a full description, see the Status Attributes.|
 |dkim | JSON object | JSON object in which DKIM key configuration is defined | no | For a full description, see the DKIM Attributes.|
-|subaccount | int | The subaccount ID to which the domain belongs | no | Zero (`0`) is the default value and is the master account. Values greater than zero are the subaccounts. Negative is invalid.|
+|subaccount | int | The subaccount ID to which the domain belongs | no | The account the domain will be associated with. `0` or not specifying will assign the domain to the master account.|
 
 ### DKIM Attributes
 
@@ -93,8 +93,7 @@ Create a sending domain by providing a **sending domain object** as the POST req
         {
             "results": {
                 "message": "Successfully Created domain.",
-                "domain": "example1.com",
-                "subaccount": 12
+                "domain": "example1.com"
             }
         }
 
@@ -141,7 +140,7 @@ Create a sending domain by providing a **sending domain object** as the POST req
 List an overview of all sending domains in the system.
 
 + Parameters
-  + subaccount =`0` (optional, int, `12`) ... Subaccount ID filter. Will only return domains belonging to the subaccount. The master account (`0`) owns all subaccount domains.
+  + subaccount (optional, int, `12`) ... Subaccount ID filter. Specifying `0` will only return domains belonging to the master account. Not specifying returns all domains belonging to the master account, and it's sub accounts.
 
 + Request
 
@@ -242,8 +241,7 @@ To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty
         {
             "results": {
                 "message": "Successfully Updated Domain.",
-                "domain": "example1.com",
-                "subaccount": 12
+                "domain": "example1.com"
             }
         }
 
