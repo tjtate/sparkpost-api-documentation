@@ -151,7 +151,7 @@ Provides links to all child URIs within the Metrics API.
     [Discoverability Links][]
 
 
-## Deliverability Metrics [/metrics/deliverability{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone}]
+## Deliverability Metrics [/metrics/deliverability{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone}]
 
 
 + Model
@@ -358,6 +358,7 @@ aggregate data, which can be used as "group by" qualifiers.
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
     + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
     + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + subaccounts (optional, list, `123`) ... Comma-delimited list of subaccount ids to include
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
         + Values
             + `smtp`
@@ -410,7 +411,7 @@ aggregate data, which can be used as "group by" qualifiers.
 
 
 
-## Deliverability Metrics by Domain [/metrics/deliverability/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone,order_by,limit}]
+## Deliverability Metrics by Domain [/metrics/deliverability/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,order_by,limit}]
 
 + Model
 
@@ -597,6 +598,7 @@ Provides aggregate metrics grouped by domain over the time window specified.
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + subaccounts (optional, list, `123`) ... Comma-delimited list of subaccount ids to include
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
@@ -650,7 +652,7 @@ Provides aggregate metrics grouped by domain over the time window specified.
   [Deliverability Metrics by Domain][]
 
 
-## Deliverability Metrics by Binding [/metrics/deliverability/binding{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Binding [/metrics/deliverability/binding{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
 + Model
 
     + Body
@@ -839,6 +841,7 @@ Provides aggregate metrics grouped by binding over the time window specified.
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + subaccounts (optional, list, `123`) ... Comma-delimited list of subaccount ids to include
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
@@ -888,7 +891,7 @@ Provides aggregate metrics grouped by binding over the time window specified.
 + Response 200
 
 
-## Deliverability Metrics by Binding Group [/metrics/deliverability/binding-group{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Binding Group [/metrics/deliverability/binding-group{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
 
 + Model
 
@@ -1077,6 +1080,7 @@ Provides aggregate metrics grouped by binding group over the time window specifi
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + subaccounts (optional, list, `123`) ... Comma-delimited list of subaccount ids to include
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
