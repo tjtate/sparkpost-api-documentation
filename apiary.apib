@@ -37,6 +37,12 @@ Note: To prevent abuse, our servers enforce request rate limiting, which may tri
 * Administrators can generate an API key using the UI. Please take care to record and safeguard your API keys at all times. You cannot retrieve an API key after it has been created.
 * For examples of supplying the Authorization header, refer to the cURL example below or any of the individual API request examples.
 
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
 ## Using cURL
 If you are using cURL to call the API, you must include the resource URI in quotes when you pass in multiple query parameters separated by an **&**.
 
@@ -49,7 +55,7 @@ curl -v \
 -X GET "https://api.sparkpost.com/api/v1/metrics/deliverability/aggregate?campaigns=testjob&from=2014-01-23T14:00&metrics=count_targeted,count_sent,count_accepted&protocols=smtp&timezone=America%2FNew_York&to=2014-06-23T15:50"
 ```
 
-or 
+or
 
 ```
 curl -v \
@@ -856,10 +862,9 @@ value will be RFC2047 base64 encoded before being written back to the headers st
 
 # Group Inbound Domains
 
-Specifying an inbound domain enables you to customize the address to which inbound messages are sent. 
+Specifying an inbound domain enables you to customize the address to which inbound messages are sent.
 Inbound domains are used in conjunction with Relay Webhooks.
-You can have multiple inbound domains but each domain must be globally unique. 
-
+You can have multiple inbound domains but each domain must be globally unique.
 
 Before you can use your inbound domain (e.g. `inbounddomain.test.com`), you will need to add the following MX records to your DNS settings:
 
@@ -869,12 +874,17 @@ Before you can use your inbound domain (e.g. `inbounddomain.test.com`), you will
 | `inbounddomain.test.com` | MX   | rx2.sparkpostmail.com | 10       |
 | `inbounddomain.test.com` | MX   | rx3.sparkpostmail.com | 10       |
 
-
 #### Inbound Domains Attributes
 
 | Field   | Type   | Description | Required | Notes |
 |------------|--------|-------------|----------|-------|
 | domain     | string | Domain (or subdomain) name for which SparkPost will receive inbound emails | yes | Your DNS provider's MX record for this domain must point back to SparkPost. (Example: `inbounddomain.test.com`) |
+
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
 
 ## Create and List [/inbound-domains]
 
@@ -900,7 +910,7 @@ Create an inbound domain by providing an **inbound domains object** as the POST 
 
   + Body
 
-            { 
+            {
               "errors" : [
                 {
                   "message" : "Restricted domain",
@@ -914,7 +924,7 @@ Create an inbound domain by providing an **inbound domains object** as the POST 
 
   + Body
 
-            { 
+            {
               "errors": [
                 {
                   "message": "Unauthorized Tenant",
@@ -927,7 +937,7 @@ Create an inbound domain by providing an **inbound domains object** as the POST 
 
   + Body
 
-            { 
+            {
               "errors": [
                 {
                   "message": "resource conflict",
@@ -951,7 +961,7 @@ Create an inbound domain by providing an **inbound domains object** as the POST 
 
   + Body
 
-            { 
+            {
               "errors": [
                 {
                   "message": "required field is missing",
@@ -977,7 +987,7 @@ Create an inbound domain by providing an **inbound domains object** as the POST 
 
   + Body
 
-            { 
+            {
               "errors": [
                 {
                   "message": "invalid data format\/type",
@@ -1002,7 +1012,7 @@ List all your inbound domains.
 
   + Body
 
-            { 
+            {
               "results": [
                 {
                   "domain": "inbounddomain.test.com"
@@ -1038,7 +1048,7 @@ Retrieve an inbound domain by specifying its domain name in the URI path.
 + Request
 
   + Headers
-  
+
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
             Accept: application/json
 
@@ -1091,7 +1101,7 @@ Delete an inbound domain by specifying its domain name in the URI path.
 + Request
 
   + Headers
-  
+
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
 + Response 200
@@ -1140,6 +1150,12 @@ Delete an inbound domain by specifying its domain name in the URI path.
 
 SparkPost and SparkPost Elite log copious amounts of statistical, real-time data about message processing, message
 disposition, and campaign performance.  This reporting data is available in the UI or through the Metrics API.  The Metrics API provides a variety of endpoints enabling you to retrieve a summary of the data, data grouped by a specific qualifier, or data by event type.  Within each endpoint, you can also apply various filters to drill down to the data for your specific reporting needs.
+
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
 
 ## Metrics API Deliverability Glossary
 
@@ -1739,7 +1755,7 @@ Provides aggregate metrics grouped by domain over the time window specified.
       + Values
           + `smtp`
   + metrics (required, list) ... Comma-delimited list of metrics for filtering
-        
+
         + Values
             + `count_injected`
             + `count_bounce`
@@ -1771,7 +1787,7 @@ Provides aggregate metrics grouped by domain over the time window specified.
             + `count_sent`
             + `count_accepted`
             + `count_spam_complaint`
-            
+
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
   + limit (optional, int, `5`) ... Maximum number of results to return
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
@@ -2458,7 +2474,7 @@ Provides aggregate metrics grouped by campaign over the time window specified.
       + Values
           + `smtp`
     + metrics (required, list) ... Comma-delimited list of metrics for filtering
-      
+
         + Values
             + `count_injected`
             + `count_bounce`
@@ -2490,7 +2506,7 @@ Provides aggregate metrics grouped by campaign over the time window specified.
             + `count_sent`
             + `count_accepted`
             + `count_spam_complaint`
-            
+
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
     + limit (optional, int, `5`) ... Maximum number of results to return
     + order_by (optional, string, `count_injected`) ... Metric by which to order results
@@ -2699,7 +2715,7 @@ Provides aggregate metrics grouped by template over the time window specified.
         + Values
             + `smtp`
     + metrics (required, list) ... Comma-delimited list of metrics for filtering
-      
+
         + Values
             + `count_injected`
             + `count_bounce`
@@ -2731,7 +2747,7 @@ Provides aggregate metrics grouped by template over the time window specified.
             + `count_sent`
             + `count_accepted`
             + `count_spam_complaint`
-            
+
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
   + limit (optional, int, `5`) ... Maximum number of results to return
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
@@ -2972,7 +2988,7 @@ in the world.
             + `count_sent`
             + `count_accepted`
             + `count_spam_complaint`
-            
+
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
   + limit (optional, int, `5`) ... Maximum number of results to return
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
@@ -3247,7 +3263,7 @@ The following table describes the validation for the **precision** parameter:
             + `month`
 
     + metrics (required, list) ... Comma-delimited list of metrics for filtering
-  
+
         + Values
             + `count_injected`
             + `count_bounce`
@@ -3401,12 +3417,12 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
         + Values
             + `smtp`
     + metrics (required, list) ... Comma-delimited list of metrics to include
-        
+
         + Values
             + `count_bounce`
             + `count_inband_bounce`
             + `count_outofband_bounce`
-            
+
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
     + limit (optional, int, `5`) ... Maximum number of results to return [1,1000]
 
@@ -3535,12 +3551,12 @@ Provides deliverability metrics, specific to bounce events, grouped by the domai
         + Values
             + `smtp`
     + metrics (required, list) ... Comma-delimited list of metrics to include
-        
+
         + Values
             + `count_bounce`
             + `count_inband_bounce`
             + `count_outofband_bounce`
-            
+
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
     + limit (optional, int, `5`) ... Maximum number of results to return [1,1000]
 
@@ -3656,12 +3672,12 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
             + `smtp`
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
     + metrics (required, list) ... Comma-delimited list of metrics to include
-        
+
         + Values
             + `count_bounce`
             + `count_inband_bounce`
             + `count_outofband_bounce`
-            
+
     + limit (optional, int, `5`) ... Maximum number of results to return
 
 + Request
@@ -4109,11 +4125,11 @@ name (or URL if no link name exists).
     + to = `now` (optional, datetime, `2014-07-20T00:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
     + timezone = `UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
     + metrics (required, list) ... Comma-delimited list of metrics to include
-      
+
         + Values
             + `count_clicked`
             + `count_raw_clicked`
-    
+
     + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
     + limit (optional, int, `5`) ... Maximum number of results to return
@@ -4576,6 +4592,13 @@ Returns a list of protocols that the Metrics API contains data on.
 
 The Message Events API provides the means to search the raw events generated by SparkPost.
 
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
+
 ## Copyrights
 __**The SparkPost message events API uses MaxMind software [MaxMind License](/docs/3RD_PARTY_LICENSES.md)**__
 
@@ -4703,7 +4726,7 @@ List descriptions of the event fields that could be included in a response from 
 
 
 ## Events Samples [/message-events/events/samples{?events}]
-  
+
 ### Samples [GET]
 
 List an example of the event data that will be included in a response from the Message Events search endpoint.
@@ -4721,40 +4744,40 @@ List an example of the event data that will be included in a response from the M
     {
         "results": [
             {
-                "bounce_class": "1", 
-                "campaign_id": "Example Campaign Name", 
-                "customer_id": "1", 
-                "delv_method": "esmtp", 
-                "device_token": "45c19189783f867973f6e6a5cca60061ffe4fa77c547150563a1192fa9847f8a", 
-                "error_code": "554", 
-                "ip_address": "127.0.0.1", 
-                "message_id": "0e0d94b7-9085-4e3c-ab30-e3f2cd9c273e", 
-                "msg_from": "sender@example.com", 
-                "msg_size": "1337", 
-                "num_retries": "2", 
-                "raw_reason": "MAIL REFUSED - IP (17.99.99.99) is in black list", 
+                "bounce_class": "1",
+                "campaign_id": "Example Campaign Name",
+                "customer_id": "1",
+                "delv_method": "esmtp",
+                "device_token": "45c19189783f867973f6e6a5cca60061ffe4fa77c547150563a1192fa9847f8a",
+                "error_code": "554",
+                "ip_address": "127.0.0.1",
+                "message_id": "0e0d94b7-9085-4e3c-ab30-e3f2cd9c273e",
+                "msg_from": "sender@example.com",
+                "msg_size": "1337",
+                "num_retries": "2",
+                "raw_reason": "MAIL REFUSED - IP (17.99.99.99) is in black list",
                 "rcpt_meta": {
                     "customKey": "customValue"
-                }, 
+                },
                 "rcpt_tags": [
-                    "male", 
+                    "male",
                     "US"
-                ], 
-                "rcpt_to": "recipient@example.com", 
-                "rcpt_type": "cc", 
-                "reason": "MAIL REFUSED - IP (a.b.c.d) is in black list", 
-                "routing_domain": "example.com", 
-                "subject": "Summer deals are here!", 
-                "template_id": "templ-1234", 
-                "template_version": "1", 
-                "timestamp": 1427736822, 
-                "transmission_id": "65832150921904138", 
+                ],
+                "rcpt_to": "recipient@example.com",
+                "rcpt_type": "cc",
+                "reason": "MAIL REFUSED - IP (a.b.c.d) is in black list",
+                "routing_domain": "example.com",
+                "subject": "Summer deals are here!",
+                "template_id": "templ-1234",
+                "template_version": "1",
+                "timestamp": 1427736822,
+                "transmission_id": "65832150921904138",
                 "type": "bounce"
             }
         ]
     }
   ```
-  
+
 
 ## Message Events [/message-events{?bounce_classes,campaign_ids,events,friendly_froms,from,message_ids,page,per_page,reason,recipients,template_ids,timezone,to,transmission_ids}]
 
@@ -5147,7 +5170,7 @@ Perform a filtered search for message event data. The response is sorted by desc
     ],
     "total_count": 1000,
     "links": [
-      { 
+      {
         "href": "http://example.com/api/v1/message-events?page=1&per_page=10",
         "rel": "first"
       }, {
@@ -5172,6 +5195,12 @@ transmission using the Transmissions API, the recipients may be submitted "inlin
 transmission data, or a stored recipient list id attribute can be specified.
 
 The Recipient List API operates on lists as a whole and does not currently support management of individual recipients.
+
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
 
 ## Recipient List Attributes
 | Field         | Type     | Description                           | Required   | Notes   |
@@ -5798,9 +5827,15 @@ submitted or generating.
 
 By configuring a relay webhook for a specified inbound domain, those inbound messages can be forwarded to a specified target over HTTP.  Before you create a relay webhook, be sure to first create an inbound domain that is properly configured. To create an inbound domain for your account, please use our Inbound Domains API. The Relay Webhooks API provides the means to create, list, retrieve, update, and delete a relay webhook.
 
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
 ## Relay Webhooks Object Properties
 
-| Property  | Type   | Description                          | Required | Notes 
+| Property  | Type   | Description                          | Required | Notes
 |-----------|--------|--------------------------------------|----------|----------------------|
 | name      | string | User-friendly name                   | no       | example: `Inbound Customer Replies` |
 | target    | string | URL of the target to which to POST relay batches | yes | example: `https://webhooks.customer.example/replies` |
@@ -5809,7 +5844,7 @@ By configuring a relay webhook for a specified inbound domain, those inbound mes
 
 ### Match Object Properties
 
-| Property  | Type   | Description                                                 | Required               | Notes 
+| Property  | Type   | Description                                                 | Required               | Notes
 |-----------|--------|-----------------------------------------------------------------------|--------------|----------------------|
 | protocol  | string | Inbound messaging protocol associated with this webhook | no - defaults to "SMTP" |                      |
 | domain    | string | Inbound domain associated with this webhook             | yes | To create an inbound domain for your account, please use the Inbound Domains API. |
@@ -6201,6 +6236,12 @@ Delete a relay webhook by specifying the webhook ID in the URI path.
 
 A sending domain is a domain that is used to indicate who an email is from via the "From:" header. Using a custom sending domain enables you to control what recipients see as the From value in their email clients. DNS records can be configured for a sending domain, which allows recipient mail servers to authenticate your messages. The Sending Domains API provides the means to create, list, retrieve, update, and verify a custom sending domain.
 
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
 ## Sending Domain Attributes
 
 | Field         | Type     | Description                           | Required   | Notes   |
@@ -6297,7 +6338,7 @@ Create a sending domain by providing a **sending domain object** as the POST req
 
 + Response 400 (application/json)
 
-      { 
+      {
         "errors": [
           {
             "message": "invalid params",
@@ -6654,6 +6695,12 @@ Transactional messages are single recipient messages that are used operationally
 
 In addition to the customer-specific exclusion list, Message Systems maintains a global suppression list across all customers.
 
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
 ## List Entry Attributes
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
@@ -6886,13 +6933,18 @@ The PUT method on this endpoint has been removed in favor of the Bulk Insert/Upd
             ]
         }
 
-
 # Group Templates
 
 A template is a named collection of content stored on the server side.  Templates are used
 in a transmission by providing the id of the template at the time of transmission submission.  Each textual component of the
 template (headers, text, and html) is run through the substitution engine
 to produce recipient specific email messages.  The Templates API provides the means to manage your templates.
+
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
 
 ## Template Attributes
 
@@ -7084,7 +7136,7 @@ Fully formed email_rfc822 content may be provided instead of the "text", "html",
               "X-Customer-Campaign-ID": "Summer2014"
             }
           }
-        } 
+        }
         ```
 
 + Response 200 (application/json)
@@ -7242,7 +7294,7 @@ and update the content all in one API call. All content fields are included whet
 changed or not.
 
 Publishing a template is a specific case of an update.  The body of the PUT
-request should contain the `"published": true` field as shown in the example. The 
+request should contain the `"published": true` field as shown in the example. The
 **update_published** query parameter does not apply.
 
 + Parameters
@@ -7282,7 +7334,7 @@ request should contain the `"published": true` field as shown in the example. Th
 + Request Publish (application/json)
 
   + Headers
-      
+
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
@@ -7420,6 +7472,12 @@ With a tracking domain you can replace the domain part of the link. So if your t
 ```
 
 **Note:** Use of a tracking domain requires modification of your DNS records to include a CNAME record.
+
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
 
 ## Tracking Domains Attributes
 
@@ -7842,7 +7900,13 @@ A transmission is a collection of messages belonging to the same campaign.  It i
 
 In addition, engagement tracking options can be set in the transmission to track message opens and clicks.
 
-## Transmission Attributes 
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
+## Transmission Attributes
 
 | Field         | Type     | Description                           | Required         | Notes   |
 |--------------------|----------------      |---------------------------------------|--------------------------|--------|
@@ -7850,8 +7914,8 @@ In addition, engagement tracking options can be set in the transmission to track
 |state |string  |State of the transmission  | no | Read only.  Valid responses are "submitted", "Generating", "Success", or "Canceled". |
 |options | JSON object | JSON object in which transmission options are defined | no | For a full description, see the Options Attributes.
 |recipients | JSON array or JSON object | Inline recipient objects or object containing stored recipient list ID |yes | Specify a stored recipient list or specify recipients inline.  When using a stored recipient list, specify the "list_id" as described in Using a Stored Recipient List.  Otherwise, provide the recipients inline using the fields described in the Recipient List API documentation for Recipient Attributes. |
-|campaign_id | string |Name of the campaign|no|Maximum length - 64 bytes| 
-|description | string |Description of the transmission|no | Maximum length - 1024 bytes| 
+|campaign_id | string |Name of the campaign|no|Maximum length - 64 bytes|
+|description | string |Description of the transmission|no | Maximum length - 1024 bytes|
 |metadata|JSON object|Transmission level metadata containing key/value pairs |no| Metadata is available during events through the Webhooks and is provided to the substitution engine.  A maximum of 1000 bytes of merged metadata (transmission level + recipient level) is available with recipient metadata taking precedence over transmission metadata when there are conflicts.  |
 |substitution_data|JSON object|Key/value pairs that are provided to the substitution engine| no | Recipient substitution data takes precedence over transmission substitution data. Unlike metadata, substitution data is not included in Webhook events. |
 |return_path | string |Email to use for envelope FROM ( **Note:** SparkPost Elite only )| yes | To support Variable Envelope Return Path (VERP), this field can also optionally be specified inside of the address object of a specific recipient in order to give the recipient a unique envelope MAIL FROM. |
@@ -7866,8 +7930,8 @@ In addition, engagement tracking options can be set in the transmission to track
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
 |start_time | string | Delay generation of messages until this datetime.  For additional information, see Scheduled Transmissions. |no - defaults to immediate generation | Format YYYY-MM-DDTHH:MM:SS+-HH:MM or "now". Example: '2015-02-11T08:00:00-04:00'.|
-|open_tracking|boolean| Whether open tracking is enabled for this transmission| no |If not specified, the setting at template level is used, or defaults to true. | 
-|click_tracking|boolean| Whether click tracking is enabled for this transmission| no |If not specified, the setting at template level is used, or defaults to true. | 
+|open_tracking|boolean| Whether open tracking is enabled for this transmission| no |If not specified, the setting at template level is used, or defaults to true. |
+|click_tracking|boolean| Whether click tracking is enabled for this transmission| no |If not specified, the setting at template level is used, or defaults to true. |
 |transactional|boolean|Whether message is transactional or non-transactional for unsubscribe and suppression purposes | no |If not specified, the setting at template level is used, or defaults to false. |
 |sandbox|boolean|Whether or not to use the sandbox sending domain ( **Note:** SparkPost only )| no |Defaults to false. |
 |skip_suppression|boolean|Whether or not to ignore customer suppression rules, for this transmission only.  Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no - Defaults to false |  Unlike most other options, this flag is omitted on a GET transmission response unless the flag's value is true. |
@@ -7952,14 +8016,14 @@ Use the _options.start_time_ attribute to delay generation of messages.  The sch
 
 
 ## Create [/transmissions{?num_rcpt_errors}]
- 
+
 ### Create a Transmission [POST]
 
 You can create a transmission in a number of ways. In all cases, you can use the **num_rcpt_errors** parameter to limit the number of recipient errors returned.
 
 **Note:** The "return_path" in the POST request body applies to SparkPost Elite only.
 
-**Note:** Sending limits apply to SparkPost only. When a transmission is created in SparkPost, the number of messages in the transmission is compared to the sending limit of your account. If the transmission will cause you to exceed your sending limit, the entire transmission results in an error and no messages are sent.  Note that no messages will be sent for the given transmission, regardless of the number of messages that caused you to exceed your sending limit. In this case, the Transmission API will return an HTTP 420 error code with an error detailing whether you would exceed your hourly, daily, or sandbox sending limit. 
+**Note:** Sending limits apply to SparkPost only. When a transmission is created in SparkPost, the number of messages in the transmission is compared to the sending limit of your account. If the transmission will cause you to exceed your sending limit, the entire transmission results in an error and no messages are sent.  Note that no messages will be sent for the given transmission, regardless of the number of messages that caused you to exceed your sending limit. In this case, the Transmission API will return an HTTP 420 error code with an error detailing whether you would exceed your hourly, daily, or sandbox sending limit.
 
 #### Using Inline Email Part Content
 
@@ -8090,7 +8154,7 @@ Once message generation has been initiated, all messages in the transmission wil
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
-  
+
             {
               "options": {
                 "open_tracking": true,
@@ -8151,7 +8215,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 200 (application/json)
 
   + Body
-  
+
             {
               "results": {
                 "total_rejected_recipients": 0,
@@ -8180,7 +8244,7 @@ Once message generation has been initiated, all messages in the transmission wil
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
-  
+
             {
                 "campaign_id": "christmas_campaign",
                 "return_path": "bounces-christmas-campaign@flintstone.com",
@@ -8217,7 +8281,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 404 (application/json)
 
   + Body
-  
+
             {
               "errors": [
                 {
@@ -8235,7 +8299,7 @@ Once message generation has been initiated, all messages in the transmission wil
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
-  
+
             {
               "options": {
                 "open_tracking": true,
@@ -8299,7 +8363,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 200 (application/json)
 
   + Body
-  
+
             {
               "errors": [
                 {
@@ -8324,7 +8388,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 404 (application/json)
 
   + Body
-  
+
             {
               "errors": [
                 {
@@ -8342,7 +8406,7 @@ Once message generation has been initiated, all messages in the transmission wil
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
-  
+
             {
                 "campaign_id": "christmas_campaign",
 
@@ -8366,7 +8430,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 420 (application/json)
 
   + Body
-  
+
             {
               "errors": [
                 {
@@ -8379,7 +8443,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 420 (application/json)
 
   + Body
-  
+
             {
               "errors": [
                 {
@@ -8392,7 +8456,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 420 (application/json)
 
   + Body
-  
+
             {
               "errors": [
                 {
@@ -8409,7 +8473,7 @@ Once message generation has been initiated, all messages in the transmission wil
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
-  
+
             {
                 "name" : "Fall Sale",
                 "campaign_id": "fall",
@@ -8696,7 +8760,7 @@ Scheduled transmissions cannot be deleted if the transmission is within 10 minut
 
 
 + Parameters
-    + id (required, string, `11714265276872`) ... ID of the transmission 
+    + id (required, string, `11714265276872`) ... ID of the transmission
 
 + Request
 
@@ -8776,6 +8840,12 @@ The following are key operational details:
 * When using 'oauth2', auth_request_details must be set by the user (example: `{ "url": "https://oauth.myurl.com/tokens", "body": { "client_id": "<oauth client id>", "client_secret": "<oauth client secret>" }}`). Additionally, auth_credentials is set by the system and cannot be configured by the user.
 * When using 'basic' auth, auth_credentials must be set by the user and should be an object containing "username" (required) and "password" (optional). (example: `{ "username": "basicauthuser", "password": "mypassword" }`)
 
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
 ## Webhooks Object Properties
 
 | Property          | Type   | Description | Required | Notes |
@@ -8789,7 +8859,7 @@ The following are key operational details:
 | auth_token        | string | Authentication token to present in the X-MessageSystems-Webhook-Token header of POST requests to target | no | Use this token in your target application to confirm that data is coming from the Webhooks API. <br />example: `5ebe2294ecd0e0f08eab7690d2a6ee69`<br /><br />_Note: This field is deprecated, you should use the auth_type field instead._ |
 
 __**The SparkPost webhooks API uses MaxMind software [MaxMind License](/docs/3RD_PARTY_LICENSES.md)**__
- 
+
 ## Events Documentation [/webhooks/events/documentation]
 
 ### Documentation [GET]
