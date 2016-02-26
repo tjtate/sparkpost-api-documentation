@@ -4,7 +4,7 @@
 
 # SparkPost API Documentation
 
-[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/sparkpost)
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
 
 ## Prerequisites
 

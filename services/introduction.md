@@ -38,7 +38,7 @@ Note: To prevent abuse, our servers enforce request rate limiting, which may tri
 
 If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
 
-[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/sparkpost)
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
 
 ## Using cURL
 If you are using cURL to call the API, you must include the resource URI in quotes when you pass in multiple query parameters separated by an **&**.
