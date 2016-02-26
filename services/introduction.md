@@ -34,6 +34,12 @@ Note: To prevent abuse, our servers enforce request rate limiting, which may tri
 * Administrators can generate an API key using the UI. Please take care to record and safeguard your API keys at all times. You cannot retrieve an API key after it has been created.
 * For examples of supplying the Authorization header, refer to the cURL example below or any of the individual API request examples.
 
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/sparkpost)
+
 ## Using cURL
 If you are using cURL to call the API, you must include the resource URI in quotes when you pass in multiple query parameters separated by an **&**.
 
@@ -46,7 +52,7 @@ curl -v \
 -X GET "https://api.sparkpost.com/api/v1/metrics/deliverability/aggregate?campaigns=testjob&from=2014-01-23T14:00&metrics=count_targeted,count_sent,count_accepted&protocols=smtp&timezone=America%2FNew_York&to=2014-06-23T15:50"
 ```
 
-or 
+or
 
 ```
 curl -v \

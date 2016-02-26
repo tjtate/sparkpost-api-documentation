@@ -3,6 +3,12 @@
 SparkPost and SparkPost Elite log copious amounts of statistical, real-time data about message processing, message
 disposition, and campaign performance.  This reporting data is available in the UI or through the Metrics API.  The Metrics API provides a variety of endpoints enabling you to retrieve a summary of the data, data grouped by a specific qualifier, or data by event type.  Within each endpoint, you can also apply various filters to drill down to the data for your specific reporting needs.
 
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/sparkpost)
+
 ## Metrics API Deliverability Glossary
 
 Definitions for terms found in Metrics API
@@ -601,7 +607,7 @@ Provides aggregate metrics grouped by domain over the time window specified.
       + Values
           + `smtp`
   + metrics (required, list) ... Comma-delimited list of metrics for filtering
-        
+
         + Values
             + `count_injected`
             + `count_bounce`
@@ -633,7 +639,7 @@ Provides aggregate metrics grouped by domain over the time window specified.
             + `count_sent`
             + `count_accepted`
             + `count_spam_complaint`
-            
+
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
   + limit (optional, int, `5`) ... Maximum number of results to return
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
@@ -1320,7 +1326,7 @@ Provides aggregate metrics grouped by campaign over the time window specified.
       + Values
           + `smtp`
     + metrics (required, list) ... Comma-delimited list of metrics for filtering
-      
+
         + Values
             + `count_injected`
             + `count_bounce`
@@ -1352,7 +1358,7 @@ Provides aggregate metrics grouped by campaign over the time window specified.
             + `count_sent`
             + `count_accepted`
             + `count_spam_complaint`
-            
+
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
     + limit (optional, int, `5`) ... Maximum number of results to return
     + order_by (optional, string, `count_injected`) ... Metric by which to order results
@@ -1561,7 +1567,7 @@ Provides aggregate metrics grouped by template over the time window specified.
         + Values
             + `smtp`
     + metrics (required, list) ... Comma-delimited list of metrics for filtering
-      
+
         + Values
             + `count_injected`
             + `count_bounce`
@@ -1593,7 +1599,7 @@ Provides aggregate metrics grouped by template over the time window specified.
             + `count_sent`
             + `count_accepted`
             + `count_spam_complaint`
-            
+
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
   + limit (optional, int, `5`) ... Maximum number of results to return
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
@@ -1834,7 +1840,7 @@ in the world.
             + `count_sent`
             + `count_accepted`
             + `count_spam_complaint`
-            
+
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
   + limit (optional, int, `5`) ... Maximum number of results to return
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
@@ -2109,7 +2115,7 @@ The following table describes the validation for the **precision** parameter:
             + `month`
 
     + metrics (required, list) ... Comma-delimited list of metrics for filtering
-  
+
         + Values
             + `count_injected`
             + `count_bounce`
@@ -2263,12 +2269,12 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
         + Values
             + `smtp`
     + metrics (required, list) ... Comma-delimited list of metrics to include
-        
+
         + Values
             + `count_bounce`
             + `count_inband_bounce`
             + `count_outofband_bounce`
-            
+
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
     + limit (optional, int, `5`) ... Maximum number of results to return [1,1000]
 
@@ -2397,12 +2403,12 @@ Provides deliverability metrics, specific to bounce events, grouped by the domai
         + Values
             + `smtp`
     + metrics (required, list) ... Comma-delimited list of metrics to include
-        
+
         + Values
             + `count_bounce`
             + `count_inband_bounce`
             + `count_outofband_bounce`
-            
+
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
     + limit (optional, int, `5`) ... Maximum number of results to return [1,1000]
 
@@ -2518,12 +2524,12 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
             + `smtp`
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
     + metrics (required, list) ... Comma-delimited list of metrics to include
-        
+
         + Values
             + `count_bounce`
             + `count_inband_bounce`
             + `count_outofband_bounce`
-            
+
     + limit (optional, int, `5`) ... Maximum number of results to return
 
 + Request
@@ -2971,11 +2977,11 @@ name (or URL if no link name exists).
     + to = `now` (optional, datetime, `2014-07-20T00:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
     + timezone = `UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
     + metrics (required, list) ... Comma-delimited list of metrics to include
-      
+
         + Values
             + `count_clicked`
             + `count_raw_clicked`
-    
+
     + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
     + limit (optional, int, `5`) ... Maximum number of results to return

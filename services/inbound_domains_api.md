@@ -1,9 +1,8 @@
 # Group Inbound Domains
 
-Specifying an inbound domain enables you to customize the address to which inbound messages are sent. 
+Specifying an inbound domain enables you to customize the address to which inbound messages are sent.
 Inbound domains are used in conjunction with Relay Webhooks.
-You can have multiple inbound domains but each domain must be globally unique. 
-
+You can have multiple inbound domains but each domain must be globally unique.
 
 Before you can use your inbound domain (e.g. `inbounddomain.test.com`), you will need to add the following MX records to your DNS settings:
 
@@ -13,12 +12,17 @@ Before you can use your inbound domain (e.g. `inbounddomain.test.com`), you will
 | `inbounddomain.test.com` | MX   | rx2.sparkpostmail.com | 10       |
 | `inbounddomain.test.com` | MX   | rx3.sparkpostmail.com | 10       |
 
-
 #### Inbound Domains Attributes
 
 | Field   | Type   | Description | Required | Notes |
 |------------|--------|-------------|----------|-------|
 | domain     | string | Domain (or subdomain) name for which SparkPost will receive inbound emails | yes | Your DNS provider's MX record for this domain must point back to SparkPost. (Example: `inbounddomain.test.com`) |
+
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/sparkpost)
 
 ## Create and List [/inbound-domains]
 
@@ -44,7 +48,7 @@ Create an inbound domain by providing an **inbound domains object** as the POST 
 
   + Body
 
-            { 
+            {
               "errors" : [
                 {
                   "message" : "Restricted domain",
@@ -58,7 +62,7 @@ Create an inbound domain by providing an **inbound domains object** as the POST 
 
   + Body
 
-            { 
+            {
               "errors": [
                 {
                   "message": "Unauthorized Tenant",
@@ -71,7 +75,7 @@ Create an inbound domain by providing an **inbound domains object** as the POST 
 
   + Body
 
-            { 
+            {
               "errors": [
                 {
                   "message": "resource conflict",
@@ -95,7 +99,7 @@ Create an inbound domain by providing an **inbound domains object** as the POST 
 
   + Body
 
-            { 
+            {
               "errors": [
                 {
                   "message": "required field is missing",
@@ -121,7 +125,7 @@ Create an inbound domain by providing an **inbound domains object** as the POST 
 
   + Body
 
-            { 
+            {
               "errors": [
                 {
                   "message": "invalid data format\/type",
@@ -146,7 +150,7 @@ List all your inbound domains.
 
   + Body
 
-            { 
+            {
               "results": [
                 {
                   "domain": "inbounddomain.test.com"
@@ -182,7 +186,7 @@ Retrieve an inbound domain by specifying its domain name in the URI path.
 + Request
 
   + Headers
-  
+
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
             Accept: application/json
 
@@ -235,7 +239,7 @@ Delete an inbound domain by specifying its domain name in the URI path.
 + Request
 
   + Headers
-  
+
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
 + Response 200
