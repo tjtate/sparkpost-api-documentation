@@ -10,6 +10,12 @@ The following are key operational details:
 * When using 'oauth2', auth_request_details must be set by the user (example: `{ "url": "https://oauth.myurl.com/tokens", "body": { "client_id": "<oauth client id>", "client_secret": "<oauth client secret>" }}`). Additionally, auth_credentials is set by the system and cannot be configured by the user.
 * When using 'basic' auth, auth_credentials must be set by the user and should be an object containing "username" (required) and "password" (optional). (example: `{ "username": "basicauthuser", "password": "mypassword" }`)
 
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
 ## Webhooks Object Properties
 
 | Property          | Type   | Description | Required | Notes |
@@ -23,7 +29,7 @@ The following are key operational details:
 | auth_token        | string | Authentication token to present in the X-MessageSystems-Webhook-Token header of POST requests to target | no | Use this token in your target application to confirm that data is coming from the Webhooks API. <br />example: `5ebe2294ecd0e0f08eab7690d2a6ee69`<br /><br />_Note: This field is deprecated, you should use the auth_type field instead._ |
 
 __**The SparkPost webhooks API uses MaxMind software [MaxMind License](/docs/3RD_PARTY_LICENSES.md)**__
- 
+
 ## Events Documentation [/webhooks/events/documentation]
 
 ### Documentation [GET]

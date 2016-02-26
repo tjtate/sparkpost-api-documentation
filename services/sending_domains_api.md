@@ -2,6 +2,12 @@
 
 A sending domain is a domain that is used to indicate who an email is from via the "From:" header. Using a custom sending domain enables you to control what recipients see as the From value in their email clients. DNS records can be configured for a sending domain, which allows recipient mail servers to authenticate your messages. The Sending Domains API provides the means to create, list, retrieve, update, and verify a custom sending domain.
 
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
 ## Sending Domain Attributes
 
 | Field         | Type     | Description                           | Required   | Notes   |
@@ -98,7 +104,7 @@ Create a sending domain by providing a **sending domain object** as the POST req
 
 + Response 400 (application/json)
 
-      { 
+      {
         "errors": [
           {
             "message": "invalid params",
