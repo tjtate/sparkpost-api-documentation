@@ -6201,6 +6201,8 @@ Delete a relay webhook by specifying the webhook ID in the URI path.
 
 A sending domain is a domain that is used to indicate who an email is from via the "From:" header. Using a custom sending domain enables you to control what recipients see as the From value in their email clients. DNS records can be configured for a sending domain, which allows recipient mail servers to authenticate your messages. The Sending Domains API provides the means to create, list, retrieve, update, and verify a custom sending domain.
 
+**Note**: This endpoint is aware of the X-SP-SUBACCOUNT header.
+
 ## Sending Domain Attributes
 
 | Field         | Type     | Description                           | Required   | Notes   |
@@ -6209,7 +6211,6 @@ A sending domain is a domain that is used to indicate who an email is from via t
 |tracking_domain | string | Associated tracking domain | no | example: "click.example1.com" |
 |status | JSON object | JSON object containing status details, including whether this domain's ownership has been verified  | no | Read only. For a full description, see the Status Attributes.|
 |dkim | JSON object | JSON object in which DKIM key configuration is defined | no | For a full description, see the DKIM Attributes.|
-|subaccount | int | The subaccount ID to which the domain belongs | no | The account the domain will be associated with. `0` or not specifying will assign the domain to the master account.|
 
 ### DKIM Attributes
 
@@ -6282,8 +6283,7 @@ Create a sending domain by providing a **sending domain object** as the POST req
                 "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
                 "selector": "brisbane",
                 "headers": "from:to:subject:date"
-            },
-            "subaccount": 12
+            }
         }
         ```
 
@@ -6302,7 +6302,7 @@ Create a sending domain by providing a **sending domain object** as the POST req
         "errors": [
           {
             "message": "invalid params",
-            "description": "Tracking domain '(domain)' is not a registered tracking domain",
+            "description": "Tracking domain 'click.example1.com' is not a registered tracking domain",
             "code": "1200"
           }
         ]
@@ -6320,26 +6320,9 @@ Create a sending domain by providing a **sending domain object** as the POST req
       ]
     }
 
-+ Response 422 (application/json)
-
-      {
-        "errors": [
-          {
-            "message": "invalid params",
-            "description": "Subaccount '(subaccount)' does not exist",
-            "code": "1306"
-          }
-        ]
-      }
-
-## List [/sending-domains{?subaccount}]
-
 ### List all Sending Domains [GET]
 
 List an overview of all sending domains in the system.
-
-+ Parameters
-  + subaccount (optional, int, `12`) ... Subaccount ID filter. Specifying `0` will only return domains belonging to the master account. Not specifying returns all domains belonging to the master account, and it's sub accounts.
 
 + Request
 
@@ -6355,10 +6338,11 @@ List an overview of all sending domains in the system.
                 {
                     "domain": "example1.com",
                     "tracking_domain": "click.example1.com",
-                    "subaccount": 12
+                    "subaccount_id": 0
                 },
                 {
-                    "domain": "example2.com"
+                    "domain": "example2.com",
+                    "subaccount_id": 12
                 }
             ]
         }
@@ -6397,7 +6381,7 @@ Retrieve a sending domain by specifying its domain name in the URI path.  The re
                     "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
                     "selector": "hello_selector"
                 },
-                "subaccount": 12
+                "subaccount_id": 0
             }
         }
 
@@ -6430,8 +6414,7 @@ To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty
                 "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
                 "selector": "hello_selector",
                 "headers": "from:to:subject:date"
-            },
-            "subaccount": 12
+            }
         }
         ```
 
@@ -6467,18 +6450,6 @@ To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty
         }
       ]
     }
-
-+ Response 422 (application/json)
-
-      {
-        "errors": [
-          {
-            "message": "invalid params",
-            "description": "Subaccount '(subaccount)' does not exist",
-            "code": "1306"
-          }
-        ]
-      }
 
 ### Delete a Sending Domain [DELETE]
 
