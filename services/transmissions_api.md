@@ -33,7 +33,7 @@ In addition, engagement tracking options can be set in the transmission to track
 |transactional|boolean|Whether message is transactional or non-transactional for unsubscribe and suppression purposes | no |If not specified, the setting at template level is used, or defaults to false. |
 |sandbox|boolean|Whether or not to use the sandbox sending domain ( **Note:** SparkPost only )| no |Defaults to false. |
 |skip_suppression|boolean|Whether or not to ignore customer suppression rules, for this transmission only.  Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no - Defaults to false |  Unlike most other options, this flag is omitted on a GET transmission response unless the flag's value is true. |
-| ip_pool | string | The name of a dedicated IP pool associated with your account.  If this field is not provided, the account's default dedicated IP pool is used (if such a pool exists).  To explicitly bypass the account's default dedicated IP pool and instead fallback to the shared pool, specify a value of "shared". | no | For more information on dedicated IPs, see the [Support Center](https://support.sparkpost.com/customer/en/portal/articles/2002977-dedicated-ip-addresses)
+| ip_pool | string | The name of a dedicated IP pool associated with your account.  If this field is not provided, the account's default dedicated IP pool is used (if such a pool exists).  To explicitly bypass the account's default dedicated IP pool and instead fallback to the shared pool, specify a value of "sp_shared". | no | For more information on dedicated IPs, see the [Support Center](https://support.sparkpost.com/customer/en/portal/articles/2002977-dedicated-ip-addresses)
 
 ### Inline Content Attributes
 
