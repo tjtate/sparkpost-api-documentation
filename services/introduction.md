@@ -75,3 +75,41 @@ To use SparkPost as an SMTP relay you need to point your SMTP client (or local M
 * Please contact your Technical Account Manager for details on your SMTP endpoint.  
 
 The SMTP relay optionally supports advanced API features using the [SMTP API](#smtp-api).  To create an API key, login to your SparkPost [Account Credentials](https://app.sparkpost.com/account/credentials) page.
+
+### Subaccount Aware APIs
+With the introduction of SparkPost's subaccounts feature, some of the SparkPost APIs are now able to store and retrieve subaccount resources. Additionally, these APIs will be accessible by Subaccount level API keys,
+which will allow your subaccounts to perform CRUD on their own assets and data. Master Accounts are also able to perform CRUD on behalf of their subaccounts.
+
+* Metrics <TODO: put link here> (Note: Only available to Master Accounts)
+* Message Events <TODO: put link here>
+* Sending Domains <">
+* Tracking Domains <">
+* SMTP Injection <">
+
+Subaccount aware SparkPost APIs allow Master Accounts to use the `X-MSYS-SUBACCOUNT` HTTP header to manipulate/filter subaccount resources on behalf of their subaccounts.
+This header is not required, but if provided, the value of `X-MSYS-SUBACCOUNT` must be a number. If a subaccount API key attempts to provide this header, it is ignored.
+
+#### Viewing resources in subaccount aware APIs (GET requests)
+* Absence of the `X-MSYS-SUBACCOUNT` header in a request will result in a response comprised of both Master Account resources and Subaccount Resources
+  * Subaccount resources will contain the key `subaccount_id`, to allow you to differenciate between Master Account resources and subaccount resources
+* To view only Master Account resources, set the `X-MSYS-SUBACCOUNT` header on the request to a value of 0. This will result in a response comprised of ONLY Master Account resources
+* To view a specific subaccount's resources, set the `X-MSYS-SUBACCOUNT` header on the request to a value matching a subaccount ID belonging to your Master Account. This will result in a response comprised of ONLY that subaccount's resources
+* The Metrics and Message Events APIs allow you to retrieve/filter resources by multiple subaccounts. These APIs do not accept the `X-MSYS-SUBACCOUNT` header, but instead accept a query parameter of `subaccounts`. Refer to the Metrics <link> and Message Events <link> API documentation for examples
+
+#### Creating resources in subaccount aware APIs (POST requests)
+* Absence of the `X-MSYS-SUBACCOUNT` header will result in creation of a resource belonging to the Master Account
+* While creating a resource, `X-MSYS-SUBACCOUNT` set to 0 will result in creation of a resource belonging to the Master Account
+  * Omitting the `X-MSYS-SUBACCOUNT` header or setting it to 0 will result in the exact same behavior
+* While creating a resource, `X-MSYS-SUBACCOUNT` set to a subaccount ID belonging to your Master Account will result in the creation of a resource belonging to that subaccount
+
+#### Updating resources in subaccount aware APIs (PUT requests)
+* Absence of the `X-MSYS-SUBACCOUNT` header will result in updating a resource which belongs to the Master Account
+* When updating a resource, setting `X-MSYS-SUBACCOUNT` to 0 will result in updating a resource which belongs to the Master Account
+  * Omitting the `X-MSYS-SUBACCOUNT` header or setting it to 0 will result in the exact same behavior
+* When updating a resource,`X-MSYS-SUBACCOUNT` set to a subaccount ID belonging to your Master Account will result in the creation of a resource belonging to that subaccount
+
+#### Deleting resources in subaccount aware APIs (DELETE requests)
+* Absence of the `X-MSYS-SUBACCOUNT` header will result in removing a resource which belongs to the Master Account
+* When deleting a resource, setting `X-MSYS-SUBACCOUNT` to 0 will result in deleting a resource which belongs to the Master Account
+  * Omitting the `X-MSYS-SUBACCOUNT` header or setting it to 0 will result in the exact same behavior
+* When deleting a resource, `X-MSYS-SUBACCOUNT` set to a subaccount ID belonging to your Master Account will result in deleting a resource belonging to that subaccount
