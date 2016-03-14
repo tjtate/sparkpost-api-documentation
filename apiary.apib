@@ -79,43 +79,37 @@ To use SparkPost as an SMTP relay you need to point your SMTP client (or local M
 
 The SMTP relay optionally supports advanced API features using the [SMTP API](#smtp-api).  To create an API key, login to your SparkPost [Account Credentials](https://app.sparkpost.com/account/credentials) page.
 
-## Subaccount Aware APIs - Coming to an API near you in April!
-With the introduction of SparkPost's subaccounts feature, some of the SparkPost APIs are now able to store and retrieve subaccount resources. Additionally, these APIs will be accessible by Subaccount level API keys,
-which will allow your subaccounts to perform CRUD on their own assets and data. Master Accounts are also able to perform CRUD on behalf of their subaccounts.
+## Subaccounts - Coming to an API near you in April!
+With the introduction of subaccounts, some of the APIs are now able to store and retrieve information at a more granular level.
+Subaccounts are a way for service providers to provision and manage their customers separately from each other and to provide assets and reporting data.
+
+The following APIs have subaccount support:
 
 * [Metrics API](#metrics-api) **(Note: Not available for Subaccount API keys)**
 * [Message Events API](#message-events-api)
 * [Sending Domains API](#sending-domains-api)
 * [Tracking Domains API](#tracking-domains-api)
+* [Suppression List API](#suppression-list-api)
 * [SMTP API](#smtp-api)
 
-Subaccount aware SparkPost APIs allow Master Accounts to use the `X-MSYS-SUBACCOUNT` HTTP header to manipulate/filter subaccount resources on behalf of their subaccounts.
-This header is not required, but if provided, the value of `X-MSYS-SUBACCOUNT` must be a number. If a subaccount API key attempts to provide this header, it is ignored.
+### Terminology
+* Master Account - This refers to a Service Provider and the Service Provider's data
+* Subaccounts - This refers to a Service Provider's customer(s), and that customer's data
 
-### Viewing resources in subaccount aware APIs (GET requests)
-* Absence of the `X-MSYS-SUBACCOUNT` header in a request will result in a response comprised of both Master Account resources and Subaccount Resources
-  * Subaccount resources will contain the key `subaccount_id`, to allow you to differenciate between Master Account resources and subaccount resources
-* To view only Master Account resources, set the `X-MSYS-SUBACCOUNT` header on the request to a value of 0. This will result in a response comprised of ONLY Master Account resources
-* To view a specific subaccount's resources, set the `X-MSYS-SUBACCOUNT` header on the request to a value matching a subaccount ID belonging to your Master Account. This will result in a response comprised of ONLY that subaccount's resources
-* The Metrics and Message Events APIs allow you to retrieve/filter resources by multiple subaccounts. These APIs do not accept the `X-MSYS-SUBACCOUNT` header, but instead accept a query parameter of `subaccounts`. Refer to the Metrics and Message Events API documentation for examples
+### Managing subaccount data as a Service Provider
+* Use the `X-MSYS-SUBACCOUNT` header to manage a subaccount's data
+* `X-MSYS-SUBACCOUNT` is not required, but if provided, must be a number
+* Subaccount API keys are unable to use `X-MSYS-SUBACCOUNT`. If it is provided in requests with a Subaccount API key, it will be ignored
+* Master Accounts can set `X-MSYS-SUBACCOUNT` with the ID of their subaccount to manage subaccount data on their behalf
+  * For example, on a GET request to /api/v1/sending-domains, setting X-MSYS-SUBACCOUNT to 123 will only return sending domains which belong to Subaccount 123
+  * The same applies to data management, setting X-MSYS-SUBACCOUNT to 123 on a POST request to /api/v1/sending/domains will create a sending domain belonging to Subaccount 123
 
-### Creating resources in subaccount aware APIs (POST requests)
-* Absence of the `X-MSYS-SUBACCOUNT` header will result in creation of a resource belonging to the Master Account
-* While creating a resource, `X-MSYS-SUBACCOUNT` set to 0 will result in creation of a resource belonging to the Master Account
-  * Omitting the `X-MSYS-SUBACCOUNT` header or setting it to 0 will result in the exact same behavior
-* While creating a resource, `X-MSYS-SUBACCOUNT` set to a subaccount ID belonging to your Master Account will result in the creation of a resource belonging to that subaccount
-
-### Updating resources in subaccount aware APIs (PUT requests)
-* Absence of the `X-MSYS-SUBACCOUNT` header will result in updating a resource which belongs to the Master Account
-* When updating a resource, setting `X-MSYS-SUBACCOUNT` to 0 will result in updating a resource which belongs to the Master Account
-  * Omitting the `X-MSYS-SUBACCOUNT` header or setting it to 0 will result in the exact same behavior
-* When updating a resource,`X-MSYS-SUBACCOUNT` set to a subaccount ID belonging to your Master Account will result in the creation of a resource belonging to that subaccount
-
-### Deleting resources in subaccount aware APIs (DELETE requests)
-* Absence of the `X-MSYS-SUBACCOUNT` header will result in removing a resource which belongs to the Master Account
-* When deleting a resource, setting `X-MSYS-SUBACCOUNT` to 0 will result in deleting a resource which belongs to the Master Account
-  * Omitting the `X-MSYS-SUBACCOUNT` header or setting it to 0 will result in the exact same behavior
-* When deleting a resource, `X-MSYS-SUBACCOUNT` set to a subaccount ID belonging to your Master Account will result in deleting a resource belonging to that subaccount
+### Managing master account data as a Service Provider
+* Setting `X-MSYS-SUBACCOUNT` to 0 will retrieve or manage Master Account data only
+* For POST/PUT/DELETE requests, omitting `X-MSYS-SUBACCOUNT` will result in the same behavior as setting `X-MSYS-SUBACCOUNT` to 0
+* For GET requests, omitting `X-MSYS-SUBACCOUNT` will result in Master Account and Subaccount data in the response
+  * Subaccount data will have the key `subaccount_id` in the response object
+* Metrics and Message Events APIs do not use `X-MSYS-SUBACCOUNT`. Instead, setting the query parameter `subaccounts` to 0 will return only Master Account reporting data
 
 ## Substitutions Reference
 <a name="substitutions-reference"></a>
@@ -6683,6 +6677,7 @@ The domain's "status" object is returned on success.
         }
 
 # Group Suppression List
+<a name="suppression-list-api"></a>
 
 A suppression list - or exclusion list, as it is sometimes called - stores a recipient's opt-out preferences. It is a list of recipient email addresses to which you do NOT want to send email. The Suppression List API is used to manage your customer-specific exclusion list entries.  An entry indicates whether the recipient requested to receive one of the following:
 

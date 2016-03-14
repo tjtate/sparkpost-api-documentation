@@ -1,4 +1,5 @@
 # Group Suppression List
+<a name="suppression-list-api"></a>
 
 A suppression list - or exclusion list, as it is sometimes called - stores a recipient's opt-out preferences. It is a list of recipient email addresses to which you do NOT want to send email. The Suppression List API is used to manage your customer-specific exclusion list entries.  An entry indicates whether the recipient requested to receive one of the following:
 
