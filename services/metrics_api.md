@@ -1141,25 +1141,32 @@ Provides aggregate metrics grouped by binding group over the time window specifi
         {
           "results": [
             {
-              "subaccount_id": 123,
               "count_targeted": 34432,
               "count_injected": 32323,
               "count_rejected": 2343,
-              "count_sent": 34344
+              "count_sent": 34344,
+              "subaccount_id": 0
             },
             {
-              "subaccount_id": 125,
               "count_targeted": 34432,
               "count_injected": 32323,
               "count_rejected": 2343,
-              "count_sent": 34344
+              "count_sent": 34344,
+              "subaccount_id": 123
             },
             {
-              "subaccount_id": 127,
               "count_targeted": 34432,
               "count_injected": 32323,
               "count_rejected": 2343,
-              "count_sent": 34344
+              "count_sent": 34344,
+              "subaccount_id": 125
+            },
+            {
+              "count_targeted": 34432,
+              "count_injected": 32323,
+              "count_rejected": 2343,
+              "count_sent": 34344,
+              "subaccount_id": 127
             }
           ]
         }
