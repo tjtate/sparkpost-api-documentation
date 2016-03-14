@@ -1,0 +1,182 @@
+# Group Subaccounts API - Coming in April!
+<a name="subaccounts-api"></a>
+API for retrieving and managing subaccounts associated with your Master Account.
+Subaccounts are a way for service providers to provision and manage their customers separately from each other and to provide assets and reporting data.
+
+## Subaccounts Collection [/subaccounts]
+
+### List subaccounts [GET]
+
+Endpoint for retrieving a list of your subaccounts. This endpoint only returns information about the subaccounts themselves, not the data associated with the subaccount.
+
++ Request
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        {
+          "results": [
+            {
+              "id": 123,
+              "name": "Joe's Garage",
+              "status": "active",
+              "compliance_status": "active"
+            },
+            {
+              "id": 456,
+              "name": "SharkPost",
+              "status": "active",
+              "compliance_status": "active"
+            },
+            {
+              "id": 789,
+              "name": "Dev Avocado",
+              "status": "suspended",
+              "compliance_status": "active"
+            }
+          ]
+        }
+
+### Create new subaccount [POST]
+
+Provisions a new subaccount and an initial subaccount API key. Subaccount API keys are only allowed very
+specific grants, which are limited to: `smtp/inject`, `sending_domains/manage`, `message_events/view` and `suppression_lists/manage`.
+Subaccounts are allowed to send mail using the SMTP protocol, retrieve sending statistics via the Message Events API, and manage their own Sending Domains and Suppression List.
+
+#### Request Body Attributes
+
+| Field         | Required   | Type    | Description                                                                                                                   |
+| ------------  | ---------- | ------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| name          | yes        | string  | User friendly identifier for a specific subaccount                                                                            |
+| key_label     | yes        | string  | User friendly identifier for the initial subaccount api key                                                                   |
+| key_grants    | yes        | Array   | List of grants to give to the initial subaccount api key                                                                      |
+| key_valid_ips | no         | Array   | List of IP's that the initial subaccount api key can be used from. If empty array, then api key is usable on any IP address   |
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+    + Body
+
+            {
+              "name": "Sparkle Ponies",
+              "key_label": "API Key for Sparkle Ponies Subaccount",
+              "key_grants": ["smtp/inject", "sending_domains/manage", "message_events/view", "suppression_lists/manage"]
+            }
+
++ Response 200 (application/json)
+
+        {
+          "results": {
+            "subaccount_id": 888,
+            "key": "cf806c8c472562ab98ad5acac1d1b06cbd1fb438",
+            "label": "API Key for Sparkle Ponies Subaccount",
+            "short_key": "cf80"
+          }
+        }
+
++ Response 400 (application/json)
+
+        {
+          "errors": [
+            {
+              "message": "`name` is a required field",
+              "param": "name",
+              "value": null
+            },
+            {
+              "message": "`key_label` is a required field",
+              "param": "key_label",
+              "value": null
+            },
+            {
+              "message": "`key_grants` is a required field",
+              "param": "key_grants",
+              "value": null
+            },
+            {
+              "message": "Invalid `key_grants value`. Supported values are: 'smtp/inject', 'sending_domains/manage', 'message_events/view', 'suppression_lists/manage'",
+              "param": "key_grants",
+              "value": null
+            },
+            {
+              "message": "`key_valid_ips` must be an Array",
+              "param": "key_valid_ips",
+              "value": null
+            },
+            {
+              "message": "`key_valid_ips` must have valid netmask values",
+              "param": "key_valid_ips",
+              "value": null
+            }
+          ]
+        }
+
+## Subaccounts Entity [/subaccounts/:subaccountID]
+
+### List specific subaccount [GET]
+
+Endpoint for retrieving information about a specific subaccount.
+
++ Request
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Parameters
+
+    + subaccountID (required, integer, `123`) ... Identifier of subaccount
+
++ Response 200 (application/json)
+
+            {
+              "results": {
+                "id": 123,
+                "name": "Joes Garage",
+                "status": "active",
+                "compliance_status": "active"
+              }
+            }
+
+### Edit a subaccount [PUT]
+Update an existing subaccount's information. You can update the following information associated with a subaccount:
+
+#### Request Body Attributes
+
+| Field   | Required   | Type   | Description                                        | Notes |
+| ------- | ---------- | ------ | -------------------------------------------------- | ----- |
+| name    | no         | string | User friendly identifier for a specific subaccount |       |
+| status  | no         | string | Status of the account                              | Value is one of `active`, `suspended`, or `terminated` |
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+    + Body
+
+            {
+              "name": "Hey Joe! Garage and Parts",
+              "status": "suspended"
+            }
+
++ Parameters
+
+    + subaccountID (required, integer, `123`) ... Identifier of subaccount
+
++ Response 200 (application/json)
+
+            {
+              "results": {
+                "message": "Successfully updated subaccount information"
+              }
+            }
