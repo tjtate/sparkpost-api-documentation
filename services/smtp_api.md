@@ -45,6 +45,7 @@ The fields supported in the X-MSYS-API header are as follows:
 | transactional | boolean | Whether message is transactional or non-transactional for unsubscribe and suppression purposes | no | Defaults to false. |
 | sandbox| boolean| Whether or not to use the sandbox sending domain ( **Note:** SparkPost only ) | no | Defaults to false. |
 | skip_suppression| boolean| Whether or not to ignore customer suppression rules, for this SMTP message only. Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no | Defaults to false. |
+| inline_css| boolean| Whether or not to perform CSS inlining in HTML content | no | Defaults to false. |
 
 ## Sending Messages with cc, bcc, and archive Recipients
 

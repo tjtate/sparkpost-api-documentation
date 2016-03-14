@@ -6,10 +6,10 @@ A sending domain is a domain that is used to indicate who an email is from via t
 
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
-|domain    |string  |Name of the sending domain   | yes |The domain name will be used as the "From:" header address in the email.|
+|domain    | string | Name of the sending domain | yes |The domain name will be used as the "From:" header address in the email.|
 |tracking_domain | string | Associated tracking domain | no | example: "click.example1.com". Note that currently we don't allow tracking domains to be linked to sending domains belonging to subaccounts.|
-|status | JSON object| JSON object containing status details, including whether this domain's ownership has been verified  | no | Read only. For a full description, see the Status Attributes.|
-|dkim | JSON object| JSON object in which DKIM key configuration is defined|no| For a full description, see the DKIM Attributes.|
+|status | JSON object | JSON object containing status details, including whether this domain's ownership has been verified  | no | Read only. For a full description, see the Status Attributes.|
+|dkim | JSON object | JSON object in which DKIM key configuration is defined | no | For a full description, see the DKIM Attributes.|
 
 ### DKIM Attributes
 
@@ -58,7 +58,7 @@ These are the valid request options for verifying a Sending Domain:
 |dkim_error | string | Error message describing reason for DKIM verification failure |
 |spf_error | string | Error message describing reason for SPF verification failure |
 
-## Create and List [/sending-domains]
+## Create [/sending-domains]
 
 ### Create a Sending Domain [POST]
 
@@ -76,12 +76,12 @@ Create a sending domain by providing a **sending domain object** as the POST req
 
         ```
         {
-            "domain" : "example1.com",
-            "tracking_domain" : "click.example1.com",
-            "dkim" : {  "private" : "MIICXgIBAAKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQABAoGBAITb3BCRPBi5lGhHdn+1RgC7cjUQEbSb4eFHm+ULRwQ0UIPWHwiVWtptZ09usHq989fKp1g/PfcNzm8c78uTS6gCxfECweFCRK6EdO6cCCr1cfWvmBdSjzYhODUdQeyWZi2ozqd0FhGWoV4VHseh4iLj36DzleTLtOZj3FhAo1WJAkEA68T+KkGeDyWwvttYtuSiQCCTrXYAWTQnkIUxduCp7Ap6tVeIDn3TaXTj74UbEgaNgLhjG4bX//fdeDW6PaK9YwJBAM6xJmwHLPMgwNVjiz3u/6fhY3kaZTWcxtMkXCjh1QE82KzDwqyrCg7EFjTtFysSHCAZxXZMcivGl4TZLHnydJUCQQCx16+M+mAatuiCnvxlQUMuMiSTNK6Amzm45u9v53nlZeY3weYMYFdHdfe1pebMiwrT7MI9clKebz6svYJVmdtXAkApDAc8VuR3WB7TgdRKNWdyGJGfoD1PO1ZE4iinOcoKV+IT1UCY99Kkgg6C7j62n/8T5OpRBvd5eBPpHxP1F9BNAkEA5Nf2VO9lcTetksHdIeKK+F7sio6UZn0Rv7iUo3ALrN1D1cGfWIh2dj3ko1iSreyNVSwGW0ePP27qDmU+u6/Y1g==",
-                "public" : "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
-                "selector" : "brisbane",
-                "headers" : "from:to:subject:date"
+            "domain": "example1.com",
+            "tracking_domain": "click.example1.com",
+            "dkim": {  "private": "MIICXgIBAAKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQABAoGBAITb3BCRPBi5lGhHdn+1RgC7cjUQEbSb4eFHm+ULRwQ0UIPWHwiVWtptZ09usHq989fKp1g/PfcNzm8c78uTS6gCxfECweFCRK6EdO6cCCr1cfWvmBdSjzYhODUdQeyWZi2ozqd0FhGWoV4VHseh4iLj36DzleTLtOZj3FhAo1WJAkEA68T+KkGeDyWwvttYtuSiQCCTrXYAWTQnkIUxduCp7Ap6tVeIDn3TaXTj74UbEgaNgLhjG4bX//fdeDW6PaK9YwJBAM6xJmwHLPMgwNVjiz3u/6fhY3kaZTWcxtMkXCjh1QE82KzDwqyrCg7EFjTtFysSHCAZxXZMcivGl4TZLHnydJUCQQCx16+M+mAatuiCnvxlQUMuMiSTNK6Amzm45u9v53nlZeY3weYMYFdHdfe1pebMiwrT7MI9clKebz6svYJVmdtXAkApDAc8VuR3WB7TgdRKNWdyGJGfoD1PO1ZE4iinOcoKV+IT1UCY99Kkgg6C7j62n/8T5OpRBvd5eBPpHxP1F9BNAkEA5Nf2VO9lcTetksHdIeKK+F7sio6UZn0Rv7iUo3ALrN1D1cGfWIh2dj3ko1iSreyNVSwGW0ePP27qDmU+u6/Y1g==",
+                "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
+                "selector": "brisbane",
+                "headers": "from:to:subject:date"
             }
         }
         ```
@@ -89,20 +89,19 @@ Create a sending domain by providing a **sending domain object** as the POST req
 + Response 200 (application/json; charset=utf-8)
 
         {
-            "results" : {
-                "message" : "Successfully Created domain.",
-                "domain"  : "example1.com"
-
+            "results": {
+                "message": "Successfully Created domain.",
+                "domain": "example1.com"
             }
         }
 
 + Response 400 (application/json)
 
-      { 
+      {
         "errors": [
           {
             "message": "invalid params",
-            "description": "Tracking domain '(domain)' is not a registered tracking domain",
+            "description": "Tracking domain 'click.example1.com' is not a registered tracking domain",
             "code": "1200"
           }
         ]
@@ -111,7 +110,7 @@ Create a sending domain by providing a **sending domain object** as the POST req
 + Response 422 (application/json)
 
     {
-      "errors" : [
+      "errors": [
         {
           "message": "invalid data format/type",
           "description": "Error validating domain name syntax for domain: '(domain)'",
@@ -134,7 +133,7 @@ List an overview of all sending domains in the system.
 + Response 200 (application/json; charset=utf-8)
 
         {
-            "results" : [
+            "results": [
                 {
                     "domain": "example1.com",
                     "tracking_domain": "click.example1.com",
@@ -145,7 +144,8 @@ List an overview of all sending domains in the system.
                         "dkim_status": "valid",
                         "compliance_status": "valid",
                         "postmaster_at_status": "valid"
-                    }
+                    },
+                    "subaccount_id": 0
                 },
                 {
                     "domain": "example2.com",
@@ -156,7 +156,8 @@ List an overview of all sending domains in the system.
                         "dkim_status": "pending",
                         "compliance_status": "pending",
                         "postmaster_at_status": "pending"
-                    }
+                    },
+                    "subaccount_id": 12
                 }
             ]
         }
@@ -194,7 +195,8 @@ Retrieve a sending domain by specifying its domain name in the URI path.  The re
                     "headers": "from:to:subject:date",
                     "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
                     "selector": "hello_selector"
-                }
+                },
+                "subaccount_id": 0
             }
         }
 
@@ -223,10 +225,10 @@ To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty
         ```
         {
             "tracking_domain": "click.example1.com",
-            "dkim" : {  "private" : "MIICXgIBAAKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQABAoGBAITb3BCRPBi5lGhHdn+1RgC7cjUQEbSb4eFHm+ULRwQ0UIPWHwiVWtptZ09usHq989fKp1g/PfcNzm8c78uTS6gCxfECweFCRK6EdO6cCCr1cfWvmBdSjzYhODUdQeyWZi2ozqd0FhGWoV4VHseh4iLj36DzleTLtOZj3FhAo1WJAkEA68T+KkGeDyWwvttYtuSiQCCTrXYAWTQnkIUxduCp7Ap6tVeIDn3TaXTj74UbEgaNgLhjG4bX//fdeDW6PaK9YwJBAM6xJmwHLPMgwNVjiz3u/6fhY3kaZTWcxtMkXCjh1QE82KzDwqyrCg7EFjTtFysSHCAZxXZMcivGl4TZLHnydJUCQQCx16+M+mAatuiCnvxlQUMuMiSTNK6Amzm45u9v53nlZeY3weYMYFdHdfe1pebMiwrT7MI9clKebz6svYJVmdtXAkApDAc8VuR3WB7TgdRKNWdyGJGfoD1PO1ZE4iinOcoKV+IT1UCY99Kkgg6C7j62n/8T5OpRBvd5eBPpHxP1F9BNAkEA5Nf2VO9lcTetksHdIeKK+F7sio6UZn0Rv7iUo3ALrN1D1cGfWIh/Y1g==",
-                "public" : "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
-                "selector" : "hello_selector",
-                "headers" : "from:to:subject:date"
+            "dkim": {  "private": "MIICXgIBAAKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQABAoGBAITb3BCRPBi5lGhHdn+1RgC7cjUQEbSb4eFHm+ULRwQ0UIPWHwiVWtptZ09usHq989fKp1g/PfcNzm8c78uTS6gCxfECweFCRK6EdO6cCCr1cfWvmBdSjzYhODUdQeyWZi2ozqd0FhGWoV4VHseh4iLj36DzleTLtOZj3FhAo1WJAkEA68T+KkGeDyWwvttYtuSiQCCTrXYAWTQnkIUxduCp7Ap6tVeIDn3TaXTj74UbEgaNgLhjG4bX//fdeDW6PaK9YwJBAM6xJmwHLPMgwNVjiz3u/6fhY3kaZTWcxtMkXCjh1QE82KzDwqyrCg7EFjTtFysSHCAZxXZMcivGl4TZLHnydJUCQQCx16+M+mAatuiCnvxlQUMuMiSTNK6Amzm45u9v53nlZeY3weYMYFdHdfe1pebMiwrT7MI9clKebz6svYJVmdtXAkApDAc8VuR3WB7TgdRKNWdyGJGfoD1PO1ZE4iinOcoKV+IT1UCY99Kkgg6C7j62n/8T5OpRBvd5eBPpHxP1F9BNAkEA5Nf2VO9lcTetksHdIeKK+F7sio6UZn0Rv7iUo3ALrN1D1cGfWIh/Y1g==",
+                "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
+                "selector": "hello_selector",
+                "headers": "from:to:subject:date"
             }
         }
         ```
@@ -234,9 +236,9 @@ To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty
 + Response 200 (application/json; charset=utf-8)
 
         {
-            "results" : {
-                "message" : "Successfully Updated Domain.",
-                "domain" : "example1.com"
+            "results": {
+                "message": "Successfully Updated Domain.",
+                "domain": "example1.com"
             }
         }
 
@@ -255,7 +257,7 @@ To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty
 + Response 422 (application/json)
 
     {
-      "errors" : [
+      "errors": [
         {
           "message": "invalid data format/type",
           "description": "Error validating domain name syntax for domain: '(domain)'",
@@ -316,8 +318,8 @@ The domain's "status" object is returned on success.
 
         ```
         {
-            "dkim_verify" : true,
-            "spf_verify"  : true
+            "dkim_verify": true,
+            "spf_verify": true
         }
         ```
 
@@ -348,7 +350,7 @@ The domain's "status" object is returned on success.
 
         ```
         {
-            "postmaster_at_verify" : true
+            "postmaster_at_verify": true
         }
         ```
 
@@ -374,7 +376,7 @@ The domain's "status" object is returned on success.
 
         ```
         {
-            "postmaster_at_token" : "rcayptmrczdnrnqfsxyrzljmtsxvjzxb"
+            "postmaster_at_token": "rcayptmrczdnrnqfsxyrzljmtsxvjzxb"
         }
         ```
 
@@ -400,7 +402,7 @@ The domain's "status" object is returned on success.
 
         ```
         {
-            "abuse_at_token" : "AN_INCORRECT_OR_EXPIRED_TOKEN"
+            "abuse_at_token": "AN_INCORRECT_OR_EXPIRED_TOKEN"
         }
         ```
 
@@ -426,7 +428,7 @@ The domain's "status" object is returned on success.
 
         ```
         {
-            "abuse_at_verify" : true
+            "abuse_at_verify": true
         }
         ```
 
