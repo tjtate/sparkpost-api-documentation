@@ -1,7 +1,8 @@
-# Group Subaccounts API - Coming in April!
+# Group Subaccounts - Coming in April!
 <a name="subaccounts-api"></a>
 API for retrieving and managing subaccounts associated with your Master Account.
 Subaccounts are a way for service providers to provision and manage their customers separately from each other and to provide assets and reporting data.
+For more general information pertaining to subaccounts, please see the [Subaccounts Introduction](#subaccounts-intro)
 
 ## Subaccounts Collection [/subaccounts]
 
