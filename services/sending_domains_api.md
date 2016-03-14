@@ -7,7 +7,7 @@ A sending domain is a domain that is used to indicate who an email is from via t
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
 |domain    | string | Name of the sending domain | yes |The domain name will be used as the "From:" header address in the email.|
-|tracking_domain | string | Associated tracking domain | no | example: "click.example1.com" |
+|tracking_domain | string | Associated tracking domain | no | example: "click.example1.com". Note that currently we don't allow tracking domains to be linked to sending domains belonging to subaccounts.|
 |status | JSON object | JSON object containing status details, including whether this domain's ownership has been verified  | no | Read only. For a full description, see the Status Attributes.|
 |dkim | JSON object | JSON object in which DKIM key configuration is defined | no | For a full description, see the DKIM Attributes.|
 
