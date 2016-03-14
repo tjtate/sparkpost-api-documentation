@@ -1,4 +1,5 @@
 # Group Tracking Domains
+<a name="tracking-domains-api"></a>
 
 Tracking domains are used in engagement tracking to report opens and clicks in your messages. When open and click tracking is enabled, you can set up a tracking domain which wraps the tracking pixel and all links in your messages.
 
