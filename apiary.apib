@@ -13,6 +13,8 @@ There are two service types available:  [SparkPost](http://sparkpost.com/), our 
 ### SparkPost API Endpoint
 **https\://api.sparkpost.com/api/v1**
 
+Note: To prevent abuse, our servers enforce request rate limiting, which may trigger responses with HTTP code 429.
+
 ### SparkPost Elite API Endpoint
 **https\://yourdomain.msyscloud.com/api/v1**
 
@@ -35,6 +37,12 @@ There are two service types available:  [SparkPost](http://sparkpost.com/), our 
 * Administrators can generate an API key using the UI. Please take care to record and safeguard your API keys at all times. You cannot retrieve an API key after it has been created.
 * For examples of supplying the Authorization header, refer to the cURL example below or any of the individual API request examples.
 
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
 ## Using cURL
 If you are using cURL to call the API, you must include the resource URI in quotes when you pass in multiple query parameters separated by an **&**.
 
@@ -47,7 +55,7 @@ curl -v \
 -X GET "https://api.sparkpost.com/api/v1/metrics/deliverability/aggregate?campaigns=testjob&from=2014-01-23T14:00&metrics=count_targeted,count_sent,count_accepted&protocols=smtp&timezone=America%2FNew_York&to=2014-06-23T15:50"
 ```
 
-or 
+or
 
 ```
 curl -v \
@@ -57,28 +65,65 @@ curl -v \
 ```
 
 ## SMTP Relay Endpoints
+<a name="smtp-relay-endpoints"></a>
 
 ### SparkPost SMTP Endpoint
 To use SparkPost as an SMTP relay you need to point your SMTP client (or local MTA) to the following endpoint:
 
 * Host: smtp.sparkpostmail.com
-* Port: 587
+* Port: 587 or 2525
 * Encryption: STARTTLS
 * Authentication: AUTH LOGIN
 * User: SMTP_Injection
 * Password: Any API key with Send via SMTP permission
 
+**Note**: Port 2525 is provided as an alternate port for cases where port 587 is blocked (such as a Google Compute Engine environment).
+
 ### SparkPost Elite SMTP Endpoint
 
-* Please contact your Technical Account Manager for details on your SMTP endpoint.  
+* Please contact your Technical Account Manager for details on your SMTP endpoint.
 
 The SMTP relay optionally supports advanced API features using the [SMTP API](#smtp-api).  To create an API key, login to your SparkPost [Account Credentials](https://app.sparkpost.com/account/credentials) page.
 
+## Subaccounts - Coming to an API near you in April!
+<a name="subaccounts-intro"></a>
+With the introduction of subaccounts, some of the APIs are now able to store and retrieve information at a more granular level.
+Subaccounts are a way for service providers to provision and manage their customers separately from each other and to provide assets and reporting data.
+
+The following APIs have subaccount support:
+
+* [Metrics API](#metrics-api) **(Note: Not available for Subaccount API keys)**
+* [Message Events API](#message-events-api)
+* [Sending Domains API](#sending-domains-api)
+* [Tracking Domains API](#tracking-domains-api)
+* [Suppression List API](#suppression-list-api)
+* [SMTP API](#smtp-api)
+
+**Note**: [Transmissions API](#transmissions-api) support is coming soon
+
+### Terminology
+* Master Account - This refers to a Service Provider and the Service Provider's data
+* Subaccounts - This refers to a Service Provider's customer(s), and that customer's data
+
+### Managing subaccount data as a Service Provider
+* Master Accounts can set `X-MSYS-SUBACCOUNT` with the ID of their subaccount to manage subaccount data on their behalf
+  * For example, on a GET request to `/api/v1/sending-domains`, setting `X-MSYS-SUBACCOUNT` to `123` will only return sending domains which belong to Subaccount `123`
+  * The same applies to data management, setting `X-MSYS-SUBACCOUNT` to `123` on a POST request to `/api/v1/sending-domains` will create a sending domain belonging to Subaccount `123`
+* `X-MSYS-SUBACCOUNT` is not required, but if provided, must be a number
+
+### Managing master account data as a Service Provider
+* Setting `X-MSYS-SUBACCOUNT` to `0` will retrieve or manage Master Account data only
+* For POST/PUT/DELETE requests, omitting `X-MSYS-SUBACCOUNT` will result in the same behavior as setting `X-MSYS-SUBACCOUNT` to `0`
+* For GET requests, omitting `X-MSYS-SUBACCOUNT` will result in Master Account and Subaccount data in the response
+  * Subaccount data will have the key `subaccount_id` in the response object
+* Metrics and Message Events APIs do not use `X-MSYS-SUBACCOUNT`. Instead, setting the query parameter `subaccounts` to `0` will return only Master Account reporting data
+
 ## Substitutions Reference
+<a name="substitutions-reference"></a>
 
 ### Key Features
 
-* Substitutions applied in top-level headers, text/plain, and text/html parts
+* Substitutions applied in top-level headers, text/plain, and text/html parts of REST API injected messages (SMTP message substitutions currently not supported)
 * Key/value substitutions using substitution data provided in an arbitrary JSON object format
 * Conditional statements such as if, then, else, elseif
 * Looping over JSON arrays using each
@@ -848,10 +893,305 @@ MIME structure.  The Content-Type will be updated appropriately.
 * If after substitution, a header value contains 8-bit data, then the header
 value will be RFC2047 base64 encoded before being written back to the headers structure.
 
+# Group Inbound Domains
+
+Specifying an inbound domain enables you to customize the address to which inbound messages are sent.
+Inbound domains are used in conjunction with Relay Webhooks.
+You can have multiple inbound domains but each domain must be globally unique.
+
+Before you can use your inbound domain (e.g. `inbounddomain.test.com`), you will need to add the following MX records to your DNS settings:
+
+| Name                     | Type | Data                  | Priority |
+|--------------------------|------|-----------------------|----------|
+| `inbounddomain.test.com` | MX   | rx1.sparkpostmail.com | 10       |
+| `inbounddomain.test.com` | MX   | rx2.sparkpostmail.com | 10       |
+| `inbounddomain.test.com` | MX   | rx3.sparkpostmail.com | 10       |
+
+#### Inbound Domains Attributes
+
+| Field   | Type   | Description | Required | Notes |
+|------------|--------|-------------|----------|-------|
+| domain     | string | Domain (or subdomain) name for which SparkPost will receive inbound emails | yes | Your DNS provider's MX record for this domain must point back to SparkPost. (Example: `inbounddomain.test.com`) |
+
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
+## Create and List [/inbound-domains]
+
+### Create an Inbound Domain [POST]
+
+Create an inbound domain by providing an **inbound domains object** as the POST request body.
+
++ Request (application/json)
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+  + Body
+
+            {
+              "domain": "inbounddomain.test.com"
+            }
+
++ Response 200
+
++ Response 400 (application/json)
+
+  + Body
+
+            {
+              "errors" : [
+                {
+                  "message" : "Restricted domain",
+                  "description" : "Please contact us at support@sparkpost.com to get this domain authorized for your account.",
+                  "code" : "7000"
+                }
+              ]
+            }
+
++ Response 401 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "message": "Unauthorized Tenant",
+                  "code": "1303"
+                }
+              ]
+            }
+
++ Response 409 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "message": "resource conflict",
+                  "description": "An inbound domain with similar attributes already exists",
+                  "code": "1602"
+                }
+              ]
+            }
+
++ Request Missing Domain (application/json)
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+  + Body
+
+            {}
+
++ Response 422 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "message": "required field is missing",
+                  "description": "Missing required field: (domain) is required",
+                  "code": "1400"
+                }
+              ]
+            }
+
++ Request Invalid Domain (application/json)
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+  + Body
+
+            {
+                "domain": "inbounddomain"
+            }
+
++ Response 422 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "message": "invalid data format\/type",
+                  "description": "Error domain name contains no '.'(s) for domain: {domain}",
+                  "code": "1300"
+                }
+              ]
+            }
+
+### List all Inbound Domains [GET]
+
+List all your inbound domains.
+
++ Request
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Response 200 (application/json)
+
+  + Body
+
+            {
+              "results": [
+                {
+                  "domain": "inbounddomain.test.com"
+                },
+                {
+                  "domain": "inbounddomain2.test.com"
+                }
+              ]
+            }
+
++ Response 401 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "message": "Unauthorized Tenant",
+                  "code": "1303"
+                }
+              ]
+            }
+
+## Retrieve and Delete [/inbound-domains/{domain}]
+
+### Retrieve an Inbound Domain [GET]
+
+Retrieve an inbound domain by specifying its domain name in the URI path.
+
++ Parameters
+  + domain (required, string, `inbounddomain.test.com`) ... Domain name
+
++ Request
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Response 200 (application/json)
+
+  + Body
+
+            {
+              "results": {
+                "domain": "inbounddomain.test.com"
+              }
+            }
+
++ Response 401 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "message": "Unauthorized Tenant",
+                  "code": "1303"
+                }
+              ]
+            }
+
++ Response 404 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "message": "resource not found",
+                  "code": "1600"
+                }
+              ]
+            }
+
+
+## Delete [/inbound-domains/{domain}]
+
+### Delete an Inbound Domain [DELETE]
+
+Delete an inbound domain by specifying its domain name in the URI path.
+
++ Parameters
+  + domain (required, string, `inbounddomain.test.com`) ... Domain name
+
++ Request
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
++ Response 200
+
++ Response 401 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "message": "Unauthorized Tenant",
+                  "code": "1303"
+                }
+              ]
+            }
+
++ Response 404 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "message": "resource not found",
+                  "code": "1600"
+                }
+              ]
+            }
+
++ Response 409 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "message": "resource conflict",
+                  "description": "Domain currently being used in a relay-webhook. Please delete the relay-webhook first.",
+                  "code": "1602"
+                }
+              ]
+            }
+
 # Group Metrics
+<a name="metrics-api"></a>
 
 SparkPost and SparkPost Elite log copious amounts of statistical, real-time data about message processing, message
 disposition, and campaign performance.  This reporting data is available in the UI or through the Metrics API.  The Metrics API provides a variety of endpoints enabling you to retrieve a summary of the data, data grouped by a specific qualifier, or data by event type.  Within each endpoint, you can also apply various filters to drill down to the data for your specific reporting needs.
+
+**Note**: The `subaccounts` query parameter and `/api/v1/metrics/deliverability/subaccount` will be available in April
+
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
 
 ## Metrics API Deliverability Glossary
 
@@ -1001,7 +1341,7 @@ Provides links to all child URIs within the Metrics API.
     [Discoverability Links][]
 
 
-## Deliverability Metrics [/metrics/deliverability{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone}]
+## Deliverability Metrics [/metrics/deliverability{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone}]
 
 
 + Model
@@ -1208,6 +1548,7 @@ aggregate data, which can be used as "group by" qualifiers.
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
     + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
     + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
         + Values
             + `smtp`
@@ -1260,7 +1601,7 @@ aggregate data, which can be used as "group by" qualifiers.
 
 
 
-## Deliverability Metrics by Domain [/metrics/deliverability/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone,order_by,limit}]
+## Deliverability Metrics by Domain [/metrics/deliverability/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,order_by,limit}]
 
 + Model
 
@@ -1447,11 +1788,12 @@ Provides aggregate metrics grouped by domain over the time window specified.
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
   + metrics (required, list) ... Comma-delimited list of metrics for filtering
-        
+
         + Values
             + `count_injected`
             + `count_bounce`
@@ -1483,7 +1825,7 @@ Provides aggregate metrics grouped by domain over the time window specified.
             + `count_sent`
             + `count_accepted`
             + `count_spam_complaint`
-            
+
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
   + limit (optional, int, `5`) ... Maximum number of results to return
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
@@ -1500,7 +1842,7 @@ Provides aggregate metrics grouped by domain over the time window specified.
   [Deliverability Metrics by Domain][]
 
 
-## Deliverability Metrics by Binding [/metrics/deliverability/binding{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Binding [/metrics/deliverability/binding{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
 + Model
 
     + Body
@@ -1689,6 +2031,7 @@ Provides aggregate metrics grouped by binding over the time window specified.
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
@@ -1738,7 +2081,7 @@ Provides aggregate metrics grouped by binding over the time window specified.
 + Response 200
 
 
-## Deliverability Metrics by Binding Group [/metrics/deliverability/binding-group{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Binding Group [/metrics/deliverability/binding-group{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
 
 + Model
 
@@ -1927,6 +2270,7 @@ Provides aggregate metrics grouped by binding group over the time window specifi
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
@@ -1977,8 +2321,259 @@ Provides aggregate metrics grouped by binding group over the time window specifi
 
   [Deliverability Metrics by Binding Group][]
 
+## Deliverability Metrics by Subaccount [/metrics/deliverability/subaccount{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
 
-## Deliverability Metrics by Campaign [/metrics/deliverability/campaign{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone,limit,order_by}]
++ Model
+
+    + Body
+
+        ```
+        {
+          "results": [
+            {
+              "count_targeted": 34432,
+              "count_injected": 32323,
+              "count_rejected": 2343,
+              "count_sent": 34344,
+              "subaccount_id": 0
+            },
+            {
+              "count_targeted": 34432,
+              "count_injected": 32323,
+              "count_rejected": 2343,
+              "count_sent": 34344,
+              "subaccount_id": 123
+            },
+            {
+              "count_targeted": 34432,
+              "count_injected": 32323,
+              "count_rejected": 2343,
+              "count_sent": 34344,
+              "subaccount_id": 125
+            },
+            {
+              "count_targeted": 34432,
+              "count_injected": 32323,
+              "count_rejected": 2343,
+              "count_sent": 34344,
+              "subaccount_id": 127
+            }
+          ]
+        }
+        ```
+
+    + Schema
+
+        ```
+        {
+          "type":"object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "required":false,
+          "properties":{
+            "results": {
+              "type":"array",
+              "required":false,
+              "items":
+                {
+                  "type":"object",
+                  "required":false,
+                  "properties":{
+                    "subaccount_id": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_accepted": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_admin_bounce": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_block_bounce": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_bounce": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_clicked": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_delayed_first": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_delayed": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_delivered_first": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_delivered_subsequent": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_delivered": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_generation_failed": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_generation_rejection": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_hard_bounce": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_inband_bounce": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_injected": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_outofband_bounce": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_policy_rejection": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_rejected": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_rendered": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_sent": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_soft_bounce": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_spam_complaint": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_targeted": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_undetermined_bounce": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_unique_clicked": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_unique_confirmed_opened": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_unique_rendered": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "total_delivery_time_first": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "total_delivery_time_subsequent": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "total_msg_volume": {
+                      "type":"number",
+                      "required":false
+                    }
+                  }
+                }
+            }
+          }
+        }
+        ```
+
+### Deliverability Metrics by Subaccount [GET]
+
+Provides aggregate metrics grouped by subaccount over the time window specified. Please note that master account events will be returned grouped by the subaccount_id field containing the value `0`.
+
++ Parameters
+  + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+  + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+  + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
+  + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
+  + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
+  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
+  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
+  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
+  + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
+      + Values
+          + `smtp`
+  + metrics (required, list, `count_targeted`) ... Comma-delimited list of metrics for filtering
+      + Values
+          + `count_injected`
+          + `count_bounce`
+          + `count_rejected`
+          + `count_delivered`
+          + `count_delivered_first`
+          + `count_delivered_subsequent`
+          + `total_delivery_time_first`
+          + `total_delivery_time_subsequent`
+          + `total_msg_volume`
+          + `count_policy_rejection`
+          + `count_generation_rejection`
+          + `count_generation_failed`
+          + `count_inband_bounce`
+          + `count_outofband_bounce`
+          + `count_soft_bounce`
+          + `count_hard_bounce`
+          + `count_block_bounce`
+          + `count_admin_bounce`
+          + `count_undetermined_bounce`
+          + `count_delayed`
+          + `count_delayed_first`
+          + `count_rendered`
+          + `count_unique_rendered`
+          + `count_unique_confirmed_opened`
+          + `count_clicked`
+          + `count_unique_clicked`
+          + `count_targeted`
+          + `count_sent`
+          + `count_accepted`
+          + `count_spam_complaint`
+  + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
+  + limit (optional, int, `5`) ... Maximum number of results to return
+  + order_by (optional, string, `count_injected`) ... Metric by which to order results
+
++ Request
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Response 200 (application/json)
+
+  [Deliverability Metrics by Subaccount][]
+
+## Deliverability Metrics by Campaign [/metrics/deliverability/campaign{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
 
 
 + Model
@@ -2166,11 +2761,12 @@ Provides aggregate metrics grouped by campaign over the time window specified.
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
     + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
     + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
     + metrics (required, list) ... Comma-delimited list of metrics for filtering
-      
+
         + Values
             + `count_injected`
             + `count_bounce`
@@ -2202,7 +2798,7 @@ Provides aggregate metrics grouped by campaign over the time window specified.
             + `count_sent`
             + `count_accepted`
             + `count_spam_complaint`
-            
+
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
     + limit (optional, int, `5`) ... Maximum number of results to return
     + order_by (optional, string, `count_injected`) ... Metric by which to order results
@@ -2219,7 +2815,7 @@ Provides aggregate metrics grouped by campaign over the time window specified.
   [Deliverability Metrics by Campaign][]
 
 
-## Deliverability Metrics by Template [/metrics/deliverability/template{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Template [/metrics/deliverability/template{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
 
 
 + Model
@@ -2407,11 +3003,12 @@ Provides aggregate metrics grouped by template over the time window specified.
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
     + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
     + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
         + Values
             + `smtp`
     + metrics (required, list) ... Comma-delimited list of metrics for filtering
-      
+
         + Values
             + `count_injected`
             + `count_bounce`
@@ -2443,7 +3040,7 @@ Provides aggregate metrics grouped by template over the time window specified.
             + `count_sent`
             + `count_accepted`
             + `count_spam_complaint`
-            
+
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
   + limit (optional, int, `5`) ... Maximum number of results to return
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
@@ -2460,7 +3057,7 @@ Provides aggregate metrics grouped by template over the time window specified.
   [Deliverability Metrics by Template][]
 
 
-## Deliverability Metrics by Watched Domain [/metrics/deliverability/watched-domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Watched Domain [/metrics/deliverability/watched-domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
 
 + Model
 
@@ -2649,6 +3246,7 @@ in the world.
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
     + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
     + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
         + Values
             + `smtp`
@@ -2684,7 +3282,7 @@ in the world.
             + `count_sent`
             + `count_accepted`
             + `count_spam_complaint`
-            
+
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
   + limit (optional, int, `5`) ... Maximum number of results to return
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
@@ -2701,7 +3299,7 @@ in the world.
   [Deliverability Metrics by Watched Domain][]
 
 
-## Time Series [/metrics/deliverability/time-series{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,precision,metrics,timezone}]
+## Time Series [/metrics/deliverability/time-series{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,precision,metrics,timezone}]
 
 
 + Model
@@ -2943,6 +3541,7 @@ The following table describes the validation for the **precision** parameter:
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes by which to filter ( **Note:** SparkPost Elite only )
     + bindings (optional, list, `bindingA,bindingB,bindingC`) ... Comma-delimited list of bindings for filtering ( **Note:** SparkPost Elite only )
     + binding_groups (optional, list, `bg1,bg2,bg3`) ... Comma-delimited list of binding groups for filtering ( **Note:** SparkPost Elite only )
+    + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
@@ -2959,7 +3558,7 @@ The following table describes the validation for the **precision** parameter:
             + `month`
 
     + metrics (required, list) ... Comma-delimited list of metrics for filtering
-  
+
         + Values
             + `count_injected`
             + `count_bounce`
@@ -3006,7 +3605,7 @@ The following table describes the validation for the **precision** parameter:
   [Time Series][]
 
 
-## Bounce Reasons [/metrics/deliverability/bounce-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone,limit}]
+## Bounce Reasons [/metrics/deliverability/bounce-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit}]
 
 + Model
 
@@ -3109,16 +3708,17 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
     + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
     + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols to include ( **Note:** SparkPost Elite only )
         + Values
             + `smtp`
     + metrics (required, list) ... Comma-delimited list of metrics to include
-        
+
         + Values
             + `count_bounce`
             + `count_inband_bounce`
             + `count_outofband_bounce`
-            
+
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
     + limit (optional, int, `5`) ... Maximum number of results to return [1,1000]
 
@@ -3134,7 +3734,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
   [Bounce Reasons][]
 
 
-## Bounce Reasons By Domain [/metrics/deliverability/bounce-reason/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone,limit}]
+## Bounce Reasons By Domain [/metrics/deliverability/bounce-reason/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit}]
 
 + Model
 
@@ -3243,16 +3843,17 @@ Provides deliverability metrics, specific to bounce events, grouped by the domai
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
     + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
     + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols to include ( **Note:** SparkPost Elite only )
         + Values
             + `smtp`
     + metrics (required, list) ... Comma-delimited list of metrics to include
-        
+
         + Values
             + `count_bounce`
             + `count_inband_bounce`
             + `count_outofband_bounce`
-            
+
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
     + limit (optional, int, `5`) ... Maximum number of results to return [1,1000]
 
@@ -3268,7 +3869,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the domai
   [Bounce Reasons By Domain][]
 
 
-## Bounce Classifications [/metrics/deliverability/bounce-classification{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,metrics,timezone,limit}]
+## Bounce Classifications [/metrics/deliverability/bounce-classification{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit}]
 
 + Model
 
@@ -3363,17 +3964,18 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-5`limited list of nodes to include ( **Note:** SparkPost Elite only )
     + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
     + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
         + Values
             + `smtp`
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
     + metrics (required, list) ... Comma-delimited list of metrics to include
-        
+
         + Values
             + `count_bounce`
             + `count_inband_bounce`
             + `count_outofband_bounce`
-            
+
     + limit (optional, int, `5`) ... Maximum number of results to return
 
 + Request
@@ -3388,7 +3990,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
   [Bounce Classifications][]
 
 
-## Rejection Reasons [/metrics/deliverability/rejection-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,timezone,limit}]
+## Rejection Reasons [/metrics/deliverability/rejection-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,timezone,limit}]
 
 + Model
 
@@ -3465,6 +4067,7 @@ Provides deliverability metrics, specific to rejection events, grouped by the re
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
@@ -3476,7 +4079,7 @@ Provides deliverability metrics, specific to rejection events, grouped by the re
   [Rejection Reasons][]
 
 
-## Rejection Reasons By Domain [/metrics/deliverability/rejection-reason/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,timezone,limit}]
+## Rejection Reasons By Domain [/metrics/deliverability/rejection-reason/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,timezone,limit}]
 
 + Model
 
@@ -3559,6 +4162,7 @@ Provides deliverability metrics, specific to rejection events, grouped by the do
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
@@ -3570,7 +4174,7 @@ Provides deliverability metrics, specific to rejection events, grouped by the do
   [Rejection Reasons By Domain][]
 
 
-## Delay Reasons [/metrics/deliverability/delay-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,timezone,limit}]
+## Delay Reasons [/metrics/deliverability/delay-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,timezone,limit}]
 
 + Model
 
@@ -3641,6 +4245,7 @@ Provides deliverability metrics, specific to delay events, grouped by the delay 
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
@@ -3659,7 +4264,7 @@ Provides deliverability metrics, specific to delay events, grouped by the delay 
   [Delay Reasons][]
 
 
-## Delay Reasons By Domain [/metrics/deliverability/delay-reason/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,timezone,limit}]
+## Delay Reasons By Domain [/metrics/deliverability/delay-reason/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,timezone,limit}]
 
 + Model
 
@@ -3736,6 +4341,7 @@ Provides deliverability metrics, specific to delay events, grouped by the domain
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
@@ -3821,11 +4427,11 @@ name (or URL if no link name exists).
     + to = `now` (optional, datetime, `2014-07-20T00:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
     + timezone = `UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
     + metrics (required, list) ... Comma-delimited list of metrics to include
-      
+
         + Values
             + `count_clicked`
             + `count_raw_clicked`
-    
+
     + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
     + limit (optional, int, `5`) ... Maximum number of results to return
@@ -3842,7 +4448,7 @@ name (or URL if no link name exists).
   [Engagement Details][]
 
 
-## Deliveries By Attempt [/metrics/deliverability/attempt{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,protocols,timezone}]
+## Deliveries By Attempt [/metrics/deliverability/attempt{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,timezone}]
 
 + Model
 
@@ -3907,6 +4513,7 @@ Provides aggregate count of deliveries grouped by the attempt number.
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
           + `smtp`
@@ -4285,8 +4892,16 @@ Returns a list of protocols that the Metrics API contains data on.
  [Protocols List][]
 
 # Group Message Events
+<a name="message-events-api"></a>
 
 The Message Events API provides the means to search the raw events generated by SparkPost.
+
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
 
 ## Copyrights
 __**The SparkPost message events API uses MaxMind software [MaxMind License](/docs/3RD_PARTY_LICENSES.md)**__
@@ -4415,7 +5030,7 @@ List descriptions of the event fields that could be included in a response from 
 
 
 ## Events Samples [/message-events/events/samples{?events}]
-  
+
 ### Samples [GET]
 
 List an example of the event data that will be included in a response from the Message Events search endpoint.
@@ -4433,42 +5048,41 @@ List an example of the event data that will be included in a response from the M
     {
         "results": [
             {
-                "bounce_class": "1", 
-                "campaign_id": "Example Campaign Name", 
-                "customer_id": "1", 
-                "delv_method": "esmtp", 
-                "device_token": "45c19189783f867973f6e6a5cca60061ffe4fa77c547150563a1192fa9847f8a", 
-                "error_code": "554", 
-                "ip_address": "127.0.0.1", 
-                "message_id": "0e0d94b7-9085-4e3c-ab30-e3f2cd9c273e", 
-                "msg_from": "sender@example.com", 
-                "msg_size": "1337", 
-                "num_retries": "2", 
-                "raw_reason": "MAIL REFUSED - IP (17.99.99.99) is in black list", 
+                "bounce_class": "1",
+                "campaign_id": "Example Campaign Name",
+                "customer_id": "1",
+                "delv_method": "esmtp",
+                "device_token": "45c19189783f867973f6e6a5cca60061ffe4fa77c547150563a1192fa9847f8a",
+                "error_code": "554",
+                "ip_address": "127.0.0.1",
+                "message_id": "0e0d94b7-9085-4e3c-ab30-e3f2cd9c273e",
+                "msg_from": "sender@example.com",
+                "msg_size": "1337",
+                "num_retries": "2",
+                "raw_reason": "MAIL REFUSED - IP (17.99.99.99) is in black list",
                 "rcpt_meta": {
                     "customKey": "customValue"
-                }, 
+                },
                 "rcpt_tags": [
-                    "male", 
+                    "male",
                     "US"
-                ], 
-                "rcpt_to": "recipient@example.com", 
-                "rcpt_type": "cc", 
-                "reason": "MAIL REFUSED - IP (a.b.c.d) is in black list", 
-                "routing_domain": "example.com", 
-                "subject": "Summer deals are here!", 
-                "template_id": "templ-1234", 
-                "template_version": "1", 
-                "timestamp": 1427736822, 
-                "transmission_id": "65832150921904138", 
+                ],
+                "rcpt_to": "recipient@example.com",
+                "rcpt_type": "cc",
+                "reason": "MAIL REFUSED - IP (a.b.c.d) is in black list",
+                "routing_domain": "example.com",
+                "subject": "Summer deals are here!",
+                "template_id": "templ-1234",
+                "template_version": "1",
+                "timestamp": 1427736822,
+                "transmission_id": "65832150921904138",
                 "type": "bounce"
             }
         ]
     }
   ```
-  
 
-## Message Events [/message-events{?bounce_classes,campaign_ids,events,friendly_froms,from,message_ids,page,per_page,reason,recipients,template_ids,timezone,to,transmission_ids}]
+## Message Events [/message-events{?bounce_classes,campaign_ids,events,friendly_froms,from,message_ids,page,per_page,reason,recipients,subaccounts,template_ids,timezone,to,transmission_ids}]
 
 ### Search for Message Events [GET]
 
@@ -4485,6 +5099,8 @@ Perform a filtered search for message event data. The response is sorted by desc
     + per_page = `1000` (optional, number, `100`) ... Number of results to return per page. Must be between 1 and 10,000 (inclusive).
     + reason (optional, string, `bounce`) ... Bounce/failure/rejection reason that will be matched using a wildcard (e.g., %reason%).
     + recipients (optional, list, `recipient@example.com`) ... Comma-delimited list of recipients to search.
+    + subaccounts (optional, list, `101`) ... Comma-delimited list of subaccount ID's to search. **Note:** The `subaccounts` query parameter will be available in April.
+
     + template_ids (optional, list, `templ-1234`) ... Comma-delimited list of template ID's to search.
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string.
     + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM.
@@ -4859,7 +5475,7 @@ Perform a filtered search for message event data. The response is sorted by desc
     ],
     "total_count": 1000,
     "links": [
-      { 
+      {
         "href": "http://example.com/api/v1/message-events?page=1&per_page=10",
         "rel": "first"
       }, {
@@ -4876,148 +5492,6 @@ Perform a filtered search for message event data. The response is sorted by desc
   }
   ```
 
-# Group Raw Log
-
-**Note:** The Raw Log API is available for SparkPost Elite only.
-
-In addition to the analytics data available through the UI, Metrics API, and Webhooks API, SparkPost Elite provides log files tracking the full disposition status of every message transiting the system.  The Raw Log API enables you to download these raw, compressed logs.
-
-You can retrieve the following logs:
-* Main log provides complete information about every message received and delivered by SparkPost Elite, including receptions, deliveries, transient failures, and permanent failures.
-* Bounce log records in-band and out-of-band bounces.
-* Rejection log stores records of inbound messages that are rejected by SparkPost Elite, either due to policy or protocol deviations.
-* FBL log records the information provided by the ISP's feedback loop service with regard to spam notifications.
-* Event log includes a batch of event data consisting of one or more event records, each composed of a payload wrapped in a type-specific JSON envelope. Each event record payload includes the data fields specific to that event type. For the field definitions and a mapping of the fields that constitute a payload for a given event type, use the Webhooks Events Documentation and Events Samples endpoints.
-
-Logs include data for one day, and the log entries differ depending upon the event type. The logs, with the exception of the eventlog, are in @ delimited format. 
-
-## Discoverability Dates [/rawlog]
-
-The Raw Log API is designed for discoverability of available logs.  Calling the API root displays a list of dates with the corresponding URL for which logs are available.
-
-### Log Discoverability Dates [GET]
-
-Provides all dates with the corresponding URL for which logs are available.
-
-+ Request
-
-  + Headers
-
-            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-            Accept: application/json
-
-+ Response 200 (application/json; charset=utf-8)
-
-        {
-            "results": [
-                    { "date":"2014-05-14", "href":"http://host.tld/rawlog/2014/05/14" },
-                    { "date":"2014-05-15", "href":"http://host.tld/rawlog/2014/05/15" },
-                    { "date":"2014-05-16", "href":"http://host.tld/rawlog/2014/05/16" }
-            ]
-        }
-
-## Logs by Date [/rawlog/{year}/{month}/{day}]
-
-### Logs for a Given Date [GET]
-
-List the URLs, one for each node that has available logs for a given date. The list is sorted by node name.
-
-+ Parameters
-  + year (required, date, `2014 (Numeric year)`) ... Year for which the log is available
-  + month (required, date, `07 (1-12, Numeric month)`) ... Month for which the log is available
-  + day (required, date, `23 (1-31, Numeric day)`) ... Day for which the log is available
-
-+ Request
-
-  + Headers
-
-            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-            Accept: application/json
-
-+ Response 200 (application/json; charset=utf-8)
-    
-        {
-            "results": [
-                { "node":"node_1", "href":"http://host.tld/rawlog/2014/05/14/node_1" },
-                { "node":"node_2", "href":"http://host.tld/rawlog/2014/05/15/node_2" },
-                { "node":"node_3", "href":"http://host.tld/rawlog/2014/05/16/node_3" }
-            ]
-        }
-
-+ Response 404 ()
-    
-        A 404 Not Found is returned if no logs are found for any nodes for the given day.
-
-
-## Logs by Nodes [/rawlog/{year}/{month}/{day}/{node}]
-
-### Logs for a Given Node [GET]
-
-List the available logs for a given node on a given date. The response includes log type, size, and URL.
-
-+ Parameters
-  + year (required, date, `2014 (Numeric year)`) ... Year for which the log is available
-  + month (required, date, `07 (1-12, Numeric month)`) ... Month for which the log is available
-  + day (required, date, `23 (1-31, Numeric day)`) ... Day for which the log is available
-  + node (required, string, `node_1`) ... Name of node from which the logs are to be discovered
-
-+ Request
-
-  + Headers
-
-            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-            Accept: application/json
-
-+ Response 200 (application/json; charset=utf-8)
-    
-            {
-                "results": [
-                    { "log":"bounce", "size":"400218", "href":"http://host.tld/rawlog/2014/05/14/node_2/bounce" },
-                    { "log":"main", "size":"610485", "href":"http://host.tld/rawlog/2014/05/15/node_2/main" },
-                    { "log":"reject", "size":"526482", "href":"http://host.tld/rawlog/2014/05/16/node_2/reject" },
-                    { "log":"fbl", "size":"192635", "href":"http://host.tld/rawlog/2014/05/16/node_2/fbl" },
-                    { "log":"event", "size":"351932", "href":"http://host.tld/rawlog/2014/05/16/node_2/event" }
-                ]
-            }
-
-+ Response 404 ()
-    
-        A 404 Not Found is returned if no logs are found for the given date and node.
-
-
-
-## Retrieve [/rawlog/{year}/{month}/{day}/{node}/{log}]
-
-### Retrieve a Log [GET]
-
-Retrieve a specific log for a given date and node. The API returns the data for the log as a bzip2 compressed file.  If the resource is not available, the API returns 404 'Not Found'.
-
-
-+ Parameters
-  + year (required, date, `2014 (Numeric year)`) ... Year for which the log is available
-  + month (required, date, `07 (1-12, Numeric month)`) ... Month for which the log is available
-  + day (required, date, ` 23 (1-31, Numeric day)`) ... Day for which the log is available
-  + node (required, string, `node_1`) ... Name of node from which to download the log
-  + log (required, string, `main`) ... Available logs are main, bounce, reject, fbl, or event
-
-
-+ Request
-
-  + Headers
-      
-            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-            Accept: application/json
-
-+ Response 200 ('Content-Disposition': 'attachment; filename=log_name', 'Content-Type': 'application/octet-stream')
-    
-        {
-            "results": {}
-        }
-
-+ Response 404 ()
-    
-        A 404 Not Found is returned if the requested Log file is not found on the specified node.
-
 # Group Recipient Lists
 
 A recipient list is a collection of recipients that can be used in a transmission.  The Recipient
@@ -5026,6 +5500,12 @@ transmission using the Transmissions API, the recipients may be submitted "inlin
 transmission data, or a stored recipient list id attribute can be specified.
 
 The Recipient List API operates on lists as a whole and does not currently support management of individual recipients.
+
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
 
 ## Recipient List Attributes
 | Field         | Type     | Description                           | Required   | Notes   |
@@ -5650,11 +6130,17 @@ submitted or generating.
 
 **Note:** The Relay Webhooks API is available for SparkPost only.
 
-By configuring a relay webhook for a specified inbound domain, those inbound messages can be forwarded to a specified target over HTTP.  Before you create a relay webhook, be sure to first create an inbound domain that is properly configured. To create an inbound domain for your account, please contact <support@sparkpost.com>. The Relay Webhooks API provides the means to create, list, retrieve, update, and delete a relay webhook.
+By configuring a relay webhook for a specified inbound domain, those inbound messages can be forwarded to a specified target over HTTP.  Before you create a relay webhook, be sure to first create an inbound domain that is properly configured. To create an inbound domain for your account, please use our Inbound Domains API. The Relay Webhooks API provides the means to create, list, retrieve, update, and delete a relay webhook.
+
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
 
 ## Relay Webhooks Object Properties
 
-| Property  | Type   | Description                          | Required | Notes 
+| Property  | Type   | Description                          | Required | Notes
 |-----------|--------|--------------------------------------|----------|----------------------|
 | name      | string | User-friendly name                   | no       | example: `Inbound Customer Replies` |
 | target    | string | URL of the target to which to POST relay batches | yes | example: `https://webhooks.customer.example/replies` |
@@ -5663,10 +6149,10 @@ By configuring a relay webhook for a specified inbound domain, those inbound mes
 
 ### Match Object Properties
 
-| Property  | Type   | Description                                                 | Required               | Notes 
+| Property  | Type   | Description                                                 | Required               | Notes
 |-----------|--------|-----------------------------------------------------------------------|--------------|----------------------|
 | protocol  | string | Inbound messaging protocol associated with this webhook | no - defaults to "SMTP" |                      |
-| domain    | string | Inbound domain associated with this webhook             | yes | To create an inbound domain for your account, please contact <support@sparkpost.com>. |
+| domain    | string | Inbound domain associated with this webhook             | yes | To create an inbound domain for your account, please use the Inbound Domains API. |
 
 ## Field Defintions
 
@@ -6052,44 +6538,38 @@ Delete a relay webhook by specifying the webhook ID in the URI path.
           }
 
 # Group Sending Domains
-
-**Note:** The Sending Domains API has reduced functionality in SparkPost Elite.
+<a name="sending-domains-api"></a>
 
 A sending domain is a domain that is used to indicate who an email is from via the "From:" header. Using a custom sending domain enables you to control what recipients see as the From value in their email clients. DNS records can be configured for a sending domain, which allows recipient mail servers to authenticate your messages. The Sending Domains API provides the means to create, list, retrieve, update, and verify a custom sending domain.
 
-## Sending Domains in SparkPost Elite
+## Using Postman
 
-In SparkPost Elite, the Sending Domains API can only be used to associate a tracking domain with a sending domain. None of the other attributes are currently used in SparkPost Elite.
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
 
-It is currently optional to register a sending domain with the Sending Domains API in SparkPost Elite. Sending domains are not currently verified in SparkPost Elite, and it is currently possible to send from an unverified sending domain.
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
 
 ## Sending Domain Attributes
 
-**Note:** "dkim" is currently ignored in SparkPost Elite. "status" will not currently affect whether messages can be sent from a sending domain in SparkPost Elite.
-
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
-|domain    |string  |Name of the sending domain   | yes |The domain name will be used as the "From:" header address in the email.|
-|tracking_domain | string | Associated tracking domain | no | example: "click.example1.com" |
-|status | JSON object| JSON object containing status details, including whether this domain's ownership has been verified  | no | Read only. For a full description, see the Status Attributes.|
-|dkim | JSON object| JSON object in which DKIM key configuration is defined|no| For a full description, see the DKIM Attributes.|
+|domain    | string | Name of the sending domain | yes |The domain name will be used as the "From:" header address in the email.|
+|tracking_domain | string | Associated tracking domain | no | example: "click.example1.com". Note that currently we don't allow tracking domains to be linked to sending domains belonging to subaccounts.|
+|status | JSON object | JSON object containing status details, including whether this domain's ownership has been verified  | no | Read only. For a full description, see the Status Attributes.|
+|dkim | JSON object | JSON object in which DKIM key configuration is defined | no | For a full description, see the DKIM Attributes.|
 
 ### DKIM Attributes
-
-**Note:** "dkim" is currently ignored in SparkPost Elite. DKIM keypairs are currently configured by the Operations team. DKIM keys that are specified via the API are not currently used.
 
 DKIM uses a pair of public and private keys to authenticate your emails. The DKIM key configuration is described in a JSON object with the following fields:
 
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
+|signing_domain| string | Signing Domain Identifier (SDID) | no | This will be used in the d= field of the DKIM Signature. If signing_domain is not specified, or is set to the empty string (""), then the Sending Domain will be used as the signing domain. ( **Note**: signing_domain is only available in SparkPost Elite. In SparkPost.com, the Sending Domain is always used as the signing domain. ) |
 |private | string | DKIM private key | yes | The private key will be used to create the DKIM Signature.|
 |public | string |DKIM public key  | yes | The public key will be retrieved from DNS of the sending domain.|
 |selector | string |DomainKey selector | yes | The DomainKey selector will be used to indicate the DKIM public key location.|
-|headers | string| Header fields to be included in the DKIM signature |no | Header fields are separated by a colon.  Example: `"from:to:subject:date"`|
+|headers | string| Header fields to be included in the DKIM signature |no | **This field is currently ignored.** |
 
 ### Status Attributes
-
-**Note:** SparkPost Elite does not currently verify sending domains. The verification status of a sending domain will not affect sending. It is currently possible to send from an unverified domain in SparkPost Elite.
 
 Detailed status for this sending domain is described in a JSON object with the following fields:
 
@@ -6106,10 +6586,14 @@ Detailed status for this sending domain is described in a JSON object with the f
 
 These are the valid request options for verifying a Sending Domain:
 
-| Field         | Type     | Description                           | Required  |
-|------------------------|:-:       |---------------------------------------|-------------|
-|dkim_verify | boolean | Request verification of DKIM record | no |
-|spf_verify | boolean | Request verification of SPF record | no |
+| Field         | Type     | Description                           | Required  | Notes   |
+|------------------------|:-:       |---------------------------------------|-------------|--------|
+|dkim_verify | boolean | Request verification of DKIM record | no | |
+|spf_verify | boolean | Request verification of SPF record | no | |
+|postmaster_at_verify | boolean | Request an email with a verification link to be sent to the sending domain's postmaster@ mailbox. | no | SparkPost.com only |
+|abuse_at_verify | boolean | Request an email with a verification link to be sent to the sending domain's abuse@ mailbox. | no | SparkPost.com only |
+|postmaster_at_token | string | A token retrieved from the verification link contained in the postmaster@ verification email. | no | SparkPost.com only |
+|abuse_at_token | string | A token retrieved from the verification link contained in the abuse@ verification email. | no | SparkPost.com only |
 
 ### DNS Attributes
 
@@ -6120,11 +6604,13 @@ These are the valid request options for verifying a Sending Domain:
 |dkim_error | string | Error message describing reason for DKIM verification failure |
 |spf_error | string | Error message describing reason for SPF verification failure |
 
-## Create and List [/sending-domains]
+## Create [/sending-domains]
 
 ### Create a Sending Domain [POST]
 
 Create a sending domain by providing a **sending domain object** as the POST request body.
+
+**Note**: For some SparkPost Elite customers, Sending Domains will be set to verified automatically when they are created, and can be used to send messages immediately. For these customers, there is no need to use the "verify" endpoint to verify Sending Domains. To find out if this applies in your SparkPost Elite environment, please contact support <support@sparkpostelite.com>, or contact your TAM.
 
 + Request (application/json)
 
@@ -6136,12 +6622,12 @@ Create a sending domain by providing a **sending domain object** as the POST req
 
         ```
         {
-            "domain" : "example1.com",
-            "tracking_domain" : "click.example1.com",
-            "dkim" : {  "private" : "MIICXgIBAAKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQABAoGBAITb3BCRPBi5lGhHdn+1RgC7cjUQEbSb4eFHm+ULRwQ0UIPWHwiVWtptZ09usHq989fKp1g/PfcNzm8c78uTS6gCxfECweFCRK6EdO6cCCr1cfWvmBdSjzYhODUdQeyWZi2ozqd0FhGWoV4VHseh4iLj36DzleTLtOZj3FhAo1WJAkEA68T+KkGeDyWwvttYtuSiQCCTrXYAWTQnkIUxduCp7Ap6tVeIDn3TaXTj74UbEgaNgLhjG4bX//fdeDW6PaK9YwJBAM6xJmwHLPMgwNVjiz3u/6fhY3kaZTWcxtMkXCjh1QE82KzDwqyrCg7EFjTtFysSHCAZxXZMcivGl4TZLHnydJUCQQCx16+M+mAatuiCnvxlQUMuMiSTNK6Amzm45u9v53nlZeY3weYMYFdHdfe1pebMiwrT7MI9clKebz6svYJVmdtXAkApDAc8VuR3WB7TgdRKNWdyGJGfoD1PO1ZE4iinOcoKV+IT1UCY99Kkgg6C7j62n/8T5OpRBvd5eBPpHxP1F9BNAkEA5Nf2VO9lcTetksHdIeKK+F7sio6UZn0Rv7iUo3ALrN1D1cGfWIh2dj3ko1iSreyNVSwGW0ePP27qDmU+u6/Y1g==",
-                "public" : "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
-                "selector" : "brisbane",
-                "headers" : "from:to:subject:date"
+            "domain": "example1.com",
+            "tracking_domain": "click.example1.com",
+            "dkim": {  "private": "MIICXgIBAAKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQABAoGBAITb3BCRPBi5lGhHdn+1RgC7cjUQEbSb4eFHm+ULRwQ0UIPWHwiVWtptZ09usHq989fKp1g/PfcNzm8c78uTS6gCxfECweFCRK6EdO6cCCr1cfWvmBdSjzYhODUdQeyWZi2ozqd0FhGWoV4VHseh4iLj36DzleTLtOZj3FhAo1WJAkEA68T+KkGeDyWwvttYtuSiQCCTrXYAWTQnkIUxduCp7Ap6tVeIDn3TaXTj74UbEgaNgLhjG4bX//fdeDW6PaK9YwJBAM6xJmwHLPMgwNVjiz3u/6fhY3kaZTWcxtMkXCjh1QE82KzDwqyrCg7EFjTtFysSHCAZxXZMcivGl4TZLHnydJUCQQCx16+M+mAatuiCnvxlQUMuMiSTNK6Amzm45u9v53nlZeY3weYMYFdHdfe1pebMiwrT7MI9clKebz6svYJVmdtXAkApDAc8VuR3WB7TgdRKNWdyGJGfoD1PO1ZE4iinOcoKV+IT1UCY99Kkgg6C7j62n/8T5OpRBvd5eBPpHxP1F9BNAkEA5Nf2VO9lcTetksHdIeKK+F7sio6UZn0Rv7iUo3ALrN1D1cGfWIh2dj3ko1iSreyNVSwGW0ePP27qDmU+u6/Y1g==",
+                "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
+                "selector": "brisbane",
+                "headers": "from:to:subject:date"
             }
         }
         ```
@@ -6149,20 +6635,19 @@ Create a sending domain by providing a **sending domain object** as the POST req
 + Response 200 (application/json; charset=utf-8)
 
         {
-            "results" : {
-                "message" : "Successfully Created domain.",
-                "domain"  : "example1.com"
-
+            "results": {
+                "message": "Successfully Created domain.",
+                "domain": "example1.com"
             }
         }
 
 + Response 400 (application/json)
 
-      { 
+      {
         "errors": [
           {
             "message": "invalid params",
-            "description": "Tracking domain '(domain)' is not a registered tracking domain",
+            "description": "Tracking domain 'click.example1.com' is not a registered tracking domain",
             "code": "1200"
           }
         ]
@@ -6171,7 +6656,7 @@ Create a sending domain by providing a **sending domain object** as the POST req
 + Response 422 (application/json)
 
     {
-      "errors" : [
+      "errors": [
         {
           "message": "invalid data format/type",
           "description": "Error validating domain name syntax for domain: '(domain)'",
@@ -6194,13 +6679,31 @@ List an overview of all sending domains in the system.
 + Response 200 (application/json; charset=utf-8)
 
         {
-            "results" : [
+            "results": [
                 {
                     "domain": "example1.com",
-                    "tracking_domain": "click.example1.com"
+                    "tracking_domain": "click.example1.com",
+                    "status": {
+                        "ownership_verified": true,
+                        "spf_status": "valid",
+                        "abuse_at_status": "valid",
+                        "dkim_status": "valid",
+                        "compliance_status": "valid",
+                        "postmaster_at_status": "valid"
+                    },
+                    "subaccount_id": 0
                 },
                 {
-                    "domain": "example2.com"
+                    "domain": "example2.com",
+                    "status": {
+                        "ownership_verified": false,
+                        "spf_status": "pending",
+                        "abuse_at_status": "pending",
+                        "dkim_status": "pending",
+                        "compliance_status": "pending",
+                        "postmaster_at_status": "pending"
+                    },
+                    "subaccount_id": 12
                 }
             ]
         }
@@ -6238,7 +6741,8 @@ Retrieve a sending domain by specifying its domain name in the URI path.  The re
                     "headers": "from:to:subject:date",
                     "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
                     "selector": "hello_selector"
-                }
+                },
+                "subaccount_id": 0
             }
         }
 
@@ -6250,6 +6754,8 @@ Update the attributes of an existing sending domain by specifying its domain nam
 If a tracking domain is specified, it will replace any currently specified tracking domain.  If the supplied tracking domain is a blank string, it will clear any currently specified tracking domain. Note that if a tracking domain is not specified, any currently specified tracking domain will remain intact.
 
 If a dkim object is provided in the update request, it must contain all relevant fields whether they are being changed or not.  The new dkim object will completely overwrite the existing one.
+
+To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty string for the value of the dkim.signing_domain field. ( **Note**: dkim.signing_domain is only available in SparkPost Elite. )
 
 + Parameters
     + domain (required, string, `example1.com`) ... Name of the domain
@@ -6265,10 +6771,10 @@ If a dkim object is provided in the update request, it must contain all relevant
         ```
         {
             "tracking_domain": "click.example1.com",
-            "dkim" : {  "private" : "MIICXgIBAAKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQABAoGBAITb3BCRPBi5lGhHdn+1RgC7cjUQEbSb4eFHm+ULRwQ0UIPWHwiVWtptZ09usHq989fKp1g/PfcNzm8c78uTS6gCxfECweFCRK6EdO6cCCr1cfWvmBdSjzYhODUdQeyWZi2ozqd0FhGWoV4VHseh4iLj36DzleTLtOZj3FhAo1WJAkEA68T+KkGeDyWwvttYtuSiQCCTrXYAWTQnkIUxduCp7Ap6tVeIDn3TaXTj74UbEgaNgLhjG4bX//fdeDW6PaK9YwJBAM6xJmwHLPMgwNVjiz3u/6fhY3kaZTWcxtMkXCjh1QE82KzDwqyrCg7EFjTtFysSHCAZxXZMcivGl4TZLHnydJUCQQCx16+M+mAatuiCnvxlQUMuMiSTNK6Amzm45u9v53nlZeY3weYMYFdHdfe1pebMiwrT7MI9clKebz6svYJVmdtXAkApDAc8VuR3WB7TgdRKNWdyGJGfoD1PO1ZE4iinOcoKV+IT1UCY99Kkgg6C7j62n/8T5OpRBvd5eBPpHxP1F9BNAkEA5Nf2VO9lcTetksHdIeKK+F7sio6UZn0Rv7iUo3ALrN1D1cGfWIh/Y1g==",
-                "public" : "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
-                "selector" : "hello_selector",
-                "headers" : "from:to:subject:date"
+            "dkim": {  "private": "MIICXgIBAAKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQABAoGBAITb3BCRPBi5lGhHdn+1RgC7cjUQEbSb4eFHm+ULRwQ0UIPWHwiVWtptZ09usHq989fKp1g/PfcNzm8c78uTS6gCxfECweFCRK6EdO6cCCr1cfWvmBdSjzYhODUdQeyWZi2ozqd0FhGWoV4VHseh4iLj36DzleTLtOZj3FhAo1WJAkEA68T+KkGeDyWwvttYtuSiQCCTrXYAWTQnkIUxduCp7Ap6tVeIDn3TaXTj74UbEgaNgLhjG4bX//fdeDW6PaK9YwJBAM6xJmwHLPMgwNVjiz3u/6fhY3kaZTWcxtMkXCjh1QE82KzDwqyrCg7EFjTtFysSHCAZxXZMcivGl4TZLHnydJUCQQCx16+M+mAatuiCnvxlQUMuMiSTNK6Amzm45u9v53nlZeY3weYMYFdHdfe1pebMiwrT7MI9clKebz6svYJVmdtXAkApDAc8VuR3WB7TgdRKNWdyGJGfoD1PO1ZE4iinOcoKV+IT1UCY99Kkgg6C7j62n/8T5OpRBvd5eBPpHxP1F9BNAkEA5Nf2VO9lcTetksHdIeKK+F7sio6UZn0Rv7iUo3ALrN1D1cGfWIh/Y1g==",
+                "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
+                "selector": "hello_selector",
+                "headers": "from:to:subject:date"
             }
         }
         ```
@@ -6276,9 +6782,9 @@ If a dkim object is provided in the update request, it must contain all relevant
 + Response 200 (application/json; charset=utf-8)
 
         {
-            "results" : {
-                "message" : "Successfully Updated Domain.",
-                "domain" : "example1.com"
+            "results": {
+                "message": "Successfully Updated Domain.",
+                "domain": "example1.com"
             }
         }
 
@@ -6297,7 +6803,7 @@ If a dkim object is provided in the update request, it must contain all relevant
 + Response 422 (application/json)
 
     {
-      "errors" : [
+      "errors": [
         {
           "message": "invalid data format/type",
           "description": "Error validating domain name syntax for domain: '(domain)'",
@@ -6342,11 +6848,14 @@ Delete an existing sending domain.
 
 ### Verify a Sending Domain [POST]
 
-**Note:** While it is possible to call this endpoint in SparkPost Elite, the verification status of a sending domain will not affect sending. It is currently possible to send from an unverified domain in SparkPost Elite.
+The verify resource operates differently depending on the provided request fields:
+  * Including the fields "dkim_verify" and/or "spf_verify" in the request initiates a check against the associated DNS record type for the specified sending domain.
+  * Including the fields "postmaster_at_verify" and/or "abuse_at_verify" in the request results in an email sent to the specified sending domain's postmaster@ and/or abuse@ mailbox where a verification link can be clicked.
+  * Including the fields "postmaster_at_token" and/or "abuse_at_token" in the request initiates a check of the provided token(s) against the stored token(s) for the specified sending domain.
 
-The verify resource validates the specified verification field types. Including the fields "dkim_verify" and "spf_verify" in the request initiates a check against the associated DNS record type for the specified sending domain. The domain's "status" object is returned on success.
+The domain's "status" object is returned on success.
 
-+ Request (application/json)
++ Request Verify DKIM and SPF (application/json)
 
     + Headers
 
@@ -6355,8 +6864,8 @@ The verify resource validates the specified verification field types. Including 
 
         ```
         {
-            "dkim_verify" : true,
-            "spf_verify"  : true
+            "dkim_verify": true,
+            "spf_verify": true
         }
         ```
 
@@ -6378,7 +6887,295 @@ The verify resource validates the specified verification field types. Including 
             }
         }
 
++ Request Initiate postmaster@ email (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+    + Body
+
+        ```
+        {
+            "postmaster_at_verify": true
+        }
+        ```
+
++ Response 200 (application/json; charset=utf-8)
+
+        {
+            "results": {
+                "ownership_verified": false,
+                "spf_status": "unverified",
+                "compliance_status": "valid",
+                "dkim_status": "unverified",
+                "abuse_at_status": "unverified",
+                "postmaster_at_status": "unverified"
+            }
+        }
+
++ Request Verify postmaster@ correct token (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+    + Body
+
+        ```
+        {
+            "postmaster_at_token": "rcayptmrczdnrnqfsxyrzljmtsxvjzxb"
+        }
+        ```
+
++ Response 200 (application/json; charset=utf-8)
+
+        {
+            "results": {
+                "ownership_verified": true,
+                "spf_status": "unverified",
+                "compliance_status": "valid",
+                "dkim_status": "unverified",
+                "abuse_at_status": "unverified",
+                "postmaster_at_status": "valid"
+            }
+        }
+
++ Request Verify abuse@ incorrect token (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+    + Body
+
+        ```
+        {
+            "abuse_at_token": "AN_INCORRECT_OR_EXPIRED_TOKEN"
+        }
+        ```
+
++ Response 200 (application/json; charset=utf-8)
+
+        {
+            "results": {
+                "ownership_verified": false,
+                "spf_status": "unverified",
+                "compliance_status": "valid",
+                "dkim_status": "unverified",
+                "abuse_at_status": "unverified",
+                "postmaster_at_status": "unverified"
+            }
+        }
+
++ Request Unable to process abuse@ request (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+    + Body
+
+        ```
+        {
+            "abuse_at_verify": true
+        }
+        ```
+
++ Response 400 (application/json; charset=utf-8)
+
+        {
+           "errors": [
+              {
+                 "message": "Failed to generate message",
+                 "description": "Failed to generate verification email",
+                 "code": "1901"
+              }
+           ]
+        }
+
+# Group Subaccounts - Coming in April!
+<a name="subaccounts-api"></a>
+API for retrieving and managing subaccounts associated with your Master Account.
+Subaccounts are a way for service providers to provision and manage their customers separately from each other and to provide assets and reporting data.
+For more general information pertaining to subaccounts, please see the [Subaccounts Introduction](#subaccounts-intro)
+
+## Subaccounts Collection [/subaccounts]
+
+### List subaccounts [GET]
+
+Endpoint for retrieving a list of your subaccounts. This endpoint only returns information about the subaccounts themselves, not the data associated with the subaccount.
+
++ Request
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        {
+          "results": [
+            {
+              "id": 123,
+              "name": "Joe's Garage",
+              "status": "active",
+              "compliance_status": "active"
+            },
+            {
+              "id": 456,
+              "name": "SharkPost",
+              "status": "active",
+              "compliance_status": "active"
+            },
+            {
+              "id": 789,
+              "name": "Dev Avocado",
+              "status": "suspended",
+              "compliance_status": "active"
+            }
+          ]
+        }
+
+### Create new subaccount [POST]
+
+Provisions a new subaccount and an initial subaccount API key. Subaccount API keys are only allowed very
+specific grants, which are limited to: `smtp/inject`, `sending_domains/manage`, `message_events/view` and `suppression_lists/manage`.
+Subaccounts are allowed to send mail using the SMTP protocol, retrieve sending statistics via the Message Events API, and manage their own Sending Domains and Suppression List.
+
+#### Request Body Attributes
+
+| Field         | Required   | Type    | Description                                                                                                                   |
+| ------------  | ---------- | ------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| name          | yes        | string  | User friendly identifier for a specific subaccount                                                                            |
+| key_label     | yes        | string  | User friendly identifier for the initial subaccount api key                                                                   |
+| key_grants    | yes        | Array   | List of grants to give to the initial subaccount api key                                                                      |
+| key_valid_ips | no         | Array   | List of IP's that the initial subaccount api key can be used from. If empty array, then api key is usable on any IP address   |
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+    + Body
+
+            {
+              "name": "Sparkle Ponies",
+              "key_label": "API Key for Sparkle Ponies Subaccount",
+              "key_grants": ["smtp/inject", "sending_domains/manage", "message_events/view", "suppression_lists/manage"]
+            }
+
++ Response 200 (application/json)
+
+        {
+          "results": {
+            "subaccount_id": 888,
+            "key": "cf806c8c472562ab98ad5acac1d1b06cbd1fb438",
+            "label": "API Key for Sparkle Ponies Subaccount",
+            "short_key": "cf80"
+          }
+        }
+
++ Response 400 (application/json)
+
+        {
+          "errors": [
+            {
+              "message": "`name` is a required field",
+              "param": "name",
+              "value": null
+            },
+            {
+              "message": "`key_label` is a required field",
+              "param": "key_label",
+              "value": null
+            },
+            {
+              "message": "`key_grants` is a required field",
+              "param": "key_grants",
+              "value": null
+            },
+            {
+              "message": "Invalid `key_grants value`. Supported values are: 'smtp/inject', 'sending_domains/manage', 'message_events/view', 'suppression_lists/manage'",
+              "param": "key_grants",
+              "value": null
+            },
+            {
+              "message": "`key_valid_ips` must be an Array",
+              "param": "key_valid_ips",
+              "value": null
+            },
+            {
+              "message": "`key_valid_ips` must have valid netmask values",
+              "param": "key_valid_ips",
+              "value": null
+            }
+          ]
+        }
+
+## Subaccounts Entity [/subaccounts/:subaccountID]
+
+### List specific subaccount [GET]
+
+Endpoint for retrieving information about a specific subaccount.
+
++ Request
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Parameters
+
+    + subaccountID (required, integer, `123`) ... Identifier of subaccount
+
++ Response 200 (application/json)
+
+            {
+              "results": {
+                "id": 123,
+                "name": "Joes Garage",
+                "status": "active",
+                "compliance_status": "active"
+              }
+            }
+
+### Edit a subaccount [PUT]
+Update an existing subaccount's information. You can update the following information associated with a subaccount:
+
+#### Request Body Attributes
+
+| Field   | Required   | Type   | Description                                        | Notes |
+| ------- | ---------- | ------ | -------------------------------------------------- | ----- |
+| name    | no         | string | User friendly identifier for a specific subaccount |       |
+| status  | no         | string | Status of the account                              | Value is one of `active`, `suspended`, or `terminated` |
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+    + Body
+
+            {
+              "name": "Hey Joe! Garage and Parts",
+              "status": "suspended"
+            }
+
++ Parameters
+
+    + subaccountID (required, integer, `123`) ... Identifier of subaccount
+
++ Response 200 (application/json)
+
+            {
+              "results": {
+                "message": "Successfully updated subaccount information"
+              }
+            }
+
 # Group Suppression List
+<a name="suppression-list-api"></a>
 
 A suppression list - or exclusion list, as it is sometimes called - stores a recipient's opt-out preferences. It is a list of recipient email addresses to which you do NOT want to send email. The Suppression List API is used to manage your customer-specific exclusion list entries.  An entry indicates whether the recipient requested to receive one of the following:
 
@@ -6390,6 +7187,12 @@ A suppression list - or exclusion list, as it is sometimes called - stores a rec
 Transactional messages are single recipient messages that are used operationally, e.g. to reset a password or confirm a purchase; while non-transactional messages are used to run email campaigns where a list of recipients are targeted, e.g. advertising a sales event.
 
 In addition to the customer-specific exclusion list, Message Systems maintains a global suppression list across all customers.
+
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
 
 ## List Entry Attributes
 | Field         | Type     | Description                           | Required   | Notes   |
@@ -6623,13 +7426,18 @@ The PUT method on this endpoint has been removed in favor of the Bulk Insert/Upd
             ]
         }
 
-
 # Group Templates
 
 A template is a named collection of content stored on the server side.  Templates are used
 in a transmission by providing the id of the template at the time of transmission submission.  Each textual component of the
 template (headers, text, and html) is run through the substitution engine
 to produce recipient specific email messages.  The Templates API provides the means to manage your templates.
+
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
 
 ## Template Attributes
 
@@ -6760,14 +7568,14 @@ Fully formed email_rfc822 content may be provided instead of the "text", "html",
           }
         }
 
-+ Response 403 (application/json)
++ Response 400 (application/json)
 
         {
           "errors" : [
             {
               "description" : "Unconfigured or unverified sending domain.",
-              "code" : "1100",
-              "message" : "permission denied"
+              "code" : "7001",
+              "message" : "Invalid domain"
             }
           ]
         }
@@ -6821,7 +7629,7 @@ Fully formed email_rfc822 content may be provided instead of the "text", "html",
               "X-Customer-Campaign-ID": "Summer2014"
             }
           }
-        } 
+        }
         ```
 
 + Response 200 (application/json)
@@ -6979,7 +7787,7 @@ and update the content all in one API call. All content fields are included whet
 changed or not.
 
 Publishing a template is a specific case of an update.  The body of the PUT
-request should contain the `"published": true` field as shown in the example. The 
+request should contain the `"published": true` field as shown in the example. The
 **update_published** query parameter does not apply.
 
 + Parameters
@@ -7019,7 +7827,7 @@ request should contain the `"published": true` field as shown in the example. Th
 + Request Publish (application/json)
 
   + Headers
-      
+
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
@@ -7141,6 +7949,7 @@ If a transmission uses a stored template, the template cannot be deleted if the 
         ```
 
 # Group Tracking Domains
+<a name="tracking-domains-api"></a>
 
 Tracking domains are used in engagement tracking to report opens and clicks in your messages. When open and click tracking is enabled, you can set up a tracking domain which wraps the tracking pixel and all links in your messages.
 
@@ -7157,6 +7966,13 @@ With a tracking domain you can replace the domain part of the link. So if your t
 ```
 
 **Note:** Use of a tracking domain requires modification of your DNS records to include a CNAME record.
+**Note:** Currently subaccounts can only use their master account's default tracking domain.
+
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
 
 ## Tracking Domains Attributes
 
@@ -7196,7 +8012,7 @@ Detailed status for this tracking domain is described in a JSON object with the 
 
 ### Create a Tracking Domain [POST]
 
-Create a tracking domain. If default is set to true and there is already a default domain, the default is changed.
+Create a tracking domain. A tracking domain cannot be set as the default until it is verified.
 
 **NOTE:** For SparkPost, only domain is required in the POST request body. The values for port (80) and secure (false) are not configurable.
 
@@ -7211,8 +8027,7 @@ Create a tracking domain. If default is set to true and there is already a defau
             {
               "domain": "example.domain.com",
               "port": 8080,
-              "secure": true,
-              "default": true
+              "secure": true
             }
 
 + Response 200
@@ -7252,6 +8067,21 @@ Create a tracking domain. If default is set to true and there is already a defau
                 }
               ]
             }
+
++ Response 422 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "code": "1300",
+                  "message": "invalid data format/type",
+                  "description": "Tracking domain 'example.domain.com' unverified."
+                }
+              ]
+            }
+
 
 + Response 422 (application/json)
 
@@ -7423,7 +8253,9 @@ Retrieve an existing tracking domain.
 
 ### Update a Tracking Domain [PUT]
 
-Update the attributes of an existing tracking domain.
+Update the attributes of an existing tracking domain.  A tracking domain cannot be
+set as the default until it is verified.  If a tracking domain is set to the default,
+and there is already a default domain, the default is changed.
 
 **NOTE:** For SparkPost, port and secure cannot be updated.
 
@@ -7468,6 +8300,20 @@ Update the attributes of an existing tracking domain.
                   "code": "1600",
                   "message": "resource not found",
                   "description": "Resource not found: example.domain.com"
+                }
+              ]
+            }
+
++ Response 422 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "code": "1300",
+                  "message": "invalid data format/type",
+                  "description": "Tracking domain 'example.domain.com' unverified."
                 }
               ]
             }
@@ -7544,12 +8390,19 @@ Initiate a check against the CNAME DNS record for the specified tracking domain.
             }
 
 # Group Transmissions
+<a name="transmissions-api"></a>
 
 A transmission is a collection of messages belonging to the same campaign.  It is also known as a mailing.  The Transmissions API provides the means to manage transmissions.  Messages in the transmissions are generated and sent to a specified list of recipients using a specified message template. The recipient list can be a stored list created using the Recipient Lists API, or it can be created "inline" as part of a transmission.  Similarly, the message template can be a stored template created using the Templates API, or it can be created "inline" as part of a transmission.  Messages are generated for the transmission for all specified recipients using the message template and performing substitution of data as necessary.
 
 In addition, engagement tracking options can be set in the transmission to track message opens and clicks.
 
-## Transmission Attributes 
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
+## Transmission Attributes
 
 | Field         | Type     | Description                           | Required         | Notes   |
 |--------------------|----------------      |---------------------------------------|--------------------------|--------|
@@ -7557,8 +8410,8 @@ In addition, engagement tracking options can be set in the transmission to track
 |state |string  |State of the transmission  | no | Read only.  Valid responses are "submitted", "Generating", "Success", or "Canceled". |
 |options | JSON object | JSON object in which transmission options are defined | no | For a full description, see the Options Attributes.
 |recipients | JSON array or JSON object | Inline recipient objects or object containing stored recipient list ID |yes | Specify a stored recipient list or specify recipients inline.  When using a stored recipient list, specify the "list_id" as described in Using a Stored Recipient List.  Otherwise, provide the recipients inline using the fields described in the Recipient List API documentation for Recipient Attributes. |
-|campaign_id | string |Name of the campaign|no|Maximum length - 64 bytes| 
-|description | string |Description of the transmission|no | Maximum length - 1024 bytes| 
+|campaign_id | string |Name of the campaign|no|Maximum length - 64 bytes|
+|description | string |Description of the transmission|no | Maximum length - 1024 bytes|
 |metadata|JSON object|Transmission level metadata containing key/value pairs |no| Metadata is available during events through the Webhooks and is provided to the substitution engine.  A maximum of 1000 bytes of merged metadata (transmission level + recipient level) is available with recipient metadata taking precedence over transmission metadata when there are conflicts.  |
 |substitution_data|JSON object|Key/value pairs that are provided to the substitution engine| no | Recipient substitution data takes precedence over transmission substitution data. Unlike metadata, substitution data is not included in Webhook events. |
 |return_path | string |Email to use for envelope FROM ( **Note:** SparkPost Elite only )| yes | To support Variable Envelope Return Path (VERP), this field can also optionally be specified inside of the address object of a specific recipient in order to give the recipient a unique envelope MAIL FROM. |
@@ -7573,11 +8426,12 @@ In addition, engagement tracking options can be set in the transmission to track
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
 |start_time | string | Delay generation of messages until this datetime.  For additional information, see Scheduled Transmissions. |no - defaults to immediate generation | Format YYYY-MM-DDTHH:MM:SS+-HH:MM or "now". Example: '2015-02-11T08:00:00-04:00'.|
-|open_tracking|boolean| Whether open tracking is enabled for this transmission| no |If not specified, the setting at template level is used, or defaults to true. | 
-|click_tracking|boolean| Whether click tracking is enabled for this transmission| no |If not specified, the setting at template level is used, or defaults to true. | 
+|open_tracking|boolean| Whether open tracking is enabled for this transmission| no |If not specified, the setting at template level is used, or defaults to true. |
+|click_tracking|boolean| Whether click tracking is enabled for this transmission| no |If not specified, the setting at template level is used, or defaults to true. |
 |transactional|boolean|Whether message is transactional or non-transactional for unsubscribe and suppression purposes | no |If not specified, the setting at template level is used, or defaults to false. |
 |sandbox|boolean|Whether or not to use the sandbox sending domain ( **Note:** SparkPost only )| no |Defaults to false. |
 |skip_suppression|boolean|Whether or not to ignore customer suppression rules, for this transmission only.  Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no - Defaults to false |  Unlike most other options, this flag is omitted on a GET transmission response unless the flag's value is true. |
+|inline_css|boolean|Whether or not to perform CSS inlining in HTML content | no - Defaults to false | |
 
 ### Inline Content Attributes
 
@@ -7591,8 +8445,8 @@ The following attributes are used when specifying inline content in the transmis
 |from |string or JSON  | Address _"from" : "deals@company.com"_ or JSON object composed of the "name" and "email" fields _"from" : { "name" : "My Company", "email" : "deals@company.com" }_ used to compose the email's "From" header| yes | Substitution syntax is supported. |
 |reply_to |string  |Email address used to compose the email's "Reply-To" header | no | Substitution syntax is supported. |
 |headers| JSON | JSON dictionary containing headers other than "Subject", "From", "To", and "Reply-To"  | no |See the Header Notes. |
-|attachments| JSON | JSON array of attachments.  **Note:** Please contact support@sparkpost.com to request enablement of attachments and inline images on your account (enabled by default on SparkPost Elite accounts) | no | For a full description, see Attachment Attributes. |
-|inline_images| JSON | JSON array of inline images.  **Note:** Please contact support@sparkpost.com to request enablement of attachments and inline images on your account (enabled by default on SparkPost Elite accounts) | no | For a full description, see Inline Image Attributes. |
+|attachments| JSON | JSON array of attachments. | no | For a full description, see Attachment Attributes. |
+|inline_images| JSON | JSON array of inline images. | no | For a full description, see Inline Image Attributes. |
 
 #### Header Notes
 
@@ -7619,8 +8473,6 @@ necessary.
 
 ### Attachment Attributes
 
-**Note:** Please contact support@sparkpost.com to request enablement of attachments and inline images on your account (enabled by default on SparkPost Elite accounts)
-
 Attachments for a transmission are specified in the content.attachments JSON array where each JSON object in the array is described by the following fields:
 
 | Field         | Type     | Description                           | Required   | Notes   |
@@ -7630,8 +8482,6 @@ Attachments for a transmission are specified in the content.attachments JSON arr
 |data |string |The content of the attachment as a Base64 encoded string.  The string should not contain \r\n line breaks.  The SparkPost systems will add line breaks as necessary to ensure the Base64 encoded lines contain no more than 76 characters each. | yes | The entirety of transmission content (text + html + attachments + inline images) is limited to 20 MBs |
 
 ### Inline Image Attributes
-
-**Note:** Please contact support@sparkpost.com to request enablement of attachments and inline images on your account (enabled by default on SparkPost Elite accounts)
 
 Inline images for a transmission are specified in the content.inline_images JSON array where each JSON object in the array is described by the following fields:
 
@@ -7663,14 +8513,14 @@ Use the _options.start_time_ attribute to delay generation of messages.  The sch
 
 
 ## Create [/transmissions{?num_rcpt_errors}]
- 
+
 ### Create a Transmission [POST]
 
 You can create a transmission in a number of ways. In all cases, you can use the **num_rcpt_errors** parameter to limit the number of recipient errors returned.
 
 **Note:** The "return_path" in the POST request body applies to SparkPost Elite only.
 
-**Note:** Sending limits apply to SparkPost only. When a transmission is created in SparkPost, the number of messages in the transmission is compared to the sending limit of your account. If the transmission will cause you to exceed your sending limit, the entire transmission results in an error and no messages are sent.  Note that no messages will be sent for the given transmission, regardless of the number of messages that caused you to exceed your sending limit. In this case, the Transmission API will return an HTTP 420 error code with an error detailing whether you would exceed your hourly, daily, or sandbox sending limit. 
+**Note:** Sending limits apply to SparkPost only. When a transmission is created in SparkPost, the number of messages in the transmission is compared to the sending limit of your account. If the transmission will cause you to exceed your sending limit, the entire transmission results in an error and no messages are sent.  Note that no messages will be sent for the given transmission, regardless of the number of messages that caused you to exceed your sending limit. In this case, the Transmission API will return an HTTP 420 error code with an error detailing whether you would exceed your hourly, daily, or sandbox sending limit.
 
 #### Using Inline Email Part Content
 
@@ -7782,21 +8632,17 @@ Once message generation has been initiated, all messages in the transmission wil
         }
         ```
 
-+ Response 403 (application/json)
++ Response 400 (application/json)
 
-    + Body
-
-        ```
         {
           "errors" : [
             {
               "description" : "Unconfigured or unverified sending domain.",
-              "code" : "1100",
-              "message" : "permission denied"
+              "code" : "7001",
+              "message" : "Invalid domain"
             }
           ]
         }
-        ```
 
 + Request Create Transmission with Inline RFC822 Content (application/json)
 
@@ -7805,7 +8651,7 @@ Once message generation has been initiated, all messages in the transmission wil
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
-  
+
             {
               "options": {
                 "open_tracking": true,
@@ -7866,7 +8712,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 200 (application/json)
 
   + Body
-  
+
             {
               "results": {
                 "total_rejected_recipients": 0,
@@ -7875,19 +8721,17 @@ Once message generation has been initiated, all messages in the transmission wil
               }
             }
 
-+ Response 403 (application/json)
++ Response 400 (application/json)
 
-  + Body
-
+        {
+          "errors" : [
             {
-              "errors" : [
-                {
-                  "description" : "Unconfigured or unverified sending domain.",
-                  "code" : "1100",
-                  "message" : "permission denied"
-                }
-              ]
+              "description" : "Unconfigured or unverified sending domain.",
+              "code" : "7001",
+              "message" : "Invalid domain"
             }
+          ]
+        }
 
 
 + Request Create Transmission with Stored Recipient List (application/json)
@@ -7897,7 +8741,7 @@ Once message generation has been initiated, all messages in the transmission wil
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
-  
+
             {
                 "campaign_id": "christmas_campaign",
                 "return_path": "bounces-christmas-campaign@flintstone.com",
@@ -7934,7 +8778,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 404 (application/json)
 
   + Body
-  
+
             {
               "errors": [
                 {
@@ -7952,7 +8796,7 @@ Once message generation has been initiated, all messages in the transmission wil
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
-  
+
             {
               "options": {
                 "open_tracking": true,
@@ -8016,7 +8860,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 200 (application/json)
 
   + Body
-  
+
             {
               "errors": [
                 {
@@ -8041,7 +8885,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 404 (application/json)
 
   + Body
-  
+
             {
               "errors": [
                 {
@@ -8059,7 +8903,7 @@ Once message generation has been initiated, all messages in the transmission wil
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
-  
+
             {
                 "campaign_id": "christmas_campaign",
 
@@ -8083,7 +8927,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 420 (application/json)
 
   + Body
-  
+
             {
               "errors": [
                 {
@@ -8096,7 +8940,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 420 (application/json)
 
   + Body
-  
+
             {
               "errors": [
                 {
@@ -8109,7 +8953,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 420 (application/json)
 
   + Body
-  
+
             {
               "errors": [
                 {
@@ -8126,7 +8970,7 @@ Once message generation has been initiated, all messages in the transmission wil
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
-  
+
             {
                 "name" : "Fall Sale",
                 "campaign_id": "fall",
@@ -8413,7 +9257,7 @@ Scheduled transmissions cannot be deleted if the transmission is within 10 minut
 
 
 + Parameters
-    + id (required, string, `11714265276872`) ... ID of the transmission 
+    + id (required, string, `11714265276872`) ... ID of the transmission
 
 + Request
 
@@ -8490,6 +9334,14 @@ The following are key operational details:
 * Any webhook batch that does not receive an HTTP 200 response will be retried for a total of 4 hours before the data is discarded.
 * Each webhook batch contains the header X-MessageSystems-Batch-ID, which is useful for auditing and prevention of processing duplicate batches.
 * Webhooks posting to your endpoint will timeout after 10 seconds. For best results, write webhook batches to disk and then process asynchronously to minimize data loss if you have a problem with your database.
+* When using 'oauth2', auth_request_details must be set by the user (example: `{ "url": "https://oauth.myurl.com/tokens", "body": { "client_id": "<oauth client id>", "client_secret": "<oauth client secret>" }}`). Additionally, auth_credentials is set by the system and cannot be configured by the user.
+* When using 'basic' auth, auth_credentials must be set by the user and should be an object containing "username" (required) and "password" (optional). (example: `{ "username": "basicauthuser", "password": "mypassword" }`)
+
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
 
 ## Webhooks Object Properties
 
@@ -8498,13 +9350,13 @@ The following are key operational details:
 | name              | string | User-friendly name for webhook | yes | example: `Example webhook` |
 | target            | string | URL of the target to which to POST event batches | yes |  When a webhook is created or updated with a change to this property, a test POST request is sent to the given URL. The target URL must accept the connection and respond with HTTP 200; otherwise, your request to the Webhook API will fail with HTTP 400, and the requested change will not be applied.<br />example: `http://client.example.com/example-webhook` |
 | events            | array  | Array of event types this webhook will receive | yes | Use the Webhooks Events endpoint to list the available event types.<br />example: `["delivery", "injection", "open", "click"]`|
-| auth_type         | string | Type of authentication to be used during POST requests to target | no | examples: `oauth2`, `none` |
+| auth_type         | string | Type of authentication to be used during POST requests to target | no | examples: `none`, `basic`, `oauth2` |
 | auth_request_details | JSON | Object containing details needed to request authorization credentials, as necessary | no | example: `{ "url": "https://oauth.myurl.com/tokens", "body": { "client_id": "<oauth client id>", "client_secret": "<oauth client secret>" }}`|
-| auth_credentials         | JSON | Object containing credentials needed to make authorized POST requests to target | no | example: `{ access_token: "<oauth token>", expires_in: 3600 }` |
+| auth_credentials         | JSON | Object containing credentials needed to make authorized POST requests to target | no | examples: `{ "access_token": "<oauth token>", expires_in: 3600 }`, `{ "username": "basicauthuser", "password": "mypassword" }` |
 | auth_token        | string | Authentication token to present in the X-MessageSystems-Webhook-Token header of POST requests to target | no | Use this token in your target application to confirm that data is coming from the Webhooks API. <br />example: `5ebe2294ecd0e0f08eab7690d2a6ee69`<br /><br />_Note: This field is deprecated, you should use the auth_type field instead._ |
 
 __**The SparkPost webhooks API uses MaxMind software [MaxMind License](/docs/3RD_PARTY_LICENSES.md)**__
- 
+
 ## Events Documentation [/webhooks/events/documentation]
 
 ### Documentation [GET]
@@ -8737,6 +9589,33 @@ Retrieve details about a webhook by specifying its id in the URI path.
         {
           "results": [
             {
+              "id": "a2b83490-10df-11e4-b670-c1ffa86371ff",
+              "name": "Some webhook",
+              "target": "http://client.example.com/some-webhook",
+              "events": [
+                "delivery",
+                "injection",
+                "open",
+                "click"
+              ],
+              "auth_type": "basic",
+              "auth_request_details": {},
+              "auth_credentials": {
+                "username": "basicuser",
+                "password": "somepass"
+              },
+              "auth_token": "",
+              "last_successful": "2014-08-01 16:09:15",
+              "last_failure": "2014-06-01 15:15:45",
+              "links": [
+                {
+                  "href": "http://www.messagesystems-api-url.com/api/v1/webhooks/a2b83490-10df-11e4-b670-c1ffa86371ff",
+                  "rel": "urn.msys.webhooks.webhook",
+                  "method": ["GET","PUT"]
+                }
+              ]
+            },
+            {
               "id": "12affc24-f183-11e3-9234-3c15c2c818c2",
               "name": "Example webhook",
               "target": "http://client.example.com/example-webhook",
@@ -8763,7 +9642,7 @@ Retrieve details about a webhook by specifying its id in the URI path.
               "last_failure": "2014-08-01 15:15:45",
               "links": [
                 {
-                  "href": "http://www.messagesystems-api-url.com/api/v1/webhooks/a2b83490-10df-11e4-b670-c1ffa86371ff",
+                  "href": "http://www.messagesystems-api-url.com/api/v1/webhooks/12affc24-f183-11e3-9234-3c15c2c818c2",
                   "rel": "urn.msys.webhooks.webhook",
                   "method": ["GET","PUT"]
                 }
@@ -8968,9 +9847,13 @@ are currently in a failed state.
 # Group SMTP API
 <a name="smtp-api"></a>
 
+**Note**: See [SMTP Relay Endpoints](#smtp-relay-endpoints) for the SMTP client configuration needed to use SparkPost or SparkPost Elite as an SMTP relay.
+
 Through use of the X-MSYS-API header in a message sent to SparkPost and SparkPost Elite through SMTP,
 you can now specify a campaign id, metadata,
-tags, Cc, Bcc, and archive recipient lists and enable open and/or click tracking.  Note that to use this option you should be familiar with how to encode
+tags, Cc, Bcc, and archive recipient lists and disable open and/or click tracking.
+
+**Note**: To use this option you should be familiar with how to encode
 options as JSON strings, as the value of the header field is a JSON object that specifies the relevant options:
 
 ```
@@ -8978,6 +9861,14 @@ X-MSYS-API: {"options" : {"open_tracking" : false, "click_tracking" : true},
    "metadata" : {"key" : "value"}, "tags" : ["cat", "dog"], "campaign_id" :
    "my_campaign"}
 ```
+
+Click and open tracking are disabled by default in SMTP messages sent through SparkPost.  To enable click and open tracking in SMTP messages, add the X-MSYS-API header as follows:
+```
+X-MSYS-API: { "options" : { "open_tracking" : true, "click_tracking" : true } }
+```
+
+**Note**: Key-Value [Substitutions](#substitutions-reference) are not supported in SMTP API.
+substitution_data provided in the X-MSYS-API header will be ignored.
 
 The fields supported in the X-MSYS-API header are as follows:
 
@@ -9000,6 +9891,7 @@ The fields supported in the X-MSYS-API header are as follows:
 | transactional | boolean | Whether message is transactional or non-transactional for unsubscribe and suppression purposes | no | Defaults to false. |
 | sandbox| boolean| Whether or not to use the sandbox sending domain ( **Note:** SparkPost only ) | no | Defaults to false. |
 | skip_suppression| boolean| Whether or not to ignore customer suppression rules, for this SMTP message only. Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no | Defaults to false. |
+| inline_css| boolean| Whether or not to perform CSS inlining in HTML content | no | Defaults to false. |
 
 ## Sending Messages with cc, bcc, and archive Recipients
 
