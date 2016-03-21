@@ -45,8 +45,8 @@ Endpoint for retrieving a list of your subaccounts. This endpoint only returns i
 ### Create new subaccount [POST]
 
 Provisions a new subaccount and an initial subaccount API key. Subaccount API keys are only allowed very
-specific grants, which are limited to: `smtp/inject`, `sending_domains/manage`, `message_events/view` and `suppression_lists/manage`.
-Subaccounts are allowed to send mail using the SMTP protocol, retrieve sending statistics via the Message Events API, and manage their own Sending Domains and Suppression List.
+specific grants, which are limited to: `smtp/inject`, `sending_domains/manage`, `tracking_domains/view`, `tracking_domains/manage`, `message_events/view` and `suppression_lists/manage`.
+Subaccounts are allowed to send mail using the SMTP protocol, retrieve sending statistics via the Message Events API, and manage their own Sending Domains, Tracking Domains, and Suppression List.
 
 #### Request Body Attributes
 
@@ -68,7 +68,7 @@ Subaccounts are allowed to send mail using the SMTP protocol, retrieve sending s
             {
               "name": "Sparkle Ponies",
               "key_label": "API Key for Sparkle Ponies Subaccount",
-              "key_grants": ["smtp/inject", "sending_domains/manage", "message_events/view", "suppression_lists/manage"]
+              "key_grants": ["smtp/inject", "sending_domains/manage", "message_events/view", "suppression_lists/manage", "tracking_domains/view", "tracking_domains/manage"]
             }
 
 + Response 200 (application/json)
