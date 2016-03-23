@@ -25,6 +25,7 @@ Endpoint for retrieving a list of your subaccounts. This endpoint only returns i
               "id": 123,
               "name": "Joe's Garage",
               "status": "active",
+              "ip_pool": "my_ip_pool",
               "compliance_status": "active"
             },
             {
@@ -56,6 +57,7 @@ Subaccounts are allowed to send mail using the SMTP protocol, retrieve sending s
 | key_label     | yes        | string  | User friendly identifier for the initial subaccount api key                                                                   |
 | key_grants    | yes        | Array   | List of grants to give to the initial subaccount api key                                                                      |
 | key_valid_ips | no         | Array   | List of IP's that the initial subaccount api key can be used from. If empty array, then api key is usable on any IP address   |
+| ip_pool       | no         | string  | The ID of the default IP Pool assigned to this subaccount's transmissions                                                     |
 
 + Request (application/json)
 
@@ -115,6 +117,11 @@ Subaccounts are allowed to send mail using the SMTP protocol, retrieve sending s
               "message": "`key_valid_ips` must have valid netmask values",
               "param": "key_valid_ips",
               "value": null
+            },
+            {
+              "message": "ip_pool parameter must not exceed 32 characters",
+              "param": "ip_pool",
+              "value": "an ip pool name that is too long"
             }
           ]
         }
@@ -143,7 +150,8 @@ Endpoint for retrieving information about a specific subaccount.
                 "id": 123,
                 "name": "Joes Garage",
                 "status": "active",
-                "compliance_status": "active"
+                "compliance_status": "active",
+                "ip_pool": "assigned_ip_pool"
               }
             }
 
@@ -156,6 +164,7 @@ Update an existing subaccount's information. You can update the following inform
 | ------- | ---------- | ------ | -------------------------------------------------- | ----- |
 | name    | no         | string | User friendly identifier for a specific subaccount |       |
 | status  | no         | string | Status of the account                              | Value is one of `active`, `suspended`, or `terminated` |
+| ip_pool | no         | string | The ID of the default IP Pool assigned to this subaccount's transmissions                                                     |
 
 + Request (application/json)
 
@@ -181,3 +190,16 @@ Update an existing subaccount's information. You can update the following inform
                 "message": "Successfully updated subaccount information"
               }
             }
+
++ Response 400 (application/json)
+
+        {
+          "errors": [          
+            {
+              "message": "ip_pool parameter must not exceed 32 characters",
+              "param": "ip_pool",
+              "value": "an ip pool name that is too long"
+            }            
+          ]
+        }
+        
