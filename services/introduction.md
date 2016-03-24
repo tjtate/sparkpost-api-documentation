@@ -34,6 +34,12 @@ Note: To prevent abuse, our servers enforce request rate limiting, which may tri
 * Administrators can generate an API key using the UI. Please take care to record and safeguard your API keys at all times. You cannot retrieve an API key after it has been created.
 * For examples of supplying the Authorization header, refer to the cURL example below or any of the individual API request examples.
 
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
 ## Using cURL
 If you are using cURL to call the API, you must include the resource URI in quotes when you pass in multiple query parameters separated by an **&**.
 
@@ -46,7 +52,7 @@ curl -v \
 -X GET "https://api.sparkpost.com/api/v1/metrics/deliverability/aggregate?campaigns=testjob&from=2014-01-23T14:00&metrics=count_targeted,count_sent,count_accepted&protocols=smtp&timezone=America%2FNew_York&to=2014-06-23T15:50"
 ```
 
-or 
+or
 
 ```
 curl -v \
@@ -72,6 +78,39 @@ To use SparkPost as an SMTP relay you need to point your SMTP client (or local M
 
 ### SparkPost Elite SMTP Endpoint
 
-* Please contact your Technical Account Manager for details on your SMTP endpoint.  
+* Please contact your Technical Account Manager for details on your SMTP endpoint.
 
 The SMTP relay optionally supports advanced API features using the [SMTP API](#smtp-api).  To create an API key, login to your SparkPost [Account Credentials](https://app.sparkpost.com/account/credentials) page.
+
+## Subaccounts - Coming to an API near you in April!
+<a name="subaccounts-intro"></a>
+With the introduction of subaccounts, some of the APIs are now able to store and retrieve information at a more granular level.
+Subaccounts are a way for service providers to provision and manage their customers separately from each other and to provide assets and reporting data.
+
+The following APIs have subaccount support:
+
+* [Metrics API](#metrics-api) **(Note: Not available for Subaccount API keys)**
+* [Message Events API](#message-events-api)
+* [Sending Domains API](#sending-domains-api)
+* [Tracking Domains API](#tracking-domains-api)
+* [Suppression List API](#suppression-list-api)
+* [SMTP API](#smtp-api)
+
+**Note**: [Transmissions API](#transmissions-api) support is coming soon
+
+### Terminology
+* Master Account - This refers to a Service Provider and the Service Provider's data
+* Subaccounts - This refers to a Service Provider's customer(s), and that customer's data
+
+### Managing subaccount data as a Service Provider
+* Master Accounts can set `X-MSYS-SUBACCOUNT` with the ID of their subaccount to manage subaccount data on their behalf
+  * For example, on a GET request to `/api/v1/sending-domains`, setting `X-MSYS-SUBACCOUNT` to `123` will only return sending domains which belong to Subaccount `123`
+  * The same applies to data management, setting `X-MSYS-SUBACCOUNT` to `123` on a POST request to `/api/v1/sending-domains` will create a sending domain belonging to Subaccount `123`
+* `X-MSYS-SUBACCOUNT` is not required, but if provided, must be a number
+
+### Managing master account data as a Service Provider
+* Setting `X-MSYS-SUBACCOUNT` to `0` will retrieve or manage Master Account data only
+* For POST/PUT/DELETE requests, omitting `X-MSYS-SUBACCOUNT` will result in the same behavior as setting `X-MSYS-SUBACCOUNT` to `0`
+* For GET requests, omitting `X-MSYS-SUBACCOUNT` will result in Master Account and Subaccount data in the response
+  * Subaccount data will have the key `subaccount_id` in the response object
+* Metrics and Message Events APIs do not use `X-MSYS-SUBACCOUNT`. Instead, setting the query parameter `subaccounts` to `0` will return only Master Account reporting data
