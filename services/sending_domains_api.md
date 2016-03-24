@@ -17,6 +17,7 @@ If you use [Postman](https://www.getpostman.com/) you can click the following bu
 |tracking_domain | string | Associated tracking domain | no | example: "click.example1.com". Note that currently we don't allow tracking domains to be linked to sending domains belonging to subaccounts.|
 |status | JSON object | JSON object containing status details, including whether this domain's ownership has been verified  | no | Read only. For a full description, see the Status Attributes.|
 |dkim | JSON object | JSON object in which DKIM key configuration is defined | no | For a full description, see the DKIM Attributes.|
+|generate_dkim | boolean | Whether to generate a DKIM keypair on creation | no | defaults to true |
 
 ### DKIM Attributes
 
@@ -73,7 +74,60 @@ Create a sending domain by providing a **sending domain object** as the POST req
 
 **Note**: For some SparkPost Elite customers, Sending Domains will be set to verified automatically when they are created, and can be used to send messages immediately. For these customers, there is no need to use the "verify" endpoint to verify Sending Domains. To find out if this applies in your SparkPost Elite environment, please contact support <support@sparkpostelite.com>, or contact your TAM.
 
-+ Request (application/json)
++ Request Create New Sending Domain with Auto-Generated DKIM Keypair (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+    + Body
+
+        ```
+        {
+            "domain": "example1.com"
+        }
+        ```
+
++ Response 200 (application/json; charset=utf-8)
+
+        {
+          "results": {
+            "message": "Successfully Created domain.",
+            "domain": "example1.com"
+            "dkim": {
+              "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
+              "selector": "brisbane",
+              "signing_domain": "",
+              "headers": "from:to:subject:date"
+            }
+          }
+        }
+
++ Request Create Sending Domain without DKIM Keypair
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+    + Body
+
+        ```
+        {
+            "domain": "example1.com",
+            "generate_dkim": "false"
+        }
+        ```
+
++ Response 200 (application/json; charset=utf-8)
+
+        {
+          "results": {
+            "message": "Successfully Created domain.",
+            "domain": "example1.com"
+          }
+        }
+
++ Request Provide Pre-Generated DKIM Keypair (application/json)
 
     + Headers
 
@@ -96,10 +150,16 @@ Create a sending domain by providing a **sending domain object** as the POST req
 + Response 200 (application/json; charset=utf-8)
 
         {
-            "results": {
-                "message": "Successfully Created domain.",
-                "domain": "example1.com"
+          "results": {
+            "message": "Successfully Created domain.",
+            "domain": "example1.com"
+            "dkim": {
+              "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
+              "selector": "brisbane",
+              "signing_domain": "",
+              "headers": "from:to:subject:date"
             }
+          }
         }
 
 + Response 400 (application/json)
