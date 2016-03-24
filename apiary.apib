@@ -7043,13 +7043,14 @@ Subaccounts are allowed to send mail using the SMTP protocol, retrieve sending s
 
 #### Request Body Attributes
 
-| Field         | Required   | Type    | Description                                                                                                                   |
-| ------------  | ---------- | ------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| name          | yes        | string  | User friendly identifier for a specific subaccount                                                                            |
-| key_label     | yes        | string  | User friendly identifier for the initial subaccount api key                                                                   |
-| key_grants    | yes        | Array   | List of grants to give to the initial subaccount api key                                                                      |
-| key_valid_ips | no         | Array   | List of IP's that the initial subaccount api key can be used from. If empty array, then api key is usable on any IP address   |
-| ip_pool       | no         | string  | The ID of the default IP Pool assigned to this subaccount's transmissions                                                     |
+| Field         | Required   | Type    | Description                                                               | Notes |
+| ------------  | ---------- | ------- | --------------------------------------------------------------------------| ----- |
+| name          | yes        | string  | User friendly identifier for a specific subaccount                        |       |
+| key_label     | yes        | string  | User friendly identifier for the initial subaccount api key               |       |
+| key_grants    | yes        | Array   | List of grants to give to the initial subaccount api key                  |       |
+| key_valid_ips | no         | Array   | List of IP's that the initial subaccount api key can be used from         | If the supplied `key_valid_ips` is an empty array, the api key is usable by any IP address |
+| ip_pool       | no         | string  | The ID of the default IP Pool assigned to this subaccount's transmissions | If the supplied `ip_pool` is an empty string or not present, no default `ip_pool` will be assigned |
+
 
 + Request (application/json)
 
@@ -7156,7 +7157,7 @@ Update an existing subaccount's information. You can update the following inform
 | ------- | ---------- | ------ | -------------------------------------------------- | ----- |
 | name    | no         | string | User friendly identifier for a specific subaccount |       |
 | status  | no         | string | Status of the account                              | Value is one of `active`, `suspended`, or `terminated` |
-| ip_pool | no         | string | The ID of the default IP Pool assigned to this subaccount's transmissions                                                     |
+| ip_pool | no         | string | The ID of the default IP Pool assigned to this subaccount's transmissions | If the supplied `ip_pool` is an empty string, it will clear any currently specified `ip_pool` |
 
 + Request (application/json)
 
