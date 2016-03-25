@@ -3984,6 +3984,7 @@ Returns a list of binding groups that the Metrics API contains data on.
 
 ### Bindings List [GET]
 
+**Note:** Bindings are deprecated. Please use Sending IPs.
 **Note:** This endpoint is available in SparkPost Elite only.
 
 Returns a list of bindings that the Metrics API contains data on.
