@@ -160,7 +160,7 @@ Provides links to all child URIs within the Metrics API.
     [Discoverability Links][]
 
 
-## Deliverability Metrics [/metrics/deliverability{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone}]
+## Deliverability Metrics [/metrics/deliverability{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,sending_domains,subaccounts,protocols,metrics,timezone}]
 
 
 + Model
@@ -367,6 +367,7 @@ aggregate data, which can be used as "group by" qualifiers.
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
     + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
     + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + sending_domains (optional, list, `sales.sender.com,company.net`) ... Comma-delimited list of sending domains to include
     + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
         + Values
@@ -420,7 +421,7 @@ aggregate data, which can be used as "group by" qualifiers.
 
 
 
-## Deliverability Metrics by Domain [/metrics/deliverability/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,order_by,limit}]
+## Deliverability Metrics by Domain [/metrics/deliverability/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,sending_domains,subaccounts,protocols,metrics,timezone,order_by,limit}]
 
 + Model
 
@@ -607,6 +608,7 @@ Provides aggregate metrics grouped by domain over the time window specified.
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + sending_domains (optional, list, `sales.sender.com,company.net`) ... Comma-delimited list of sending domains to include 
   + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -661,7 +663,7 @@ Provides aggregate metrics grouped by domain over the time window specified.
   [Deliverability Metrics by Domain][]
 
 
-## Deliverability Metrics by Binding [/metrics/deliverability/binding{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Binding [/metrics/deliverability/binding{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,sending_domains,subaccounts,protocols,metrics,timezone,limit,order_by}]
 + Model
 
     + Body
@@ -850,6 +852,7 @@ Provides aggregate metrics grouped by binding over the time window specified.
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + sending_domains (optional, list, `sales.sender.com,company.net`) ... Comma-delimited list of sending domains to include
   + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -900,7 +903,7 @@ Provides aggregate metrics grouped by binding over the time window specified.
 + Response 200
 
 
-## Deliverability Metrics by Binding Group [/metrics/deliverability/binding-group{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Binding Group [/metrics/deliverability/binding-group{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,sending_domains,subaccounts,protocols,metrics,timezone,limit,order_by}]
 
 + Model
 
@@ -1089,6 +1092,7 @@ Provides aggregate metrics grouped by binding group over the time window specifi
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + sending_domains (optional, list, `sales.sender.com,company.net`) ... Comma-delimited list of sending domains to include  
   + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -1140,7 +1144,260 @@ Provides aggregate metrics grouped by binding group over the time window specifi
 
   [Deliverability Metrics by Binding Group][]
 
-## Deliverability Metrics by Subaccount [/metrics/deliverability/subaccount{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Sending Domain [/metrics/deliverability/sending-domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,sending_domains,subaccounts,protocols,metrics,timezone,limit,order_by}]
+
++ Model
+
+    + Body
+
+        ```
+        {
+          "results": [
+            {
+              "count_targeted": 34432,
+              "count_injected": 32323,
+              "count_rejected": 2343,
+              "count_sent": 34344,
+              "subaccount_id": 0
+            },
+            {
+              "count_targeted": 34432,
+              "count_injected": 32323,
+              "count_rejected": 2343,
+              "count_sent": 34344,
+              "subaccount_id": 123
+            },
+            {
+              "count_targeted": 34432,
+              "count_injected": 32323,
+              "count_rejected": 2343,
+              "count_sent": 34344,
+              "subaccount_id": 125
+            },
+            {
+              "count_targeted": 34432,
+              "count_injected": 32323,
+              "count_rejected": 2343,
+              "count_sent": 34344,
+              "subaccount_id": 127
+            }
+          ]
+        }
+        ```
+
+    + Schema
+
+        ```
+        {
+          "type":"object",
+          "$schema": "http://json-schema.org/draft-03/schema",
+          "required":false,
+          "properties":{
+            "results": {
+              "type":"array",
+              "required":false,
+              "items":
+                {
+                  "type":"object",
+                  "required":false,
+                  "properties":{
+                    "subaccount_id": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_accepted": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_admin_bounce": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_block_bounce": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_bounce": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_clicked": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_delayed_first": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_delayed": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_delivered_first": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_delivered_subsequent": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_delivered": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_generation_failed": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_generation_rejection": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_hard_bounce": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_inband_bounce": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_injected": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_outofband_bounce": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_policy_rejection": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_rejected": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_rendered": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_sent": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_soft_bounce": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_spam_complaint": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_targeted": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_undetermined_bounce": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_unique_clicked": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_unique_confirmed_opened": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "count_unique_rendered": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "total_delivery_time_first": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "total_delivery_time_subsequent": {
+                      "type":"number",
+                      "required":false
+                    },
+                    "total_msg_volume": {
+                      "type":"number",
+                      "required":false
+                    }
+                  }
+                }
+            }
+          }
+        }
+        ```
+
+### Deliverability Metrics by Sending Domain [GET]
+
+Provides aggregate metrics grouped by sending domain over the time window specified.
+
++ Parameters
+  + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+  + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+  + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
+  + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
+  + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
+  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
+  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
+  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + sending_domains (optional, list, `sales.sender.com,company.net`) ... Comma-delimited list of sending domains to include  
+  + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
+  + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
+      + Values
+          + `smtp`
+  + metrics (required, list, `count_targeted`) ... Comma-delimited list of metrics for filtering
+      + Values
+          + `count_injected`
+          + `count_bounce`
+          + `count_rejected`
+          + `count_delivered`
+          + `count_delivered_first`
+          + `count_delivered_subsequent`
+          + `total_delivery_time_first`
+          + `total_delivery_time_subsequent`
+          + `total_msg_volume`
+          + `count_policy_rejection`
+          + `count_generation_rejection`
+          + `count_generation_failed`
+          + `count_inband_bounce`
+          + `count_outofband_bounce`
+          + `count_soft_bounce`
+          + `count_hard_bounce`
+          + `count_block_bounce`
+          + `count_admin_bounce`
+          + `count_undetermined_bounce`
+          + `count_delayed`
+          + `count_delayed_first`
+          + `count_rendered`
+          + `count_unique_rendered`
+          + `count_unique_confirmed_opened`
+          + `count_clicked`
+          + `count_unique_clicked`
+          + `count_targeted`
+          + `count_sent`
+          + `count_accepted`
+          + `count_spam_complaint`
+  + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
+  + limit (optional, int, `5`) ... Maximum number of results to return
+  + order_by (optional, string, `count_injected`) ... Metric by which to order results
+
++ Request
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Response 200 (application/json)
+
+  [Deliverability Metrics by Sending Domain][]
+
+## Deliverability Metrics by Subaccount [/metrics/deliverability/subaccount{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,sending_domains,subaccounts,protocols,metrics,timezone,limit,order_by}]
 
 + Model
 
@@ -1341,6 +1598,7 @@ Provides aggregate metrics grouped by subaccount over the time window specified.
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + sending_domains (optional, list, `sales.sender.com,company.net`) ... Comma-delimited list of sending domains to include  
   + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -1392,7 +1650,7 @@ Provides aggregate metrics grouped by subaccount over the time window specified.
 
   [Deliverability Metrics by Subaccount][]
 
-## Deliverability Metrics by Campaign [/metrics/deliverability/campaign{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Campaign [/metrics/deliverability/campaign{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,sending_domains,subaccounts,protocols,metrics,timezone,limit,order_by}]
 
 
 + Model
@@ -1580,6 +1838,7 @@ Provides aggregate metrics grouped by campaign over the time window specified.
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
     + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
     + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + sending_domains (optional, list, `sales.sender.com,company.net`) ... Comma-delimited list of sending domains to include  
     + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -1634,7 +1893,7 @@ Provides aggregate metrics grouped by campaign over the time window specified.
   [Deliverability Metrics by Campaign][]
 
 
-## Deliverability Metrics by Template [/metrics/deliverability/template{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Template [/metrics/deliverability/template{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,sending_domains,subaccounts,protocols,metrics,timezone,limit,order_by}]
 
 
 + Model
@@ -1822,6 +2081,7 @@ Provides aggregate metrics grouped by template over the time window specified.
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
     + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
     + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + sending_domains (optional, list, `sales.sender.com,company.net`) ... Comma-delimited list of sending domains to include      
     + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
         + Values
@@ -1876,7 +2136,7 @@ Provides aggregate metrics grouped by template over the time window specified.
   [Deliverability Metrics by Template][]
 
 
-## Deliverability Metrics by Watched Domain [/metrics/deliverability/watched-domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Watched Domain [/metrics/deliverability/watched-domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,sending_domains,subaccounts,protocols,metrics,timezone,limit,order_by}]
 
 + Model
 
@@ -2066,6 +2326,7 @@ in the world.
     + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
     + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
     + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
+    + sending_domains (optional, list, `sales.sender.com,company.net`) ... Comma-delimited list of sending domains to include  
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
         + Values
             + `smtp`
@@ -2118,7 +2379,7 @@ in the world.
   [Deliverability Metrics by Watched Domain][]
 
 
-## Time Series [/metrics/deliverability/time-series{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,precision,metrics,timezone}]
+## Time Series [/metrics/deliverability/time-series{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,sending_domains,subaccounts,protocols,precision,metrics,timezone}]
 
 
 + Model
@@ -2360,6 +2621,7 @@ The following table describes the validation for the **precision** parameter:
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes by which to filter ( **Note:** SparkPost Elite only )
     + bindings (optional, list, `bindingA,bindingB,bindingC`) ... Comma-delimited list of bindings for filtering ( **Note:** SparkPost Elite only )
     + binding_groups (optional, list, `bg1,bg2,bg3`) ... Comma-delimited list of binding groups for filtering ( **Note:** SparkPost Elite only )
+    + sending_domains (optional, list, `sales.sender.com,company.net`) ... Comma-delimited list of sending domains to include  
     + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -2424,7 +2686,7 @@ The following table describes the validation for the **precision** parameter:
   [Time Series][]
 
 
-## Bounce Reasons [/metrics/deliverability/bounce-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit}]
+## Bounce Reasons [/metrics/deliverability/bounce-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,sending_domains,subaccounts,protocols,metrics,timezone,limit}]
 
 + Model
 
@@ -2527,6 +2789,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
     + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
     + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + sending_domains (optional, list, `sales.sender.com,company.net`) ... Comma-delimited list of sending domains to include  
     + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols to include ( **Note:** SparkPost Elite only )
         + Values
@@ -2553,7 +2816,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
   [Bounce Reasons][]
 
 
-## Bounce Reasons By Domain [/metrics/deliverability/bounce-reason/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit}]
+## Bounce Reasons By Domain [/metrics/deliverability/bounce-reason/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,sending_domains,subaccounts,protocols,metrics,timezone,limit}]
 
 + Model
 
@@ -2662,6 +2925,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the domai
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
     + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
     + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + sending_domains (optional, list, `sales.sender.com,company.net`) ... Comma-delimited list of sending domains to include  
     + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols to include ( **Note:** SparkPost Elite only )
         + Values
@@ -2688,7 +2952,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the domai
   [Bounce Reasons By Domain][]
 
 
-## Bounce Classifications [/metrics/deliverability/bounce-classification{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit}]
+## Bounce Classifications [/metrics/deliverability/bounce-classification{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,sending_domains,subaccounts,protocols,metrics,timezone,limit}]
 
 + Model
 
@@ -2783,6 +3047,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-5`limited list of nodes to include ( **Note:** SparkPost Elite only )
     + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
     + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + sending_domains (optional, list, `sales.sender.com,company.net`) ... Comma-delimited list of sending domains to include  
     + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
         + Values
@@ -2809,7 +3074,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
   [Bounce Classifications][]
 
 
-## Rejection Reasons [/metrics/deliverability/rejection-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,timezone,limit}]
+## Rejection Reasons [/metrics/deliverability/rejection-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,sending_domains,subaccounts,protocols,timezone,limit}]
 
 + Model
 
@@ -2886,6 +3151,7 @@ Provides deliverability metrics, specific to rejection events, grouped by the re
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + sending_domains (optional, list, `sales.sender.com,company.net`) ... Comma-delimited list of sending domains to include  
   + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -2981,6 +3247,7 @@ Provides deliverability metrics, specific to rejection events, grouped by the do
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + sending_domains (optional, list, `sales.sender.com,company.net`) ... Comma-delimited list of sending domains to include  
   + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -2993,7 +3260,7 @@ Provides deliverability metrics, specific to rejection events, grouped by the do
   [Rejection Reasons By Domain][]
 
 
-## Delay Reasons [/metrics/deliverability/delay-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,timezone,limit}]
+## Delay Reasons [/metrics/deliverability/delay-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,sending_domains,subaccounts,protocols,timezone,limit}]
 
 + Model
 
@@ -3064,6 +3331,7 @@ Provides deliverability metrics, specific to delay events, grouped by the delay 
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + sending_domains (optional, list, `sales.sender.com,company.net`) ... Comma-delimited list of sending domains to include  
   + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -3083,7 +3351,7 @@ Provides deliverability metrics, specific to delay events, grouped by the delay 
   [Delay Reasons][]
 
 
-## Delay Reasons By Domain [/metrics/deliverability/delay-reason/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,timezone,limit}]
+## Delay Reasons By Domain [/metrics/deliverability/delay-reason/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,sending_domains,subaccounts,protocols,timezone,limit}]
 
 + Model
 
@@ -3160,6 +3428,7 @@ Provides deliverability metrics, specific to delay events, grouped by the domain
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + sending_domains (optional, list, `sales.sender.com,company.net`) ... Comma-delimited list of sending domains to include    
   + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -3178,7 +3447,7 @@ Provides deliverability metrics, specific to delay events, grouped by the domain
 
   [Delay Reasons By Domain][]
 
-## Engagement Details [/metrics/deliverability/link-name{?from,to,timezone,campaigns,templates,metrics,limit}]
+## Engagement Details [/metrics/deliverability/link-name{?from,to,timezone,campaigns,templates,subaccounts,sending_domains,metrics,limit}]
 
 + Model
 
@@ -3253,6 +3522,8 @@ name (or URL if no link name exists).
 
     + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
+    + sending_domains (optional, list, `sales.sender.com,company.net`) ... Comma-delimited list of sending domains to include    
+    + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + limit (optional, int, `5`) ... Maximum number of results to return
 
 + Request
@@ -3267,7 +3538,7 @@ name (or URL if no link name exists).
   [Engagement Details][]
 
 
-## Deliveries By Attempt [/metrics/deliverability/attempt{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,timezone}]
+## Deliveries By Attempt [/metrics/deliverability/attempt{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,sending_domains,subaccounts,protocols,timezone}]
 
 + Model
 
@@ -3332,6 +3603,7 @@ Provides aggregate count of deliveries grouped by the attempt number.
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + sending_domains (optional, list, `sales.sender.com,company.net`) ... Comma-delimited list of sending domains to include    
   + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
