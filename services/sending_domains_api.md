@@ -114,7 +114,7 @@ Create a sending domain by providing a **sending domain object** as the POST req
         ```
         {
             "domain": "example1.com",
-            "generate_dkim": "false"
+            "generate_dkim": false
         }
         ```
 
