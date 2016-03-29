@@ -1,4 +1,4 @@
-# Group Subaccounts - Coming in April!
+# Group Subaccounts
 <a name="subaccounts-api"></a>
 API for retrieving and managing subaccounts associated with your Master Account.
 Subaccounts are a way for service providers to provision and manage their customers separately from each other and to provide assets and reporting data.
@@ -133,6 +133,8 @@ Subaccounts are allowed to send mail using the SMTP protocol, retrieve sending s
 
 Endpoint for retrieving information about a specific subaccount.
 
+**Note**: You may specify the default ip_pool, however, this will not currently have any effect.  This feature is coming soon.
+
 + Request
 
     + Headers
@@ -195,12 +197,12 @@ Update an existing subaccount's information. You can update the following inform
 + Response 400 (application/json)
 
         {
-          "errors": [          
+          "errors": [
             {
               "message": "ip_pool parameter must not exceed 32 characters",
               "param": "ip_pool",
               "value": "an ip pool name that is too long"
-            }            
+            }
           ]
         }
-        
+

@@ -14,7 +14,7 @@ If you use [Postman](https://www.getpostman.com/) you can click the following bu
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
 |domain    | string | Name of the sending domain | yes |The domain name will be used as the "From:" header address in the email.|
-|tracking_domain | string | Associated tracking domain | no | example: "click.example1.com". Note that currently we don't allow tracking domains to be linked to sending domains belonging to subaccounts.|
+|tracking_domain | string | Associated tracking domain | no | example: "click.example1.com". **Note**: linking tracking domains to sending domains belonging to subaccounts is coming soon.|
 |status | JSON object | JSON object containing status details, including whether this domain's ownership has been verified  | no | Read only. For a full description, see the Status Attributes.|
 |dkim | JSON object | JSON object in which DKIM key configuration is defined | no | For a full description, see the DKIM Attributes.|
 
@@ -151,8 +151,7 @@ List an overview of all sending domains in the system.
                         "dkim_status": "valid",
                         "compliance_status": "valid",
                         "postmaster_at_status": "valid"
-                    },
-                    "subaccount_id": 0
+                    }
                 },
                 {
                     "domain": "example2.com",
@@ -202,8 +201,7 @@ Retrieve a sending domain by specifying its domain name in the URI path.  The re
                     "headers": "from:to:subject:date",
                     "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
                     "selector": "hello_selector"
-                },
-                "subaccount_id": 0
+                }
             }
         }
 
