@@ -16,7 +16,7 @@ With a tracking domain you can replace the domain part of the link. So if your t
 ```
 
 **Note:** Use of a tracking domain requires modification of your DNS records to include a CNAME record.
-**Note:** Currently subaccounts can only use their master account's default tracking domain.
+**Note:** Currently subaccounts can only use their master account's default tracking domain. Feature coming soon.
 
 ## Using Postman
 

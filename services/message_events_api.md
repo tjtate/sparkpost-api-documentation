@@ -206,7 +206,7 @@ Perform a filtered search for message event data. The response is sorted by desc
     + per_page = `1000` (optional, number, `100`) ... Number of results to return per page. Must be between 1 and 10,000 (inclusive).
     + reason (optional, string, `bounce`) ... Bounce/failure/rejection reason that will be matched using a wildcard (e.g., %reason%).
     + recipients (optional, list, `recipient@example.com`) ... Comma-delimited list of recipients to search.
-    + subaccounts (optional, list, `101`) ... Comma-delimited list of subaccount ID's to search. **Note:** The `subaccounts` query parameter will be available in April.
+    + subaccounts (optional, list, `101`) ... Comma-delimited list of subaccount ID's to search.
 
     + template_ids (optional, list, `templ-1234`) ... Comma-delimited list of template ID's to search.
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string.
@@ -594,7 +594,7 @@ Perform a filtered search for message event data. The response is sorted by desc
       }, {
         "href": "http://example.com/api/v1/xyz?page=100&per_page=10",
         "rel": "last"
-      }    
+      }
     ]
   }
   ```
