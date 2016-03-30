@@ -1156,28 +1156,28 @@ Provides aggregate metrics grouped by binding group over the time window specifi
               "count_injected": 32323,
               "count_rejected": 2343,
               "count_sent": 34344,
-              "subaccount_id": 0
+              "sending_domain": "foo.example.com"
             },
             {
               "count_targeted": 34432,
               "count_injected": 32323,
               "count_rejected": 2343,
               "count_sent": 34344,
-              "subaccount_id": 123
+              "sending_domain": "bar.example.com"
             },
             {
               "count_targeted": 34432,
               "count_injected": 32323,
               "count_rejected": 2343,
               "count_sent": 34344,
-              "subaccount_id": 125
+              "sending_domain": "bat.example.com"
             },
             {
               "count_targeted": 34432,
               "count_injected": 32323,
               "count_rejected": 2343,
               "count_sent": 34344,
-              "subaccount_id": 127
+              "sending_domain": "baz.example.com"
             }
           ]
         }
