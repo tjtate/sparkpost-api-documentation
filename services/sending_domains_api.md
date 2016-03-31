@@ -222,8 +222,7 @@ List an overview of all sending domains in the system.
                         "dkim_status": "pending",
                         "compliance_status": "pending",
                         "postmaster_at_status": "pending"
-                    },
-                    "subaccount_id": 12
+                    }
                 }
             ]
         }
