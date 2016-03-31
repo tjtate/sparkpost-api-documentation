@@ -6,6 +6,8 @@ disposition, and campaign performance.  This reporting data is available in the 
 
 **Note**: The `subaccounts` query parameter and `/api/v1/metrics/deliverability/subaccount` will be available in April
 
+**Deprecation Notice:** The `bindings` and `binding_groups` query parmeters have been deprecated. Please use the `sending_ips` and `ip_pools` query parameters instead.
+
 ## Using Postman
 
 If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
@@ -368,8 +370,6 @@ Provides links to all child URIs within the Metrics API.
 Provides high-level summary of aggregate metrics and lists the child endpoints that contain
 aggregate data, which can be used as "group by" qualifiers.
 
-**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
-
 + Parameters
     + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
     + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -610,8 +610,6 @@ aggregate data, which can be used as "group by" qualifiers.
 
 Provides aggregate metrics grouped by domain over the time window specified.
 
-**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
-
 + Parameters
   + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
   + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -677,12 +675,16 @@ Provides aggregate metrics grouped by domain over the time window specified.
 
 ## Deliverability Metrics by Binding [/metrics/deliverability/binding{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
 
-**Note:** Bindings are deprecated. Please use Deliverability Metrics by Sending IP.
+**Deprecation Notice:** This endpoint has been deprecated. Please use the Deliverability Metrics by Sending IP endpoint instead.
+
+### Deliverability Metrics by Binding [GET]
 
 
 ## Deliverability Metrics by Binding Group [/metrics/deliverability/binding-group{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
 
-**Note:** Binding Groups are deprecated. Please use Deliverability Metrics by IP Pool.
+**Deprecation Notice:** This endpoint has been deprecated. Please use the Deliverability Metrics by IP Pool endpoint instead.
+
+### Deliverability Metrics by Binding Group [GET]
 
 
 ## Deliverability Metrics by Sending IP [/metrics/deliverability/sending-ip{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,metrics,timezone,limit,order_by}]
@@ -1354,8 +1356,6 @@ Provides aggregate metrics grouped by IP pool over the time window specified.
 
 Provides aggregate metrics grouped by subaccount over the time window specified. Please note that master account events will be returned grouped by the subaccount_id field containing the value `0`.
 
-**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
-
 + Parameters
   + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
   + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -1594,8 +1594,6 @@ Provides aggregate metrics grouped by subaccount over the time window specified.
 ### Deliverability Metrics by Campaign [GET]
 
 Provides aggregate metrics grouped by campaign over the time window specified.
-
-**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
 
 + Parameters
     + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -1839,8 +1837,6 @@ Provides aggregate metrics grouped by campaign over the time window specified.
 
 Provides aggregate metrics grouped by template over the time window specified.
 
-**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
-
 + Parameters
     + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
     + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -2083,8 +2079,6 @@ Provides aggregate metrics grouped by template over the time window specified.
 Provides aggregate metrics grouped by watched domain over the time window specified. The difference
 between domain and watched domain is that watched domains are comprised of the top 99% domains
 in the world.
-
-**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
 
 + Parameters
     + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -2373,8 +2367,6 @@ in the world.
 
 Provides deliverability metrics ordered by a precision of time.
 
-**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
-
 The following table describes the validation for the **precision** parameter:
 
 | Value of         | Valid for time window of    |
@@ -2550,8 +2542,6 @@ The following table describes the validation for the **precision** parameter:
 
 Provides deliverability metrics, specific to bounce events, grouped by the bounce reasons.
 
-**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
-
 + Parameters
     + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
     + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -2687,8 +2677,6 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
 
 Provides deliverability metrics, specific to bounce events, grouped by the domain and bounce reasons.
 
-**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
-
 + Parameters
     + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
     + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -2810,8 +2798,6 @@ Provides deliverability metrics, specific to bounce events, grouped by the domai
 
 Provides deliverability metrics, specific to bounce events, grouped by the bounce classification. (See [Bounce Classification Codes.](https://www.sparkpost.com/docs/bounce-classification-codes))
 
-**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
-
 + Parameters
     + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
     + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -2915,8 +2901,6 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
 
 Provides deliverability metrics, specific to rejection events, grouped by the rejection reasons.
 
-**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
-
 + Parameters
   + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
   + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -3012,8 +2996,6 @@ Provides deliverability metrics, specific to rejection events, grouped by the re
 
 Provides deliverability metrics, specific to rejection events, grouped by the domain and rejection reasons.
 
-**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
-
 + Parameters
   + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
   + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -3096,8 +3078,6 @@ Provides deliverability metrics, specific to rejection events, grouped by the do
 ### Delay Reason Metrics [GET]
 
 Provides deliverability metrics, specific to delay events, grouped by the delay reasons.
-
-**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
 
 + Parameters
   + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -3194,8 +3174,6 @@ Provides deliverability metrics, specific to delay events, grouped by the delay 
 ### Delay Reason Metrics By Domain [GET]
 
 Provides deliverability metrics, specific to delay events, grouped by the domain and delay reasons.
-
-**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
 
 + Parameters
   + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -3369,8 +3347,6 @@ name (or URL if no link name exists).
 
 Provides aggregate count of deliveries grouped by the attempt number.
 
-**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
-
 + Parameters
   + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
   + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -3399,12 +3375,16 @@ Provides aggregate count of deliveries grouped by the attempt number.
 
 ## Binding Groups List [/metrics/binding-groups]
 
-**Note:** Binding Groups are deprecated. Please use IP Pools List.
+**Deprecation Notice:** This endpoint has been deprecated. Please use the IP Pools listing endpoint instead.
+
+###  Bindings Groups List [GET]
 
 
 ## Bindings List [/metrics/bindings]
 
-**Note:** Bindings are deprecated. Please use Sending IPs List.
+**Deprecation Notice:** This endpoint has been deprecated. Please use the Sending IPs listing endpoint instead.
+
+###  Bindings List [GET]
 
 
 ## IP Pools List [/metrics/ip-pools]
