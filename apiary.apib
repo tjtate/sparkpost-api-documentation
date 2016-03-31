@@ -1271,6 +1271,16 @@ list of URIs that exists within the Metrics API.
                   "method": "GET"
                 },
                 {
+                  "href": "/api/v1/metrics/ip-pools",
+                  "rel": "ip-pools",
+                  "method": "GET"
+                },
+                {
+                  "href": "/api/v1/metrics/sending-ips",
+                  "rel": "sending-ips",
+                  "method": "GET"
+                },
+                {
                   "href": "/api/v1/metrics/nodes",
                   "rel": "nodes",
                   "method": "GET"
@@ -1341,7 +1351,7 @@ Provides links to all child URIs within the Metrics API.
     [Discoverability Links][]
 
 
-## Deliverability Metrics [/metrics/deliverability{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone}]
+## Deliverability Metrics [/metrics/deliverability{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,metrics,timezone}]
 
 
 + Model
@@ -1539,6 +1549,8 @@ Provides links to all child URIs within the Metrics API.
 Provides high-level summary of aggregate metrics and lists the child endpoints that contain
 aggregate data, which can be used as "group by" qualifiers.
 
+**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
+
 + Parameters
     + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
     + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -1546,8 +1558,8 @@ aggregate data, which can be used as "group by" qualifiers.
     + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
-    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
-    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + sending_ips (optional, list, `Confirmation`) ... Comma-delimited list of sending IPs to include
+    + ip_pools (optional, list, `Transaction`) ... Comma-delimited list of IP pools to include
     + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
         + Values
@@ -1601,7 +1613,7 @@ aggregate data, which can be used as "group by" qualifiers.
 
 
 
-## Deliverability Metrics by Domain [/metrics/deliverability/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,order_by,limit}]
+## Deliverability Metrics by Domain [/metrics/deliverability/domain{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,metrics,timezone,order_by,limit}]
 
 + Model
 
@@ -1779,6 +1791,8 @@ aggregate data, which can be used as "group by" qualifiers.
 
 Provides aggregate metrics grouped by domain over the time window specified.
 
+**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
+
 + Parameters
   + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
   + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -1786,8 +1800,8 @@ Provides aggregate metrics grouped by domain over the time window specified.
   + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
-  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
-  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + sending_ips (optional, list, `Confirmation`) ... Comma-delimited list of sending IPs to include
+  + ip_pools (optional, list, `Transaction`) ... Comma-delimited list of IP pools to include
   + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -1843,6 +1857,17 @@ Provides aggregate metrics grouped by domain over the time window specified.
 
 
 ## Deliverability Metrics by Binding [/metrics/deliverability/binding{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
+
+**Note:** Bindings are deprecated. Please use Deliverability Metrics by Sending IP.
+
+
+## Deliverability Metrics by Binding Group [/metrics/deliverability/binding-group{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
+
+**Note:** Binding Groups are deprecated. Please use Deliverability Metrics by IP Pool.
+
+
+## Deliverability Metrics by Sending IP [/metrics/deliverability/sending-ip{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,metrics,timezone,limit,order_by}]
+
 + Model
 
     + Body
@@ -1851,14 +1876,14 @@ Provides aggregate metrics grouped by domain over the time window specified.
         {
           "results": [
             {
-              "binding": "binding-0",
+              "sending_ip": "sending-ip-0",
               "count_targeted": 34432,
               "count_injected": 32323,
               "count_rejected": 2343,
               "count_sent": 34344
             },
             {
-              "binding": "binding-1",
+              "sending_ip": "sending-ip-1",
               "count_targeted": 34432,
               "count_injected": 32323,
               "count_rejected": 2343,
@@ -1884,7 +1909,7 @@ Provides aggregate metrics grouped by domain over the time window specified.
                   "type":"object",
                   "required":false,
                   "properties":{
-                    "binding": {
+                    "sending_ip": {
                       "type":"string",
                       "required":false
                     },
@@ -2016,11 +2041,9 @@ Provides aggregate metrics grouped by domain over the time window specified.
         ```
 
 
-### Deliverability Metrics by Binding [GET]
+### Deliverability Metrics by Sending IP [GET]
 
-**Note:** This endpoint is available in SparkPost Elite only.
-
-Provides aggregate metrics grouped by binding over the time window specified.
+Provides aggregate metrics grouped by sending IP over the time window specified.
 
 + Parameters
   + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -2029,8 +2052,8 @@ Provides aggregate metrics grouped by binding over the time window specified.
   + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
-  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
-  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + sending_ips (optional, list, `Confirmation`) ... Comma-delimited list of sending IPs to include
+  + ip_pools (optional, list, `Transaction`) ... Comma-delimited list of IP pools to include
   + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -2081,7 +2104,7 @@ Provides aggregate metrics grouped by binding over the time window specified.
 + Response 200
 
 
-## Deliverability Metrics by Binding Group [/metrics/deliverability/binding-group{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by IP Pool [/metrics/deliverability/ip-pool{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,metrics,timezone,limit,order_by}]
 
 + Model
 
@@ -2091,14 +2114,14 @@ Provides aggregate metrics grouped by binding over the time window specified.
         {
           "results": [
             {
-              "binding_group": "bg-0",
+              "ip_pool": "ip-pool-0",
               "count_targeted": 34432,
               "count_injected": 32323,
               "count_rejected": 2343,
               "count_sent": 34344
             },
             {
-              "binding_group": "bg-1",
+              "ip_pool": "ip-pool-1",
               "count_targeted": 34432,
               "count_injected": 32323,
               "count_rejected": 2343,
@@ -2124,7 +2147,7 @@ Provides aggregate metrics grouped by binding over the time window specified.
                   "type":"object",
                   "required":false,
                   "properties":{
-                    "binding_group": {
+                    "ip_pool": {
                       "type":"string",
                       "required":false
                     },
@@ -2255,11 +2278,9 @@ Provides aggregate metrics grouped by binding over the time window specified.
         }
         ```
 
-### Deliverability Metrics by Binding Group [GET]
+### Deliverability Metrics by IP Pool [GET]
 
-**Note:** This endpoint is available in SparkPost Elite only.
-
-Provides aggregate metrics grouped by binding group over the time window specified.
+Provides aggregate metrics grouped by IP pool over the time window specified.
 
 + Parameters
   + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -2268,8 +2289,8 @@ Provides aggregate metrics grouped by binding group over the time window specifi
   + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
-  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
-  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + sending_ips (optional, list, `Confirmation`) ... Comma-delimited list of sending IPs to include
+  + ip_pools (optional, list, `Transaction`) ... Comma-delimited list of IP pools to include
   + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -2319,9 +2340,10 @@ Provides aggregate metrics grouped by binding group over the time window specifi
 
 + Response 200 (application/json)
 
-  [Deliverability Metrics by Binding Group][]
+  [Deliverability Metrics by IP Pool][]
 
-## Deliverability Metrics by Subaccount [/metrics/deliverability/subaccount{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
+
+## Deliverability Metrics by Subaccount [/metrics/deliverability/subaccount{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,metrics,timezone,limit,order_by}]
 
 + Model
 
@@ -2513,6 +2535,8 @@ Provides aggregate metrics grouped by binding group over the time window specifi
 
 Provides aggregate metrics grouped by subaccount over the time window specified. Please note that master account events will be returned grouped by the subaccount_id field containing the value `0`.
 
+**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
+
 + Parameters
   + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
   + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -2520,8 +2544,8 @@ Provides aggregate metrics grouped by subaccount over the time window specified.
   + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
-  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
-  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + sending_ips (optional, list, `Confirmation`) ... Comma-delimited list of sending IPs to include
+  + ip_pools (optional, list, `Transaction`) ... Comma-delimited list of IP pools to include  
   + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -2573,7 +2597,7 @@ Provides aggregate metrics grouped by subaccount over the time window specified.
 
   [Deliverability Metrics by Subaccount][]
 
-## Deliverability Metrics by Campaign [/metrics/deliverability/campaign{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Campaign [/metrics/deliverability/campaign{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,metrics,timezone,limit,order_by}]
 
 
 + Model
@@ -2752,6 +2776,8 @@ Provides aggregate metrics grouped by subaccount over the time window specified.
 
 Provides aggregate metrics grouped by campaign over the time window specified.
 
+**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
+
 + Parameters
     + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
     + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -2759,8 +2785,8 @@ Provides aggregate metrics grouped by campaign over the time window specified.
     + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
-    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
-    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + sending_ips (optional, list, `Confirmation`) ... Comma-delimited list of sending IPs to include
+    + ip_pools (optional, list, `Transaction`) ... Comma-delimited list of IP pools to include
     + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -2815,7 +2841,7 @@ Provides aggregate metrics grouped by campaign over the time window specified.
   [Deliverability Metrics by Campaign][]
 
 
-## Deliverability Metrics by Template [/metrics/deliverability/template{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Template [/metrics/deliverability/template{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,metrics,timezone,limit,order_by}]
 
 
 + Model
@@ -2994,6 +3020,8 @@ Provides aggregate metrics grouped by campaign over the time window specified.
 
 Provides aggregate metrics grouped by template over the time window specified.
 
+**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
+
 + Parameters
     + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
     + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -3001,8 +3029,8 @@ Provides aggregate metrics grouped by template over the time window specified.
     + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
-    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
-    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + sending_ips (optional, list, `Confirmation`) ... Comma-delimited list of sending IPs to include
+    + ip_pools (optional, list, `Transaction`) ... Comma-delimited list of IP pools to include
     + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
         + Values
@@ -3057,7 +3085,7 @@ Provides aggregate metrics grouped by template over the time window specified.
   [Deliverability Metrics by Template][]
 
 
-## Deliverability Metrics by Watched Domain [/metrics/deliverability/watched-domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Watched Domain [/metrics/deliverability/watched-domain{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,metrics,timezone,limit,order_by}]
 
 + Model
 
@@ -3237,6 +3265,8 @@ Provides aggregate metrics grouped by watched domain over the time window specif
 between domain and watched domain is that watched domains are comprised of the top 99% domains
 in the world.
 
+**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
+
 + Parameters
     + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
     + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -3244,8 +3274,8 @@ in the world.
     + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
-    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
-    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + sending_ips (optional, list, `Confirmation`) ... Comma-delimited list of sending IPs to include
+    + ip_pools (optional, list, `Transaction`) ... Comma-delimited list of IP pools to include
     + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
         + Values
@@ -3299,7 +3329,7 @@ in the world.
   [Deliverability Metrics by Watched Domain][]
 
 
-## Time Series [/metrics/deliverability/time-series{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,precision,metrics,timezone}]
+## Time Series [/metrics/deliverability/time-series{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,precision,metrics,timezone}]
 
 
 + Model
@@ -3524,6 +3554,8 @@ in the world.
 
 Provides deliverability metrics ordered by a precision of time.
 
+**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
+
 The following table describes the validation for the **precision** parameter:
 
 | Value of         | Valid for time window of    |
@@ -3539,8 +3571,8 @@ The following table describes the validation for the **precision** parameter:
     + campaigns (optional, list, `summerSale,promotionX`) ... Comma-delimited list of campaigns for filtering
     + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes by which to filter ( **Note:** SparkPost Elite only )
-    + bindings (optional, list, `bindingA,bindingB,bindingC`) ... Comma-delimited list of bindings for filtering ( **Note:** SparkPost Elite only )
-    + binding_groups (optional, list, `bg1,bg2,bg3`) ... Comma-delimited list of binding groups for filtering ( **Note:** SparkPost Elite only )
+    + sending_ips (optional, list, `sending-ip-A,sending-ip-B,sending-ip-C`) ... Comma-delimited list of sending IPs to include
+    + ip_pools (optional, list, `ip-pool-1,ip-pool-2,ip-pool-3`) ... Comma-delimited list of IP pools to include
     + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -3605,7 +3637,7 @@ The following table describes the validation for the **precision** parameter:
   [Time Series][]
 
 
-## Bounce Reasons [/metrics/deliverability/bounce-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit}]
+## Bounce Reasons [/metrics/deliverability/bounce-reason{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,metrics,timezone,limit}]
 
 + Model
 
@@ -3699,6 +3731,8 @@ The following table describes the validation for the **precision** parameter:
 
 Provides deliverability metrics, specific to bounce events, grouped by the bounce reasons.
 
+**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
+
 + Parameters
     + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
     + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -3706,8 +3740,8 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
     + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
-    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
-    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + sending_ips (optional, list, `Confirmation`) ... Comma-delimited list of sending IPs to include
+    + ip_pools (optional, list, `Transaction`) ... Comma-delimited list of IP pools to include
     + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols to include ( **Note:** SparkPost Elite only )
         + Values
@@ -3734,7 +3768,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
   [Bounce Reasons][]
 
 
-## Bounce Reasons By Domain [/metrics/deliverability/bounce-reason/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit}]
+## Bounce Reasons By Domain [/metrics/deliverability/bounce-reason/domain{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,metrics,timezone,limit}]
 
 + Model
 
@@ -3834,6 +3868,8 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
 
 Provides deliverability metrics, specific to bounce events, grouped by the domain and bounce reasons.
 
+**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
+
 + Parameters
     + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
     + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -3841,8 +3877,8 @@ Provides deliverability metrics, specific to bounce events, grouped by the domai
     + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
     + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
-    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
-    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + sending_ips (optional, list, `Confirmation`) ... Comma-delimited list of sending IPs to include
+    + ip_pools (optional, list, `Transaction`) ... Comma-delimited list of IP pools to include
     + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols to include ( **Note:** SparkPost Elite only )
         + Values
@@ -3869,7 +3905,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the domai
   [Bounce Reasons By Domain][]
 
 
-## Bounce Classifications [/metrics/deliverability/bounce-classification{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit}]
+## Bounce Classifications [/metrics/deliverability/bounce-classification{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,metrics,timezone,limit}]
 
 + Model
 
@@ -3955,15 +3991,17 @@ Provides deliverability metrics, specific to bounce events, grouped by the domai
 
 Provides deliverability metrics, specific to bounce events, grouped by the bounce classification. (See [Bounce Classification Codes.](https://www.sparkpost.com/docs/bounce-classification-codes))
 
+**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
+
 + Parameters
     + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
     + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
     + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... Comma-delimited list of domains to include
     + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
-    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-5`limited list of nodes to include ( **Note:** SparkPost Elite only )
-    + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
-    + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
+    + sending_ips (optional, list, `Confirmation`) ... Comma-delimited list of sending IPs to include
+    + ip_pools (optional, list, `Transaction`) ... Comma-delimited list of IP pools to include
     + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
         + Values
@@ -3990,7 +4028,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
   [Bounce Classifications][]
 
 
-## Rejection Reasons [/metrics/deliverability/rejection-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,timezone,limit}]
+## Rejection Reasons [/metrics/deliverability/rejection-reason{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,timezone,limit}]
 
 + Model
 
@@ -4058,6 +4096,8 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
 
 Provides deliverability metrics, specific to rejection events, grouped by the rejection reasons.
 
+**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
+
 + Parameters
   + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
   + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -4065,8 +4105,8 @@ Provides deliverability metrics, specific to rejection events, grouped by the re
   + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
-  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
-  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + sending_ips (optional, list, `Confirmation`) ... Comma-delimited list of sending IPs to include
+  + ip_pools (optional, list, `Transaction`) ... Comma-delimited list of IP pools to include
   + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -4079,7 +4119,7 @@ Provides deliverability metrics, specific to rejection events, grouped by the re
   [Rejection Reasons][]
 
 
-## Rejection Reasons By Domain [/metrics/deliverability/rejection-reason/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,timezone,limit}]
+## Rejection Reasons By Domain [/metrics/deliverability/rejection-reason/domain{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,timezone,limit}]
 
 + Model
 
@@ -4153,6 +4193,8 @@ Provides deliverability metrics, specific to rejection events, grouped by the re
 
 Provides deliverability metrics, specific to rejection events, grouped by the domain and rejection reasons.
 
+**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
+
 + Parameters
   + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
   + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -4160,8 +4202,8 @@ Provides deliverability metrics, specific to rejection events, grouped by the do
   + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include  
   + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
-  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
-  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + sending_ips (optional, list, `Confirmation`) ... Comma-delimited list of sending IPs to include
+  + ip_pools (optional, list, `Transaction`) ... Comma-delimited list of IP pools to include
   + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -4174,7 +4216,7 @@ Provides deliverability metrics, specific to rejection events, grouped by the do
   [Rejection Reasons By Domain][]
 
 
-## Delay Reasons [/metrics/deliverability/delay-reason{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,timezone,limit}]
+## Delay Reasons [/metrics/deliverability/delay-reason{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,timezone,limit}]
 
 + Model
 
@@ -4236,6 +4278,8 @@ Provides deliverability metrics, specific to rejection events, grouped by the do
 
 Provides deliverability metrics, specific to delay events, grouped by the delay reasons.
 
+**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
+
 + Parameters
   + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
   + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -4243,8 +4287,8 @@ Provides deliverability metrics, specific to delay events, grouped by the delay 
   + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include  
   + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
-  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
-  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + sending_ips (optional, list, `Confirmation`) ... Comma-delimited list of sending IPs to include
+  + ip_pools (optional, list, `Transaction`) ... Comma-delimited list of IP pools to include
   + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -4264,7 +4308,7 @@ Provides deliverability metrics, specific to delay events, grouped by the delay 
   [Delay Reasons][]
 
 
-## Delay Reasons By Domain [/metrics/deliverability/delay-reason/domain{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,timezone,limit}]
+## Delay Reasons By Domain [/metrics/deliverability/delay-reason/domain{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,timezone,limit}]
 
 + Model
 
@@ -4332,6 +4376,8 @@ Provides deliverability metrics, specific to delay events, grouped by the delay 
 
 Provides deliverability metrics, specific to delay events, grouped by the domain and delay reasons.
 
+**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
+
 + Parameters
   + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
   + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -4339,8 +4385,8 @@ Provides deliverability metrics, specific to delay events, grouped by the domain
   + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include  
   + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
-  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
-  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + sending_ips (optional, list, `Confirmation`) ... Comma-delimited list of sending IPs to include
+  + ip_pools (optional, list, `Transaction`) ... Comma-delimited list of IP pools to include
   + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -4448,7 +4494,7 @@ name (or URL if no link name exists).
   [Engagement Details][]
 
 
-## Deliveries By Attempt [/metrics/deliverability/attempt{?from,to,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,timezone}]
+## Deliveries By Attempt [/metrics/deliverability/attempt{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,timezone}]
 
 + Model
 
@@ -4504,6 +4550,8 @@ name (or URL if no link name exists).
 
 Provides aggregate count of deliveries grouped by the attempt number.
 
+**Note:** Bindings and Binding Groups have been deprecated. Please use Sending IPs and IP Pools.
+
 + Parameters
   + from (required, datetime, `2014-07-11T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
   + to = `now` (optional, datetime, `2014-07-20T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
@@ -4511,8 +4559,8 @@ Provides aggregate count of deliveries grouped by the attempt number.
   + campaigns (optional, list, `Black Friday`) ... Comma-delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... Comma-delimited list of template IDs to include
   + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... Comma-delimited list of nodes to include ( **Note:** SparkPost Elite only )
-  + bindings (optional, list, `Confirmation`) ... Comma-delimited list of bindings to include ( **Note:** SparkPost Elite only )
-  + binding_groups (optional, list, `Transaction`) ... Comma-delimited list of binding groups to include ( **Note:** SparkPost Elite only )
+  + sending_ips (optional, list, `Confirmation`) ... Comma-delimited list of sending IPs to include
+  + ip_pools (optional, list, `Transaction`) ... Comma-delimited list of IP pools to include
   + subaccounts (optional, list, `123,125,127`) ... Comma-delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
   + protocols (optional, list, `smtp`) ... Comma-delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
       + Values
@@ -4532,69 +4580,16 @@ Provides aggregate count of deliveries grouped by the attempt number.
 
 ## Binding Groups List [/metrics/binding-groups]
 
-+ Model (application/json)
-
-    + Body
-
-        ```
-        {
-          "results": {
-             "binding-groups": [
-             "bg-1",
-             "bg-2",
-             "bg-3",
-             "bg-4",
-             "bg-5"
-            ]
-          }
-        }
-        ```
-
-    + Schema
-
-        ```
-        {
-          "type": "object",
-          "required": true,
-          "properties": {
-            "results": {
-              "type": "object",
-              "required": true,
-              "properties": {
-                "binding-groups": {
-                  "type": "array",
-                  "required": false
-                }
-              }
-            }
-          }
-        }
-        ```
-
-### Binding Groups List [GET]
-
-**Note:** This endpoint is available in SparkPost Elite only.
-
-Returns a list of binding groups that the Metrics API contains data on.
-
-+ Parameters
-    + match (optional, string, `example`) ... Only return results containing this string
-    + limit (optional, int, `5`) ... Maximum number of results to return
-
-+ Request
-
-  + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
-
-
-+ Response 200
-
-    [Binding Groups List][]
+**Note:** Binding Groups are deprecated. Please use IP Pools List.
 
 
 ## Bindings List [/metrics/bindings]
 
+**Note:** Bindings are deprecated. Please use Sending IPs List.
+
+
+## IP Pools List [/metrics/ip-pools]
+
 + Model (application/json)
 
     + Body
@@ -4602,12 +4597,12 @@ Returns a list of binding groups that the Metrics API contains data on.
         ```
         {
           "results": {
-             "bindings": [
-               "binding-1",
-               "binding-2",
-               "binding-3",
-               "binding-4",
-               "binding-5"
+             "ip-pools": [
+             "ip-pool-1",
+             "ip-pool-2",
+             "ip-pool-3",
+             "ip-pool-4",
+             "ip-pool-5"
             ]
           }
         }
@@ -4624,7 +4619,7 @@ Returns a list of binding groups that the Metrics API contains data on.
               "type": "object",
               "required": true,
               "properties": {
-                "bindings": {
+                "ip-pools": {
                   "type": "array",
                   "required": false
                 }
@@ -4634,11 +4629,9 @@ Returns a list of binding groups that the Metrics API contains data on.
         }
         ```
 
-### Bindings List [GET]
+### IP Pools List [GET]
 
-**Note:** This endpoint is available in SparkPost Elite only.
-
-Returns a list of bindings that the Metrics API contains data on.
+Returns a list of IP pools that the Metrics API contains data on.
 
 + Parameters
     + match (optional, string, `example`) ... Only return results containing this string
@@ -4652,7 +4645,67 @@ Returns a list of bindings that the Metrics API contains data on.
 
 + Response 200
 
- [Bindings List][]
+    [IP Pools List][]
+
+
+## Sending IPs List [/metrics/sending-ips]
+
++ Model (application/json)
+
+    + Body
+
+        ```
+        {
+          "results": {
+             "sending-ips": [
+               "sending-ip-1",
+               "sending-ip-2",
+               "sending-ip-3",
+               "sending-ip-4",
+               "sending-ip-5"
+            ]
+          }
+        }
+        ```
+
+    + Schema
+
+        ```
+        {
+          "type": "object",
+          "required": true,
+          "properties": {
+            "results": {
+              "type": "object",
+              "required": true,
+              "properties": {
+                "sending-ips": {
+                  "type": "array",
+                  "required": false
+                }
+              }
+            }
+          }
+        }
+        ```
+
+### Sending IPs List [GET]
+
+Returns a list of sending IPs that the Metrics API contains data on.
+
++ Parameters
+    + match (optional, string, `example`) ... Only return results containing this string
+    + limit (optional, int, `5`) ... Maximum number of results to return
+
++ Request
+
+  + Headers
+      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+      Accept: application/json
+
++ Response 200
+
+ [Sending IPs List][]
 
 
 ## Campaigns List [/metrics/campaigns]
