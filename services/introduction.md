@@ -94,9 +94,9 @@ The following APIs have subaccount support:
 * [Sending Domains API](#sending-domains-api)
 * [Suppression List API](#suppression-list-api)
 * [SMTP API](#smtp-api)
+* [Transmissions API](#transmissions-api)
 
 **Note**: support coming soon for the following
-* [Transmissions API](#transmissions-api)
 * [Tracking Domains API](#tracking-domains-api)
 
 ### Terminology
