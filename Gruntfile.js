@@ -53,12 +53,12 @@ module.exports = function(grunt) {
 
                         var name = (file.split('.'))[0];
                         name = (name.split('/'))[1];
-                        if (name != 'substitutions_reference') {
-                            var html = $('nav').html();
-                            grunt.option('dom_munger.getnav.'+ name, html);
-                            html = grunt.option('dom_munger.getnav.'+ name);
-                            //grunt.log.writeln('cached '+ html.length +' characters for '+ name);
+                        // Fix nav name, it's Overview for some reason
+                        if (name == 'substitutions_reference') {
+                            $('nav div.heading a[href="substitutions_reference.html#top"]').text('Substitutions Reference');
                         }
+                        var html = $('nav').html();
+                        grunt.option('dom_munger.getnav.'+ name, html);
 
                         return false;
                     }
@@ -78,7 +78,6 @@ module.exports = function(grunt) {
                             var names = services.map(function(s) { return (s.split('.'))[0]; });
                             for (var idx in names) {
                                 var name = names[idx];
-                                if (name == 'substitutions_reference') { continue; }
                                 var html = grunt.option('dom_munger.getnav.'+ name);
                                 if (html === undefined) {
                                     grunt.log.fatal('no nav html for ['+ name +'], run dom_munger before copy!');
@@ -90,7 +89,7 @@ module.exports = function(grunt) {
                         //grunt.log.writeln('full nav loaded '+ allnav.length +' characters');
                         // TODO: indicate current page somehow
                         content = content.replace(/<nav[^>]*>.*?<\/nav>/, '<nav>'+ allnav +'</nav>');
-                        return content
+                        return content;
                     }
                 }
             }
