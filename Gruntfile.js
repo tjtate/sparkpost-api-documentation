@@ -25,8 +25,6 @@ module.exports = function(grunt) {
     // Dynamically load any preexisting grunt tasks/modules
     matchdep.filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
-    var navCache = {};
-
     // Configure existing grunt tasks and create custom ones
     grunt.initConfig({
         aglio: {
@@ -49,16 +47,16 @@ module.exports = function(grunt) {
                             var jelt = $(elt);
                             var html = (file.split('/'))[1];
                             var href = html + jelt.attr('href');
-                            grunt.log.writeln('rewriting to ['+ href +']');
+                            //grunt.log.writeln('rewriting to ['+ href +']');
                             jelt.attr('href', href);
                           }
                         )
 
                         var name = (file.split('.'))[0];
-                        if (!navCache[name]) {
-                            navCache[name] = $('nav').html();
-                            grunt.log.writeln('cached '+ navCache[name].length +' characters for '+ name)
-                        }
+                        var html = $('nav').html();
+                        grunt.option(['dom_munger', 'setnav', name].join('.'), html);
+                        html = grunt.option(['dom_munger', 'setnav', name].join('.'));
+                        grunt.log.writeln('cached '+ html.length +' characters for '+ name)
 
                         return false;
                     }
@@ -70,10 +68,14 @@ module.exports = function(grunt) {
                     callback: function($,file) {
                           var names = services.map(function(s) { return (s.split('.'))[0]; });
                           for (var idx in names) {
-                            var name = names[idx]
-                            var nav = $.load(navCache[name])
-                            grunt.log.writeln('found '+ navCache[name].length +' characters for '+ name)
-                            grunt.log.writeln(file +'('+ name +') '+ ': '+ $('div.heading a', nav).text());
+                              var name = names[idx]
+                              var html = grunt.option(['dom_munger', 'setnav', name].join('.'));
+                              if (html == undefined) {
+                                  grunt.log.writeln('failed to get nav html for ['+ name +']')
+                              } else {
+                                  grunt.log.writeln('loaded '+ html.length +' characters for '+ name)
+                                  //grunt.log.writeln(file +'('+ name +') '+ ': '+ $('div.heading a', nav).text());
+                              }
                           }
                           // TODO: add full nav to each page, marking current page with a style
                           return false;
