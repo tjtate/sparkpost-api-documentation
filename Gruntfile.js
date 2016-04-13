@@ -8,7 +8,6 @@ var matchdep = require('matchdep')
         'inbound_domains_api.md',
         'metrics_api.md',
         'message_events_api.md',
-        'raw_log_api.md',
         'recipient_list_api.md',
         'relay_webhooks_api.md',
         'sending_domains_api.md',
@@ -38,7 +37,7 @@ module.exports = function(grunt) {
             },
         },
         dom_munger: {
-            getnav: {
+            main: {
                 options: {
                     callback: function($,file) {
                         // absolutify the links
@@ -50,38 +49,50 @@ module.exports = function(grunt) {
                             //grunt.log.writeln('rewriting to ['+ href +']');
                             jelt.attr('href', href);
                           }
-                        )
+                        );
 
                         var name = (file.split('.'))[0];
-                        var html = $('nav').html();
-                        grunt.option(['dom_munger', 'setnav', name].join('.'), html);
-                        html = grunt.option(['dom_munger', 'setnav', name].join('.'));
-                        grunt.log.writeln('cached '+ html.length +' characters for '+ name)
+                        name = (name.split('/'))[1];
+                        if (name != 'substitutions_reference') {
+                            var html = $('nav').html();
+                            grunt.option('dom_munger.getnav.'+ name, html);
+                            html = grunt.option('dom_munger.getnav.'+ name);
+                            //grunt.log.writeln('cached '+ html.length +' characters for '+ name);
+                        }
 
                         return false;
                     }
                 },
                 src: services.map(function(s) { var name = (s.split('.'))[0]; return 'aglio/'+ name +'.html'; })
-            },
-            setnav: {
+            }
+        },
+        copy: {
+            main: {
+                src: services.map(function(s) { var name = (s.split('.'))[0]; return 'aglio/'+ name +'.html'; }),
+                dest: './',
                 options: {
-                    callback: function($,file) {
-                          var names = services.map(function(s) { return (s.split('.'))[0]; });
-                          for (var idx in names) {
-                              var name = names[idx]
-                              var html = grunt.option(['dom_munger', 'setnav', name].join('.'));
-                              if (html == undefined) {
-                                  grunt.log.writeln('failed to get nav html for ['+ name +']')
-                              } else {
-                                  grunt.log.writeln('loaded '+ html.length +' characters for '+ name)
-                                  //grunt.log.writeln(file +'('+ name +') '+ ': '+ $('div.heading a', nav).text());
-                              }
-                          }
-                          // TODO: add full nav to each page, marking current page with a style
-                          return false;
+                    process: function(content, srcpath) {
+                        var allnav = grunt.option('copy.allnav');
+                        if (allnav === undefined) {
+                            allnav = '';
+                            var names = services.map(function(s) { return (s.split('.'))[0]; });
+                            for (var idx in names) {
+                                var name = names[idx];
+                                if (name == 'substitutions_reference') { continue; }
+                                var html = grunt.option('dom_munger.getnav.'+ name);
+                                if (html === undefined) {
+                                    grunt.log.fatal('no nav html for ['+ name +'], run dom_munger before copy!');
+                                }
+                                allnav = allnav + html;
+                            }
+                            grunt.option('copy.allnav', allnav);
+                        }
+                        //grunt.log.writeln('full nav loaded '+ allnav.length +' characters');
+                        // TODO: indicate current page somehow
+                        content = content.replace(/<nav[^>]*>.*?<\/nav>/, '<nav>'+ allnav +'</nav>');
+                        return content
                     }
-                },
-                src: services.map(function(s) { var name = (s.split('.'))[0]; return 'aglio/'+ name +'.html'; })
+                }
             }
         },
         concat: {
