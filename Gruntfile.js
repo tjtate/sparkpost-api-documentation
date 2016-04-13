@@ -25,8 +25,65 @@ module.exports = function(grunt) {
     // Dynamically load any preexisting grunt tasks/modules
     matchdep.filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
+    grunt.loadNpmTasks('grunt-aglio');
+    grunt.loadNpmTasks('grunt-dom-munger');
+    var navCache = {};
+
     // Configure existing grunt tasks and create custom ones
     grunt.initConfig({
+        aglio: {
+            build: {
+                files:
+                    services.reduce(function(obj, val, idx) {
+                      var name = (val.split('.'))[0];
+                      obj['aglio/'+ name +'.html'] = [ 'services/'+ val ];
+                      return obj;
+                    }, {})
+            },
+        },
+        dom_munger: {
+            getnav: {
+                options: {
+                    callback: function($,file) {
+                        // absolutify the links
+                        $('nav a[href^=#]').each(
+                          function(idx, elt) {
+                            var jelt = $(elt);
+                            var html = (file.split('/'))[1];
+                            var href = html + jelt.attr('href');
+                            grunt.log.writeln('rewriting to ['+ href +']');
+                            jelt.attr('href', href);
+                          }
+                        )
+
+                        var name = (file.split('.'))[0];
+                        if (!navCache[name]) {
+                            navCache[name] = $('nav').html();
+                            grunt.log.writeln('cached '+ navCache[name].length +' characters for '+ name)
+                        }
+
+                        return false;
+                    }
+                },
+                src: services.map(function(s) { var name = (s.split('.'))[0]; return 'aglio/'+ name +'.html'; })
+            },
+            setnav: {
+                options: {
+                    callback: function($,file) {
+                          var names = services.map(function(s) { return (s.split('.'))[0]; });
+                          for (var idx in names) {
+                            var name = names[idx]
+                            var nav = $.load(navCache[name])
+                            grunt.log.writeln('found '+ navCache[name].length +' characters for '+ name)
+                            grunt.log.writeln(file +'('+ name +') '+ ': '+ $('div.heading a', nav).text());
+                          }
+                          // TODO: add full nav to each page, marking current page with a style
+                          return false;
+                    }
+                },
+                src: services.map(function(s) { var name = (s.split('.'))[0]; return 'aglio/'+ name +'.html'; })
+            }
+        },
         concat: {
             options: {
                 banner: 'FORMAT: X-1A' + grunt.util.linefeed +
@@ -58,9 +115,9 @@ module.exports = function(grunt) {
             test: {
                 command : function(file) {
                     if (file) {
-                        file = './services/' + file
+                        file = './services/' + file;
                     } else {
-                        file = 'apiary.apib'
+                        file = 'apiary.apib';
                     }
                     return 'node ./bin/api-blueprint-validator ' + file;
                 },
