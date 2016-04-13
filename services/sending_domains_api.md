@@ -165,6 +165,7 @@ Create a sending domain by providing a **sending domain object** as the POST req
 
 + Response 400 (application/json)
 
+      ```
       {
         "errors": [
           {
@@ -316,6 +317,7 @@ To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty
 
 + Response 400 (application/json)
 
+      ```
       {
         "errors": [
           {
