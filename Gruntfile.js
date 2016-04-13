@@ -88,6 +88,12 @@ module.exports = function(grunt) {
                         }
                         //grunt.log.writeln('full nav loaded '+ allnav.length +' characters');
                         // TODO: indicate current page somehow
+                        var file = (srcpath.split('/'))[1];
+                        var selector = 'div.heading a[href="'+ file +'#top"]';
+                        var cheerio = require('cheerio');
+                        $ = cheerio.load(allnav)
+                        $(selector).parent('div.heading').attr('style', 'background-color:#f00;');
+                        allnav = $.html();
                         content = content.replace(/<nav[^>]*>.*?<\/nav>/, '<nav>'+ allnav +'</nav>');
                         return content;
                     }
