@@ -25,8 +25,6 @@ module.exports = function(grunt) {
     // Dynamically load any preexisting grunt tasks/modules
     matchdep.filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
-    grunt.loadNpmTasks('grunt-aglio');
-    grunt.loadNpmTasks('grunt-dom-munger');
     var navCache = {};
 
     // Configure existing grunt tasks and create custom ones
