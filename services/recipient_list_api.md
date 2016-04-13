@@ -398,6 +398,7 @@ number of rejected recipients will only be returned if a "recipients" array is p
 + Request (application/json)
 
   + Headers
+
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body

@@ -22,7 +22,8 @@ List descriptions of the event fields that could be included in a response from 
 + Request
 
   + Headers
-      Accept: application/json
+
+            Accept: application/json
 
 + Response 200 (application/json)
   ```js
@@ -148,7 +149,8 @@ List an example of the event data that will be included in a response from the M
 + Request
 
   + Headers
-      Accept: application/json
+
+            Accept: application/json
 
 + Response 200 (application/json)
   ```js
@@ -217,8 +219,8 @@ Perform a filtered search for message event data. The response is sorted by desc
 
   + Headers
 
-      Accept: application/json
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
 + Response 200 (application/json)
   ```

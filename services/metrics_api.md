@@ -3642,7 +3642,7 @@ Provides aggregate count of deliveries grouped by the attempt number.
 
   [Deliveries By Attempt][]
 
-## Binding Groups List [/metrics/binding-groups]
+## Binding Groups List [/metrics/binding-groups{?match,limit}]
 
 **Deprecation Notice:** This endpoint has been deprecated. Please use the IP Pools listing endpoint instead.
 
@@ -3708,8 +3708,9 @@ Returns a list of IP pools that the Metrics API contains data on.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200
 
@@ -3837,7 +3838,7 @@ Returns a list of campaigns that the Metrics API contains data on.
   [Campaigns List][]
 
 
-## Domains List [/metrics/domains]
+## Domains List [/metrics/domains{?match,limit}]
 
 + Model (application/json)
 
@@ -3947,8 +3948,9 @@ Returns a list of nodes that the Metrics API contains data on.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200
 
@@ -4005,8 +4007,9 @@ Returns a list of protocols that the Metrics API contains data on.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200
 

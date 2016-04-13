@@ -90,6 +90,7 @@ Create a sending domain by providing a **sending domain object** as the POST req
 
 + Response 200 (application/json; charset=utf-8)
 
+        ```
         {
           "results": {
             "message": "Successfully Created domain.",
@@ -173,9 +174,11 @@ Create a sending domain by providing a **sending domain object** as the POST req
           }
         ]
       }
+      ```
 
 + Response 422 (application/json)
 
+    ```
     {
       "errors": [
         {
@@ -185,6 +188,7 @@ Create a sending domain by providing a **sending domain object** as the POST req
         }
       ]
     }
+    ```
 
 ### List all Sending Domains [GET]
 
@@ -199,6 +203,7 @@ List an overview of all sending domains in the system.
 
 + Response 200 (application/json; charset=utf-8)
 
+        ```
         {
             "results": [
                 {
@@ -226,6 +231,7 @@ List an overview of all sending domains in the system.
                 }
             ]
         }
+        ```
 
 ## Retrieve, Update, and Delete [/sending-domains/{domain}]
 
@@ -245,6 +251,7 @@ Retrieve a sending domain by specifying its domain name in the URI path.  The re
 
 + Response 200 (application/json; charset=utf-8)
 
+        ```
         {
             "results": {
                 "tracking_domain": "click.example1.com",
@@ -263,6 +270,7 @@ Retrieve a sending domain by specifying its domain name in the URI path.  The re
                 }
             }
         }
+        ```
 
 
 ### Update a Sending Domain [PUT]
@@ -317,9 +325,11 @@ To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty
           }
         ]
       }
+      ```
 
 + Response 422 (application/json)
 
+    ```
     {
       "errors": [
         {
@@ -329,6 +339,7 @@ To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty
         }
       ]
     }
+    ```
 
 ### Delete a Sending Domain [DELETE]
 
@@ -390,6 +401,7 @@ The domain's "status" object is returned on success.
 
 + Response 200 (application/json; charset=utf-8)
 
+        ```
         {
             "results": {
                 "ownership_verified": true,
@@ -404,6 +416,7 @@ The domain's "status" object is returned on success.
                 "postmaster_at_status": "unverified"
             }
         }
+        ```
 
 + Request Initiate postmaster@ email (application/json)
 
@@ -420,6 +433,7 @@ The domain's "status" object is returned on success.
 
 + Response 200 (application/json; charset=utf-8)
 
+        ```
         {
             "results": {
                 "ownership_verified": false,
@@ -430,6 +444,7 @@ The domain's "status" object is returned on success.
                 "postmaster_at_status": "unverified"
             }
         }
+        ```
 
 + Request Verify postmaster@ correct token (application/json)
 
@@ -446,6 +461,7 @@ The domain's "status" object is returned on success.
 
 + Response 200 (application/json; charset=utf-8)
 
+        ```
         {
             "results": {
                 "ownership_verified": true,
@@ -456,6 +472,7 @@ The domain's "status" object is returned on success.
                 "postmaster_at_status": "valid"
             }
         }
+        ```
 
 + Request Verify abuse@ incorrect token (application/json)
 
@@ -472,6 +489,7 @@ The domain's "status" object is returned on success.
 
 + Response 200 (application/json; charset=utf-8)
 
+        ```
         {
             "results": {
                 "ownership_verified": false,
@@ -482,6 +500,7 @@ The domain's "status" object is returned on success.
                 "postmaster_at_status": "unverified"
             }
         }
+        ```
 
 + Request Unable to process abuse@ request (application/json)
 
@@ -498,6 +517,7 @@ The domain's "status" object is returned on success.
 
 + Response 400 (application/json; charset=utf-8)
 
+        ```
         {
            "errors": [
               {
@@ -507,3 +527,4 @@ The domain's "status" object is returned on success.
               }
            ]
         }
+        ```

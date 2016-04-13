@@ -715,7 +715,7 @@ Once message generation has been initiated, all messages in the transmission wil
 
 
 
-## Retrieve [/transmissions/{id}]
+## Retrieve and Delete [/transmissions/{id}]
 
 ### Retrieve a Transmission [GET]
 
@@ -787,6 +787,97 @@ The response for a transmission using an inline template will include "template_
             }
 
 
+### Delete a Transmission [DELETE]
+
+Delete a transmission by specifying its ID in the URI path.
+
+Only transmissions which are scheduled for future generation may be deleted.
+
+Scheduled transmissions cannot be deleted if the transmission is within 10 minutes of the scheduled generation time.
+
+
++ Parameters
+    + id (required, string, `11714265276872`) ... ID of the transmission
+
++ Request
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Response 200 (application/json)
+
+    +  Body
+
+        ```
+        {
+        }
+        ```
+
++ Response 404 (application/json)
+
+  + Body
+
+          ```
+          {
+            "errors": [
+              {
+                "message": "resource not found",
+                "code": "1600",
+                "description": "Resource not found:transmission id 999999999"
+              }
+            ]
+          }
+          ```
+
++ Response 409 (application/json)
+
+  + Body
+
+          ```
+          {
+            "errors": [
+              {
+                "message": "too close to generation time to delete transmission",
+                "code": "2003",
+                "description": "Deletion time window (660 seconds) doesn't permit transmission deletion"
+              }
+            ]
+          }
+          ```
+
++ Response 409 (application/json)
+
+  + Body
+
+          ```
+          {
+            "errors": [
+              {
+                "message": "transmission database record is in an invalid state for deletion",
+                "code": "2006",
+                "description": "Unable to delete a transmission that is in progress (state=Generating)"
+              }
+            ]
+          }
+          ```
+
++ Response 409 (application/json)
+
+  + Body
+
+          ```
+          {
+            "errors": [
+              {
+                "message": "transmission database record is in an invalid state for deletion",
+                "code": "2006",
+                "description": "Unable to delete a transmission that has completed (state=Success)"
+              }
+            ]
+          }
+          ```
 ## List [/transmissions{?campaign_id,template_id}]
 
 ### List all Transmissions [GET]
@@ -853,83 +944,3 @@ The example response shows a query on _campaign_id=thanksgiving_, with **templat
           ]
         }
         ```
-
-## Delete [/transmissions/{id}]
-
-### Delete a Transmission [DELETE]
-
-Delete a transmission by specifying its ID in the URI path.
-
-Only transmissions which are scheduled for future generation may be deleted.
-
-Scheduled transmissions cannot be deleted if the transmission is within 10 minutes of the scheduled generation time.
-
-
-+ Parameters
-    + id (required, string, `11714265276872`) ... ID of the transmission
-
-+ Request
-
-    + Headers
-
-            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-            Accept: application/json
-
-+ Response 200 (application/json)
-
-    +  Body
-
-        {
-        }
-
-+ Response 404 (application/json)
-
-  + Body
-          {
-            "errors": [
-              {
-                "message": "resource not found",
-                "code": "1600",
-                "description": "Resource not found:transmission id 999999999"
-              }
-            ]
-          }
-
-+ Response 409 (application/json)
-
-  + Body
-          {
-            "errors": [
-              {
-                "message": "too close to generation time to delete transmission",
-                "code": "2003",
-                "description": "Deletion time window (660 seconds) doesn't permit transmission deletion"
-              }
-            ]
-          }
-
-+ Response 409 (application/json)
-
-  + Body
-          {
-            "errors": [
-              {
-                "message": "transmission database record is in an invalid state for deletion",
-                "code": "2006",
-                "description": "Unable to delete a transmission that is in progress (state=Generating)"
-              }
-            ]
-          }
-
-+ Response 409 (application/json)
-
-  + Body
-          {
-            "errors": [
-              {
-                "message": "transmission database record is in an invalid state for deletion",
-                "code": "2006",
-                "description": "Unable to delete a transmission that has completed (state=Success)"
-              }
-            ]
-          }
