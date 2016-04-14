@@ -40,7 +40,7 @@ module.exports = function(grunt) {
 
         dom_munger: {
             main: {
-                src: services.map(function(s) { var name = (s.split('.'))[0]; return 'aglio/'+ name +'.html'; })
+                src: services.map(function(s) { var name = (s.split('.'))[0]; return 'aglio/'+ name +'.html'; }),
                 options: {
                     callback: function($,file) {
                         // absolutify sub-section links
@@ -63,12 +63,14 @@ module.exports = function(grunt) {
                         if (name == 'substitutions_reference') {
                             $('nav div.heading a[href^="substitutions_reference.html#"]').text('Substitutions Reference');
                         }
-                        var html = $('nav').html();
-                        grunt.option('dom_munger.getnav.'+ name, html);
+                        // save a copy of the fixed-up nav from the current page
+                        // we'll use this in `copy`, below
+                        grunt.option('dom_munger.getnav.'+ name, $('nav').html());
 
+                        // don't write out file changes, we'll do that in `copy` too
                         return false;
                     }
-                },
+                }
             }
         },
 
@@ -78,8 +80,10 @@ module.exports = function(grunt) {
                 dest: './',
                 options: {
                     process: function(content, srcpath) {
+                        // get the global nav we build and cache below
                         var allnav = grunt.option('copy.allnav');
                         if (allnav === undefined) {
+                            // build and cache global nav if we haven't yet this run
                             allnav = '';
                             var names = services.map(function(s) { return (s.split('.'))[0]; });
                             for (var idx in names) {
@@ -93,9 +97,12 @@ module.exports = function(grunt) {
                             grunt.option('copy.allnav', allnav);
                         }
 
+                        // get a DOM for our global nav
                         $ = cheerio.load(allnav);
                         var file = (srcpath.split('/'))[1];
+                        // css selector for current nav
                         var curNav = 'div.heading a[href^="'+ file +'#"]';
+                        // anchor from current nav
                         var anchor = (($(curNav).attr('href')).split('#'))[1];
 
                         // indicate current page w/in nav
