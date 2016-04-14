@@ -1,7 +1,7 @@
 FORMAT: X-1A
 HOST: https://api.sparkpost.com/api/v1
 
-# SparkPost API vTOM 
+# SparkPost API v1 
 There are two service types available:  [SparkPost](http://sparkpost.com/), our self-service product, and [SparkPost Elite](https://www.sparkpost.com/products/sparkpost-elite), a managed service with guaranteed burst rates and white-glove support. These services have shared and unique aspects, with those unique aspects indicated in our consolidated API documentation as follows:
 * Features specific to **SparkPost** are indicated as "SparkPost only".
 * Features specific to **SparkPost Elite** products are indicated by "SparkPost Elite only".
@@ -64,27 +64,6 @@ curl -v \
 -X GET "https://api.sparkpost.com/api/v1/metrics/deliverability/aggregate?campaigns=testjob&from=2014-01-23T14:00&metrics=count_targeted,count_sent,count_accepted&protocols=smtp&timezone=America%2FNew_York&to=2014-06-23T15:50"
 ```
 
-## SMTP Relay Endpoints
-<a name="smtp-relay-endpoints"></a>
-
-### SparkPost SMTP Endpoint
-To use SparkPost as an SMTP relay you need to point your SMTP client (or local MTA) to the following endpoint:
-
-* Host: smtp.sparkpostmail.com
-* Port: 587 or 2525
-* Encryption: STARTTLS
-* Authentication: AUTH LOGIN
-* User: SMTP_Injection
-* Password: Any API key with Send via SMTP permission
-
-**Note**: Port 2525 is provided as an alternate port for cases where port 587 is blocked (such as a Google Compute Engine environment).
-
-### SparkPost Elite SMTP Endpoint
-
-* Please contact your Technical Account Manager for details on your SMTP endpoint.
-
-The SMTP relay optionally supports advanced API features using the [SMTP API](#smtp-api).  To create an API key, login to your SparkPost [Account Credentials](https://app.sparkpost.com/account/credentials) page.
-
 ## Subaccounts
 <a name="subaccounts-intro"></a>
 With the introduction of subaccounts, some of the APIs are now able to store and retrieve information at a more granular level.
@@ -118,6 +97,29 @@ The following APIs have subaccount support:
 * For GET requests, omitting `X-MSYS-SUBACCOUNT` will result in Master Account and Subaccount data in the response
   * Subaccount data will have the key `subaccount_id` in the response object
 * Metrics and Message Events APIs do not use `X-MSYS-SUBACCOUNT`. Instead, setting the query parameter `subaccounts` to `0` will return only Master Account reporting data
+
+## SMTP Relay Endpoints
+<a name="smtp-relay-endpoints"></a>
+
+### SparkPost SMTP Endpoint
+To use SparkPost as an SMTP relay you need to point your SMTP client (or local MTA) to the following endpoint:
+
+* Host: smtp.sparkpostmail.com
+* Port: 587 or 2525
+* Encryption: STARTTLS
+* Authentication: AUTH LOGIN
+* User: SMTP_Injection
+* Password: Any API key with Send via SMTP permission
+* To send mail over an SMTP relay endpoint as a Subaccount, modify the your `User` to include the subaccount ID.
+  * For example, use `SMTP_Injection:X-MSYS-SUBACCOUNT=123` to send as a Subacount, having an ID of 123.  The Master Account's API key is still used as the password in this case.
+
+**Note**: Port 2525 is provided as an alternate port for cases where port 587 is blocked (such as a Google Compute Engine environment).
+
+### SparkPost Elite SMTP Endpoint
+
+* Please contact your Technical Account Manager for details on your SMTP endpoint.
+
+The SMTP relay optionally supports advanced API features using the [SMTP API](#smtp-api).  To create an API key, login to your SparkPost [Account Credentials](https://app.sparkpost.com/account/credentials) page.
 
 ## Substitutions Reference
 <a name="substitutions-reference"></a>
