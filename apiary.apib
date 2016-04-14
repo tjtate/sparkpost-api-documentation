@@ -1123,8 +1123,6 @@ Retrieve an inbound domain by specifying its domain name in the URI path.
             }
 
 
-## Delete [/inbound-domains/{domain}]
-
 ### Delete an Inbound Domain [DELETE]
 
 Delete an inbound domain by specifying its domain name in the URI path.
@@ -1869,7 +1867,7 @@ Provides aggregate metrics grouped by domain over the time window specified.
 ### Deliverability Metrics by Binding Group [GET]
 
 
-## Deliverability Metrics by Sending IP [/metrics/deliverability/sending-ip{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Sending IP [/metrics/deliverability/sending-ip{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,metrics,timezone,limit,order_by}]
 
 + Model
 
@@ -4365,7 +4363,7 @@ Provides deliverability metrics, specific to rejection events, grouped by the re
   [Rejection Reasons][]
 
 
-## Rejection Reasons By Domain [/metrics/deliverability/rejection-reason/domain{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,timezone,limit}]
+## Rejection Reasons By Domain [/metrics/deliverability/rejection-reason/domain{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,timezone,limit}]
 
 + Model
 
@@ -4739,7 +4737,7 @@ name (or URL if no link name exists).
   [Engagement Details][]
 
 
-## Deliveries By Attempt [/metrics/deliverability/attempt{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,timezone}]
+## Deliveries By Attempt [/metrics/deliverability/attempt{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,bindings,binding_groups,sending_domains,subaccounts,protocols,timezone}]
 
 + Model
 
@@ -4824,21 +4822,21 @@ Provides aggregate count of deliveries grouped by the attempt number.
 
   [Deliveries By Attempt][]
 
-## Binding Groups List [/metrics/binding-groups]
+## Binding Groups List [/metrics/binding-groups{?match,limit}]
 
 **Deprecation Notice:** This endpoint has been deprecated. Please use the IP Pools listing endpoint instead.
 
-###  Bindings Groups List [GET]
+### Bindings Groups List [GET]
 
 
 ## Bindings List [/metrics/bindings]
 
 **Deprecation Notice:** This endpoint has been deprecated. Please use the Sending IPs listing endpoint instead.
 
-###  Bindings List [GET]
+### Bindings List [GET]
 
 
-## IP Pools List [/metrics/ip-pools]
+## IP Pools List [/metrics/ip-pools{?match,limit}]
 
 + Model (application/json)
 
@@ -4890,15 +4888,16 @@ Returns a list of IP pools that the Metrics API contains data on.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200
 
     [IP Pools List][]
 
 
-## Sending IPs List [/metrics/sending-ips]
+## Sending IPs List [/metrics/sending-ips{?match,limit}]
 
 + Model (application/json)
 
@@ -4950,15 +4949,16 @@ Returns a list of sending IPs that the Metrics API contains data on.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200
 
  [Sending IPs List][]
 
 
-## Campaigns List [/metrics/campaigns]
+## Campaigns List [/metrics/campaigns{?match,limit}]
 
 + Model (application/json)
 
@@ -5019,7 +5019,7 @@ Returns a list of campaigns that the Metrics API contains data on.
   [Campaigns List][]
 
 
-## Domains List [/metrics/domains]
+## Domains List [/metrics/domains{?match,limit}]
 
 + Model (application/json)
 
@@ -5129,8 +5129,9 @@ Returns a list of nodes that the Metrics API contains data on.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200
 
@@ -5187,8 +5188,9 @@ Returns a list of protocols that the Metrics API contains data on.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200
 
@@ -5218,7 +5220,8 @@ List descriptions of the event fields that could be included in a response from 
 + Request
 
   + Headers
-      Accept: application/json
+
+            Accept: application/json
 
 + Response 200 (application/json)
   ```js
@@ -5344,7 +5347,8 @@ List an example of the event data that will be included in a response from the M
 + Request
 
   + Headers
-      Accept: application/json
+
+            Accept: application/json
 
 + Response 200 (application/json)
   ```js
@@ -5413,8 +5417,8 @@ Perform a filtered search for message event data. The response is sorted by desc
 
   + Headers
 
-      Accept: application/json
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
 + Response 200 (application/json)
   ```
@@ -6195,6 +6199,7 @@ number of rejected recipients will only be returned if a "recipients" array is p
 + Request (application/json)
 
   + Headers
+
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
@@ -6496,7 +6501,7 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
 
   + Headers
 
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
 
@@ -6526,6 +6531,7 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
 
   + Body
 
+          ```
           { "errors": [
               {
                 "message": "invalid params",
@@ -6534,11 +6540,13 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
               }
             ]
           }
+          ```
 
 + Response 401 (application/json)
 
   + Body
 
+          ```
           { "errors": [
               {
                 "message": "Unauthorized Tenant",
@@ -6546,11 +6554,13 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
               }
             ]
           }
+          ```
 
 + Response 409 (application/json)
 
   + Body
 
+          ```
           { "errors": [
               {
                 "message": "resource conflict",
@@ -6559,11 +6569,13 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
               }
             ]
           }
+          ```
 
 + Response 422 (application/json)
 
   + Body
 
+          ```
             {
               "errors" : [
                 {
@@ -6573,11 +6585,13 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
                 }
               ]
             }
+          ```
 
 + Response 422 (application/json)
 
   + Body
 
+          ```
             {
               "errors" : [
                 {
@@ -6587,6 +6601,7 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
                 }
               ]
             }
+          ```
 
 ### List all Relay Webhooks [GET]
 
@@ -6595,12 +6610,15 @@ List all your relay webhooks.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200 (application/json)
 
   + Body
+
+        ```
          { "results": [
               {
                 "id": "12013026328707075",
@@ -6615,10 +6633,13 @@ List all your relay webhooks.
               }
             ]
           }
+        ```
 
 + Response 401 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -6627,6 +6648,7 @@ List all your relay webhooks.
               }
             ]
           }
+        ```
 
 ## Retrieve, Update, and Delete [/relay-webhooks/{webhook_id}]
 
@@ -6640,12 +6662,15 @@ Retrieve a specific relay webhook by specifying the webhook ID in the URI path.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200 (application/json)
 
   + Body
+
+        ```
          {
             "results": {
               "name": "Replies Webhook",
@@ -6657,10 +6682,13 @@ Retrieve a specific relay webhook by specifying the webhook ID in the URI path.
               }
             }
          }
+        ```
 
 + Response 401 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -6669,10 +6697,13 @@ Retrieve a specific relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 404 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -6681,6 +6712,7 @@ Retrieve a specific relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 ### Update a Relay Webhook [PUT]
 
@@ -6692,29 +6724,36 @@ Update a relay webhook by specifying the webhook ID in the URI path.
 + Request (application/json)
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
 
+        ```
             {
               "name": "New Replies Webhook",
               "target": "https://webhook.customer.example/replies"
             }
+        ```
 
 + Response 200 (application/json)
 
   + Body
 
+        ```
             {
               "results":
                 {
                   "id": "12013026328707075"
                 }
             }
+        ```
 
 + Response 400 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -6724,10 +6763,13 @@ Update a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 401 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -6736,10 +6778,13 @@ Update a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 404 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -6749,10 +6794,13 @@ Update a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 404 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -6761,11 +6809,13 @@ Update a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 409 (application/json)
 
   + Body
 
+        ```
           { "errors": [
               {
                 "message": "resource conflict",
@@ -6774,11 +6824,13 @@ Update a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 422 (application/json)
 
   + Body
 
+        ```
             {
               "errors" : [
                 {
@@ -6788,6 +6840,7 @@ Update a relay webhook by specifying the webhook ID in the URI path.
                 }
               ]
             }
+        ```
 
 ### Delete a Relay Webhook [DELETE]
 
@@ -6799,13 +6852,16 @@ Delete a relay webhook by specifying the webhook ID in the URI path.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
 + Response 200
 
 + Response 401 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -6814,10 +6870,13 @@ Delete a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 404 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -6827,10 +6886,13 @@ Delete a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 404 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -6839,6 +6901,7 @@ Delete a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 # Group Sending Domains
 <a name="sending-domains-api"></a>
@@ -6932,6 +6995,7 @@ Create a sending domain by providing a **sending domain object** as the POST req
 
 + Response 200 (application/json; charset=utf-8)
 
+        ```
         {
           "results": {
             "message": "Successfully Created domain.",
@@ -7006,6 +7070,7 @@ Create a sending domain by providing a **sending domain object** as the POST req
 
 + Response 400 (application/json)
 
+      ```
       {
         "errors": [
           {
@@ -7015,9 +7080,11 @@ Create a sending domain by providing a **sending domain object** as the POST req
           }
         ]
       }
+      ```
 
 + Response 422 (application/json)
 
+    ```
     {
       "errors": [
         {
@@ -7027,6 +7094,7 @@ Create a sending domain by providing a **sending domain object** as the POST req
         }
       ]
     }
+    ```
 
 ### List all Sending Domains [GET]
 
@@ -7041,6 +7109,7 @@ List an overview of all sending domains in the system.
 
 + Response 200 (application/json; charset=utf-8)
 
+        ```
         {
             "results": [
                 {
@@ -7068,6 +7137,7 @@ List an overview of all sending domains in the system.
                 }
             ]
         }
+        ```
 
 ## Retrieve, Update, and Delete [/sending-domains/{domain}]
 
@@ -7087,6 +7157,7 @@ Retrieve a sending domain by specifying its domain name in the URI path.  The re
 
 + Response 200 (application/json; charset=utf-8)
 
+        ```
         {
             "results": {
                 "tracking_domain": "click.example1.com",
@@ -7105,6 +7176,7 @@ Retrieve a sending domain by specifying its domain name in the URI path.  The re
                 }
             }
         }
+        ```
 
 
 ### Update a Sending Domain [PUT]
@@ -7150,6 +7222,7 @@ To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty
 
 + Response 400 (application/json)
 
+      ```
       {
         "errors": [
           {
@@ -7159,9 +7232,11 @@ To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty
           }
         ]
       }
+      ```
 
 + Response 422 (application/json)
 
+    ```
     {
       "errors": [
         {
@@ -7171,6 +7246,7 @@ To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty
         }
       ]
     }
+    ```
 
 ### Delete a Sending Domain [DELETE]
 
@@ -7232,6 +7308,7 @@ The domain's "status" object is returned on success.
 
 + Response 200 (application/json; charset=utf-8)
 
+        ```
         {
             "results": {
                 "ownership_verified": true,
@@ -7246,6 +7323,7 @@ The domain's "status" object is returned on success.
                 "postmaster_at_status": "unverified"
             }
         }
+        ```
 
 + Request Initiate postmaster@ email (application/json)
 
@@ -7262,6 +7340,7 @@ The domain's "status" object is returned on success.
 
 + Response 200 (application/json; charset=utf-8)
 
+        ```
         {
             "results": {
                 "ownership_verified": false,
@@ -7272,6 +7351,7 @@ The domain's "status" object is returned on success.
                 "postmaster_at_status": "unverified"
             }
         }
+        ```
 
 + Request Verify postmaster@ correct token (application/json)
 
@@ -7288,6 +7368,7 @@ The domain's "status" object is returned on success.
 
 + Response 200 (application/json; charset=utf-8)
 
+        ```
         {
             "results": {
                 "ownership_verified": true,
@@ -7298,6 +7379,7 @@ The domain's "status" object is returned on success.
                 "postmaster_at_status": "valid"
             }
         }
+        ```
 
 + Request Verify abuse@ incorrect token (application/json)
 
@@ -7314,6 +7396,7 @@ The domain's "status" object is returned on success.
 
 + Response 200 (application/json; charset=utf-8)
 
+        ```
         {
             "results": {
                 "ownership_verified": false,
@@ -7324,6 +7407,7 @@ The domain's "status" object is returned on success.
                 "postmaster_at_status": "unverified"
             }
         }
+        ```
 
 + Request Unable to process abuse@ request (application/json)
 
@@ -7340,6 +7424,7 @@ The domain's "status" object is returned on success.
 
 + Response 400 (application/json; charset=utf-8)
 
+        ```
         {
            "errors": [
               {
@@ -7349,6 +7434,7 @@ The domain's "status" object is returned on success.
               }
            ]
         }
+        ```
 
 # Group Subaccounts
 <a name="subaccounts-api"></a>
@@ -7662,7 +7748,7 @@ Perform a filtered search for entries in your customer-specific exclusion list.
     + to = `now` (optional, datetime, `2014-07-20T09:00:00%2B0000`) ... Datetime the entries were last updated, in the format of YYYY-MM-DDTHH:mm:ssZ
     + from (optional, datetime, `2014-07-20T09:00:00%2B0000`) ... Datetime the entries were last updated, in the format YYYY-MM-DDTHH:mm:ssZ
     + types (optional, list) ... Types of entries to include in the search, i.e. entries with "transactional" and/or "non_transactional" keys set to true
-    + sources (optional, list) ... Source(s) of the entries to include in the search, i.e. entries that were added by this source
+    + sources (optional, list) ... Sources of the entries to include in the search, i.e. entries that were added by this source
     + limit (optional, int, `5`) ... Maximum number of results to return.  Must be between 1 and 100000. Default value is 100000.
 
 + Request
@@ -9489,7 +9575,7 @@ Once message generation has been initiated, all messages in the transmission wil
 
 
 
-## Retrieve [/transmissions/{id}]
+## Retrieve and Delete [/transmissions/{id}]
 
 ### Retrieve a Transmission [GET]
 
@@ -9561,6 +9647,97 @@ The response for a transmission using an inline template will include "template_
             }
 
 
+### Delete a Transmission [DELETE]
+
+Delete a transmission by specifying its ID in the URI path.
+
+Only transmissions which are scheduled for future generation may be deleted.
+
+Scheduled transmissions cannot be deleted if the transmission is within 10 minutes of the scheduled generation time.
+
+
++ Parameters
+    + id (required, string, `11714265276872`) ... ID of the transmission
+
++ Request
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Response 200 (application/json)
+
+    +  Body
+
+        ```
+        {
+        }
+        ```
+
++ Response 404 (application/json)
+
+  + Body
+
+          ```
+          {
+            "errors": [
+              {
+                "message": "resource not found",
+                "code": "1600",
+                "description": "Resource not found:transmission id 999999999"
+              }
+            ]
+          }
+          ```
+
++ Response 409 (application/json)
+
+  + Body
+
+          ```
+          {
+            "errors": [
+              {
+                "message": "too close to generation time to delete transmission",
+                "code": "2003",
+                "description": "Deletion time window (660 seconds) doesn't permit transmission deletion"
+              }
+            ]
+          }
+          ```
+
++ Response 409 (application/json)
+
+  + Body
+
+          ```
+          {
+            "errors": [
+              {
+                "message": "transmission database record is in an invalid state for deletion",
+                "code": "2006",
+                "description": "Unable to delete a transmission that is in progress (state=Generating)"
+              }
+            ]
+          }
+          ```
+
++ Response 409 (application/json)
+
+  + Body
+
+          ```
+          {
+            "errors": [
+              {
+                "message": "transmission database record is in an invalid state for deletion",
+                "code": "2006",
+                "description": "Unable to delete a transmission that has completed (state=Success)"
+              }
+            ]
+          }
+          ```
 ## List [/transmissions{?campaign_id,template_id}]
 
 ### List all Transmissions [GET]
@@ -9628,86 +9805,6 @@ The example response shows a query on _campaign_id=thanksgiving_, with **templat
         }
         ```
 
-## Delete [/transmissions/{id}]
-
-### Delete a Transmission [DELETE]
-
-Delete a transmission by specifying its ID in the URI path.
-
-Only transmissions which are scheduled for future generation may be deleted.
-
-Scheduled transmissions cannot be deleted if the transmission is within 10 minutes of the scheduled generation time.
-
-
-+ Parameters
-    + id (required, string, `11714265276872`) ... ID of the transmission
-
-+ Request
-
-    + Headers
-
-            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-            Accept: application/json
-
-+ Response 200 (application/json)
-
-    +  Body
-
-        {
-        }
-
-+ Response 404 (application/json)
-
-  + Body
-          {
-            "errors": [
-              {
-                "message": "resource not found",
-                "code": "1600",
-                "description": "Resource not found:transmission id 999999999"
-              }
-            ]
-          }
-
-+ Response 409 (application/json)
-
-  + Body
-          {
-            "errors": [
-              {
-                "message": "too close to generation time to delete transmission",
-                "code": "2003",
-                "description": "Deletion time window (660 seconds) doesn't permit transmission deletion"
-              }
-            ]
-          }
-
-+ Response 409 (application/json)
-
-  + Body
-          {
-            "errors": [
-              {
-                "message": "transmission database record is in an invalid state for deletion",
-                "code": "2006",
-                "description": "Unable to delete a transmission that is in progress (state=Generating)"
-              }
-            ]
-          }
-
-+ Response 409 (application/json)
-
-  + Body
-          {
-            "errors": [
-              {
-                "message": "transmission database record is in an invalid state for deletion",
-                "code": "2006",
-                "description": "Unable to delete a transmission that has completed (state=Success)"
-              }
-            ]
-          }
-
 # Group Webhooks
 
 The Webhooks API provides the means to create, review, update, and delete webhooks, which enables you to
@@ -9749,7 +9846,8 @@ List descriptions of the events, event types, and event fields that could be inc
 + Request
 
   + Headers
-      Accept: application/json
+
+            Accept: application/json
 
 + Response 200 (application/json)
   ```js
@@ -9793,7 +9891,8 @@ List an example of the event data that will be posted by a Webhook for the speci
 + Request
 
   + Headers
-      Accept: application/json
+
+            Accept: application/json
 
 + Response 200 (application/json)
   ```js
@@ -9843,32 +9942,33 @@ As described in "Webhooks Object Properties", webhook creation entails a test PO
 + Request (application/json)
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
 
-    ```js
-    {
-      "name": "Example webhook",
-      "target": "http://client.example.com/example-webhook",
-      "auth_type": "oauth2",
-      "auth_request_details": {
-        "url": "http://client.example.com/tokens",
-        "body": {
-            "client_id": "CLIENT123",
-            "client_secret": "9sdfj791d2bsbf",
-            "grant_type": "client_credentials"
+        ```js
+        {
+          "name": "Example webhook",
+          "target": "http://client.example.com/example-webhook",
+          "auth_type": "oauth2",
+          "auth_request_details": {
+            "url": "http://client.example.com/tokens",
+            "body": {
+                "client_id": "CLIENT123",
+                "client_secret": "9sdfj791d2bsbf",
+                "grant_type": "client_credentials"
+            }
+          },
+          "auth_token": "",
+          "events": [
+            "delivery",
+            "injection",
+            "open",
+            "click"
+          ]
         }
-      },
-      "auth_token": "",
-      "events": [
-        "delivery",
-        "injection",
-        "open",
-        "click"
-      ]
-    }
-    ```
+        ```
 
 + Response 200 (application/json)
 
@@ -9955,8 +10055,9 @@ Retrieve details about a webhook by specifying its id in the URI path.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200 (application/json)
 
@@ -10065,8 +10166,9 @@ List currently extant webhooks.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200 (application/json)
 
@@ -10091,20 +10193,21 @@ As described in "Webhooks Object Properties", a change to the _target_ value ent
 + Request (application/json)
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
 
-    ```js
-    {
-      "name": "Renamed webhook",
-      "events": [
-        "rejection",
-        "delay"
-      ],
-      "auth_type": "none"
-    }
-    ```
+        ```js
+        {
+          "name": "Renamed webhook",
+          "events": [
+            "rejection",
+            "delay"
+          ],
+          "auth_type": "none"
+        }
+        ```
 
 + Response 200 (application/json)
 
@@ -10134,7 +10237,8 @@ delivered are drained.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
 + Response 204
 
@@ -10158,17 +10262,18 @@ and returns detailed information on the response received from the target.
 + Request (application/json)
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
 
-    ```js
-    {
-        "message": {
-            "msys": {}
+        ```js
+        {
+            "message": {
+                "msys": {}
+            }
         }
-    }
-    ```
+        ```
 
 + Response 200 (application/json)
 
@@ -10203,8 +10308,9 @@ are currently in a failed state.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200 (application/json)
 

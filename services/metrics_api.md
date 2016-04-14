@@ -687,7 +687,7 @@ Provides aggregate metrics grouped by domain over the time window specified.
 ### Deliverability Metrics by Binding Group [GET]
 
 
-## Deliverability Metrics by Sending IP [/metrics/deliverability/sending-ip{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Sending IP [/metrics/deliverability/sending-ip{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,metrics,timezone,limit,order_by}]
 
 + Model
 
@@ -3183,7 +3183,7 @@ Provides deliverability metrics, specific to rejection events, grouped by the re
   [Rejection Reasons][]
 
 
-## Rejection Reasons By Domain [/metrics/deliverability/rejection-reason/domain{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,subaccounts,protocols,timezone,limit}]
+## Rejection Reasons By Domain [/metrics/deliverability/rejection-reason/domain{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,timezone,limit}]
 
 + Model
 
@@ -3557,7 +3557,7 @@ name (or URL if no link name exists).
   [Engagement Details][]
 
 
-## Deliveries By Attempt [/metrics/deliverability/attempt{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,timezone}]
+## Deliveries By Attempt [/metrics/deliverability/attempt{?from,to,domains,campaigns,templates,nodes,sending_ips,ip_pools,bindings,binding_groups,sending_domains,subaccounts,protocols,timezone}]
 
 + Model
 
@@ -3642,21 +3642,21 @@ Provides aggregate count of deliveries grouped by the attempt number.
 
   [Deliveries By Attempt][]
 
-## Binding Groups List [/metrics/binding-groups]
+## Binding Groups List [/metrics/binding-groups{?match,limit}]
 
 **Deprecation Notice:** This endpoint has been deprecated. Please use the IP Pools listing endpoint instead.
 
-###  Bindings Groups List [GET]
+### Bindings Groups List [GET]
 
 
 ## Bindings List [/metrics/bindings]
 
 **Deprecation Notice:** This endpoint has been deprecated. Please use the Sending IPs listing endpoint instead.
 
-###  Bindings List [GET]
+### Bindings List [GET]
 
 
-## IP Pools List [/metrics/ip-pools]
+## IP Pools List [/metrics/ip-pools{?match,limit}]
 
 + Model (application/json)
 
@@ -3708,15 +3708,16 @@ Returns a list of IP pools that the Metrics API contains data on.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200
 
     [IP Pools List][]
 
 
-## Sending IPs List [/metrics/sending-ips]
+## Sending IPs List [/metrics/sending-ips{?match,limit}]
 
 + Model (application/json)
 
@@ -3768,15 +3769,16 @@ Returns a list of sending IPs that the Metrics API contains data on.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200
 
  [Sending IPs List][]
 
 
-## Campaigns List [/metrics/campaigns]
+## Campaigns List [/metrics/campaigns{?match,limit}]
 
 + Model (application/json)
 
@@ -3837,7 +3839,7 @@ Returns a list of campaigns that the Metrics API contains data on.
   [Campaigns List][]
 
 
-## Domains List [/metrics/domains]
+## Domains List [/metrics/domains{?match,limit}]
 
 + Model (application/json)
 
@@ -3947,8 +3949,9 @@ Returns a list of nodes that the Metrics API contains data on.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200
 
@@ -4005,8 +4008,9 @@ Returns a list of protocols that the Metrics API contains data on.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200
 
