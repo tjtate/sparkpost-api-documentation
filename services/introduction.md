@@ -1,4 +1,4 @@
-# SparkPost API v1
+# SparkPost API vTOM 
 There are two service types available:  [SparkPost](http://sparkpost.com/), our self-service product, and [SparkPost Elite](https://www.sparkpost.com/products/sparkpost-elite), a managed service with guaranteed burst rates and white-glove support. These services have shared and unique aspects, with those unique aspects indicated in our consolidated API documentation as follows:
 * Features specific to **SparkPost** are indicated as "SparkPost only".
 * Features specific to **SparkPost Elite** products are indicated by "SparkPost Elite only".
