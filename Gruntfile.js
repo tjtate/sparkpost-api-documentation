@@ -23,6 +23,7 @@ var matchdep = require('matchdep')
 module.exports = function(grunt) {
     // Dynamically load any preexisting grunt tasks/modules
     matchdep.filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+    var cheerio = require('cheerio');
 
     // Configure existing grunt tasks and create custom ones
     grunt.initConfig({
@@ -36,18 +37,23 @@ module.exports = function(grunt) {
                     }, {})
             },
         },
+
         dom_munger: {
             main: {
+                src: services.map(function(s) { var name = (s.split('.'))[0]; return 'aglio/'+ name +'.html'; })
                 options: {
                     callback: function($,file) {
-                        // absolutify the links
+                        // absolutify sub-section links
                         $('nav a[href^=#]').each(
                           function(idx, elt) {
-                            var jelt = $(elt);
-                            var html = (file.split('/'))[1];
-                            var href = html + jelt.attr('href');
-                            //grunt.log.writeln('rewriting to ['+ href +']');
-                            jelt.attr('href', href);
+                            var obj = $(elt);
+                            var filename = (file.split('/'))[1];
+                            var href = filename + obj.attr('href');
+                            // Rename #top anchor so auto-expansion works as expected.
+                            if (href == 'substitutions_reference.html#top') {
+                                href = filename + '#substitutions-reference-top';
+                            }
+                            obj.attr('href', href);
                           }
                         );
 
@@ -55,7 +61,7 @@ module.exports = function(grunt) {
                         name = (name.split('/'))[1];
                         // Fix nav name, it's Overview for some reason
                         if (name == 'substitutions_reference') {
-                            $('nav div.heading a[href="substitutions_reference.html#top"]').text('Substitutions Reference');
+                            $('nav div.heading a[href^="substitutions_reference.html#"]').text('Substitutions Reference');
                         }
                         var html = $('nav').html();
                         grunt.option('dom_munger.getnav.'+ name, html);
@@ -63,9 +69,9 @@ module.exports = function(grunt) {
                         return false;
                     }
                 },
-                src: services.map(function(s) { var name = (s.split('.'))[0]; return 'aglio/'+ name +'.html'; })
             }
         },
+
         copy: {
             main: {
                 src: services.map(function(s) { var name = (s.split('.'))[0]; return 'aglio/'+ name +'.html'; }),
@@ -86,20 +92,30 @@ module.exports = function(grunt) {
                             }
                             grunt.option('copy.allnav', allnav);
                         }
-                        //grunt.log.writeln('full nav loaded '+ allnav.length +' characters');
-                        // TODO: indicate current page somehow
+
+                        $ = cheerio.load(allnav);
                         var file = (srcpath.split('/'))[1];
-                        var selector = 'div.heading a[href="'+ file +'#top"]';
-                        var cheerio = require('cheerio');
-                        $ = cheerio.load(allnav)
-                        $(selector).parent('div.heading').attr('style', 'background-color:#f00;');
+                        var curNav = 'div.heading a[href^="'+ file +'#"]';
+                        var anchor = (($(curNav).attr('href')).split('#'))[1];
+
+                        // indicate current page w/in nav
+                        $(curNav).attr('style', 'font-weight:bold;background-color:#fa6423;color:#fff;');
                         allnav = $.html();
+
+                        // replace single-page nav with the global nav we built above
                         content = content.replace(/<nav[^>]*>.*?<\/nav>/, '<nav>'+ allnav +'</nav>');
+
+                        // auto-expand nav on page load
+                        var collapse = '    var nav = document.querySelectorAll(\'nav .resource-group .heading a[href$="#'+
+                            anchor +'"]\');\n    toggleCollapseNav({target: nav[0]});\n';
+                        content = content.replace(/(window\.onload\s*=\s*function\s*\(\)\s*\{[^}]+)\}/, '$1'+ collapse +'}');
+
                         return content;
                     }
                 }
             }
         },
+
         concat: {
             options: {
                 banner: 'FORMAT: X-1A' + grunt.util.linefeed +
@@ -111,6 +127,7 @@ module.exports = function(grunt) {
                 dest: 'apiary.apib'
             }
         },
+
         connect: {
             apiary: {
                 options: {
@@ -127,6 +144,7 @@ module.exports = function(grunt) {
                 }
             }
         },
+
         shell: {
             test: {
                 command : function(file) {
@@ -144,6 +162,7 @@ module.exports = function(grunt) {
                 }
             }
         },
+
         watch: {
             apiaryDocs: {
                 files: [ 'services/*.md', 'Gruntfile.js' ],
