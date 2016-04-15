@@ -89,12 +89,12 @@ Subaccounts are a way for service providers to provision and manage their custom
 
 The following APIs have subaccount support:
 
-* [Metrics API](#metrics-api) **(Note: Not available for Subaccount API keys)**
-* [Message Events API](#message-events-api)
-* [Sending Domains API](#sending-domains-api)
-* [Suppression List API](#suppression-list-api)
-* [SMTP API](#smtp-api)
-* [Transmissions API](#transmissions-api)
+* [Metrics API](https://developers.sparkpost.com/api/#/reference/metrics) **(Note: Not available for Subaccount API keys)**
+* [Message Events API](https://developers.sparkpost.com/api/#/reference/message-events)
+* [Sending Domains API](https://developers.sparkpost.com/api/#/reference/sending-domains)
+* [Suppression List API](https://developers.sparkpost.com/api/#/reference/suppression-list)
+* [SMTP API](https://developers.sparkpost.com/api/#/reference/smtp-api)
+* [Transmissions API](https://developers.sparkpost.com/api/#/reference/transmissions)
 
 **Note**: support coming soon for the following
 * [Tracking Domains API](#tracking-domains-api)
