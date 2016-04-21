@@ -6982,6 +6982,8 @@ These are the valid request options for verifying a Sending Domain:
 
 Create a sending domain by providing a **sending domain object** as the POST request body.
 
+To use a DKIM Signing Domain Identifier different to the Sending Domain, set the dkim.signing_domain field. ( **Note**: dkim.signing_domain is only available in SparkPost Elite. )
+
 **Note**: For some SparkPost Elite customers, Sending Domains will be set to verified automatically when they are created, and can be used to send messages immediately. For these customers, there is no need to use the "verify" endpoint to verify Sending Domains. To find out if this applies in your SparkPost Elite environment, please contact support <support@sparkpostelite.com>, or contact your TAM.
 
 + Request Create New Sending Domain with Auto-Generated DKIM Keypair (application/json)
@@ -8949,6 +8951,8 @@ necessary.
 * The provided email_rfc822 in MIME format will be rejected if SparkPost and SparkPost Elite cannot parse the contents into a MIME tree.
 
 ### Attachment Attributes
+
+**Note: we do not allow attachments that have been known to contain malicious content including, but not limited to, bat, doc, docx, exe, xls, xlsx, and zip files.**
 
 Attachments for a transmission are specified in the content.attachments JSON array where each JSON object in the array is described by the following fields:
 
