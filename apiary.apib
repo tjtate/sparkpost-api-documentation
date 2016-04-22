@@ -110,7 +110,7 @@ To use SparkPost as an SMTP relay you need to point your SMTP client (or local M
 * Authentication: AUTH LOGIN
 * User: SMTP_Injection
 * Password: Any API key with Send via SMTP permission
-* To send mail over an SMTP relay endpoint on behalf of a Subaccount, modify the your `User` to include the subaccount ID.
+* To inject mail to an SMTP relay endpoint on behalf of a subaccount, modify your SMTP injection username to include the subaccount ID.
   * For example, use `SMTP_Injection:X-MSYS-SUBACCOUNT=123` to send as a Subaccount, having an ID of 123.
   * The Master Account's API key is still used as the password when sending on behalf of a Subaccount.
   * When sending on behalf of a Subaccount, the Subaccount's Sending Domain must be used.
