@@ -106,6 +106,8 @@ module.exports = function(grunt) {
                         var anchor = (($(curNav).attr('href')).split('#'))[1];
 
                         // indicate current page w/in nav
+                        // FIXME: style info doesn't belong in Grunt, put this elsewhere,
+                        // perhaps a per-"service" external stylesheet
                         $(curNav).attr('style', 'font-weight:bold;background-color:#fa6423;color:#fff;');
                         allnav = $.html();
 
