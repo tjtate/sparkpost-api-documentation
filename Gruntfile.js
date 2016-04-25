@@ -20,6 +20,28 @@ var matchdep = require('matchdep')
         'smtp_api.md'
     ];
 
+function _md2html(obj, val, idx) {
+    var name = (val.split('.'))[0];
+    if (val === 'introduction.md') {
+        name = 'index';
+    }
+    obj['aglio/'+ name +'.html'] = [ 'services/'+ val ];
+    return obj;
+}
+
+function sectionName(md) {
+    var name = (md.split('.'))[0];
+    if (name === 'introduction') {
+        name = 'index';
+    }
+    return name
+}
+
+function htmlFile(md) {
+    var name = sectionName(md);
+    return 'aglio/'+ name +'.html';
+}
+
 module.exports = function(grunt) {
     // Dynamically load any preexisting grunt tasks/modules
     matchdep.filterDev('grunt-*').forEach(grunt.loadNpmTasks);
@@ -29,18 +51,13 @@ module.exports = function(grunt) {
     grunt.initConfig({
         aglio: {
             build: {
-                files:
-                    services.reduce(function(obj, val, idx) {
-                      var name = (val.split('.'))[0];
-                      obj['aglio/'+ name +'.html'] = [ 'services/'+ val ];
-                      return obj;
-                    }, {})
+                files: services.reduce(_md2html, {})
             },
         },
 
         dom_munger: {
             main: {
-                src: services.map(function(s) { var name = (s.split('.'))[0]; return 'aglio/'+ name +'.html'; }),
+                src: services.map(htmlFile),
                 options: {
                     callback: function($,file) {
                         // absolutify sub-section links
@@ -76,7 +93,7 @@ module.exports = function(grunt) {
 
         copy: {
             main: {
-                src: services.map(function(s) { var name = (s.split('.'))[0]; return 'aglio/'+ name +'.html'; }),
+                src: services.map(htmlFile),
                 dest: './',
                 options: {
                     process: function(content, srcpath) {
@@ -85,7 +102,7 @@ module.exports = function(grunt) {
                         if (allnav === undefined) {
                             // build and cache global nav if we haven't yet this run
                             allnav = '';
-                            var names = services.map(function(s) { return (s.split('.'))[0]; });
+                            var names = services.map(sectionName);
                             for (var idx in names) {
                                 var name = names[idx];
                                 var html = grunt.option('dom_munger.getnav.'+ name);
