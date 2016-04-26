@@ -8,7 +8,6 @@ var matchdep = require('matchdep')
         'inbound_domains_api.md',
         'metrics_api.md',
         'message_events_api.md',
-        'raw_log_api.md',
         'recipient_list_api.md',
         'relay_webhooks_api.md',
         'sending_domains_api.md',
@@ -21,67 +20,128 @@ var matchdep = require('matchdep')
         'smtp_api.md'
     ];
 
+function _md2html(obj, val, idx) {
+    var name = (val.split('.'))[0];
+    if (val === 'introduction.md') {
+        name = 'index';
+    }
+    obj['aglio/'+ name +'.html'] = [ 'services/'+ val ];
+    return obj;
+}
+
+function sectionName(md) {
+    var name = (md.split('.'))[0];
+    if (name === 'introduction') {
+        name = 'index';
+    }
+    return name
+}
+
+function htmlFile(md) {
+    var name = sectionName(md);
+    return 'aglio/'+ name +'.html';
+}
+
 module.exports = function(grunt) {
     // Dynamically load any preexisting grunt tasks/modules
     matchdep.filterDev('grunt-*').forEach(grunt.loadNpmTasks);
-
-    var navCache = {};
+    var cheerio = require('cheerio');
 
     // Configure existing grunt tasks and create custom ones
     grunt.initConfig({
         aglio: {
             build: {
-                files:
-                    services.reduce(function(obj, val, idx) {
-                      var name = (val.split('.'))[0];
-                      obj['aglio/'+ name +'.html'] = [ 'services/'+ val ];
-                      return obj;
-                    }, {})
+                files: services.reduce(_md2html, {})
             },
         },
+
         dom_munger: {
-            getnav: {
+            main: {
+                src: services.map(htmlFile),
                 options: {
                     callback: function($,file) {
-                        // absolutify the links
+                        // absolutify sub-section links
                         $('nav a[href^=#]').each(
                           function(idx, elt) {
-                            var jelt = $(elt);
-                            var html = (file.split('/'))[1];
-                            var href = html + jelt.attr('href');
-                            grunt.log.writeln('rewriting to ['+ href +']');
-                            jelt.attr('href', href);
+                            var obj = $(elt);
+                            var filename = (file.split('/'))[1];
+                            var href = filename + obj.attr('href');
+                            // Rename #top anchor so auto-expansion works as expected.
+                            if (href == 'substitutions_reference.html#top') {
+                                href = filename + '#substitutions-reference-top';
+                            }
+                            obj.attr('href', href);
                           }
-                        )
+                        );
 
                         var name = (file.split('.'))[0];
-                        if (!navCache[name]) {
-                            navCache[name] = $('nav').html();
-                            grunt.log.writeln('cached '+ navCache[name].length +' characters for '+ name)
+                        name = (name.split('/'))[1];
+                        // Fix nav name, it's Overview for some reason
+                        if (name == 'substitutions_reference') {
+                            $('nav div.heading a[href^="substitutions_reference.html#"]').text('Substitutions Reference');
                         }
+                        // save a copy of the fixed-up nav from the current page
+                        // we'll use this in `copy`, below
+                        grunt.option('dom_munger.getnav.'+ name, $('nav').html());
 
+                        // don't write out file changes, we'll do that in `copy` too
                         return false;
                     }
-                },
-                src: services.map(function(s) { var name = (s.split('.'))[0]; return 'aglio/'+ name +'.html'; })
-            },
-            setnav: {
-                options: {
-                    callback: function($,file) {
-                          var names = services.map(function(s) { return (s.split('.'))[0]; });
-                          for (var idx in names) {
-                            var name = names[idx]
-                            var nav = $.load(navCache[name])
-                            grunt.log.writeln('found '+ navCache[name].length +' characters for '+ name)
-                            grunt.log.writeln(file +'('+ name +') '+ ': '+ $('div.heading a', nav).text());
-                          }
-                          // TODO: add full nav to each page, marking current page with a style
-                          return false;
-                    }
-                },
-                src: services.map(function(s) { var name = (s.split('.'))[0]; return 'aglio/'+ name +'.html'; })
+                }
             }
         },
+
+        copy: {
+            main: {
+                src: services.map(htmlFile),
+                dest: './',
+                options: {
+                    process: function(content, srcpath) {
+                        // get the global nav we build and cache below
+                        var allnav = grunt.option('copy.allnav');
+                        if (allnav === undefined) {
+                            // build and cache global nav if we haven't yet this run
+                            allnav = '';
+                            var names = services.map(sectionName);
+                            for (var idx in names) {
+                                var name = names[idx];
+                                var html = grunt.option('dom_munger.getnav.'+ name);
+                                if (html === undefined) {
+                                    grunt.log.fatal('no nav html for ['+ name +'], run dom_munger before copy!');
+                                }
+                                allnav = allnav + html;
+                            }
+                            grunt.option('copy.allnav', allnav);
+                        }
+
+                        // get a DOM for our global nav
+                        $ = cheerio.load(allnav);
+                        var file = (srcpath.split('/'))[1];
+                        // css selector for current nav
+                        var curNav = 'div.heading a[href^="'+ file +'#"]';
+                        // anchor from current nav
+                        var anchor = (($(curNav).attr('href')).split('#'))[1];
+
+                        // indicate current page w/in nav
+                        // FIXME: style info doesn't belong in Grunt, put this elsewhere,
+                        // perhaps a per-"service" external stylesheet
+                        $(curNav).attr('style', 'font-weight:bold;background-color:#fa6423;color:#fff;');
+                        allnav = $.html();
+
+                        // replace single-page nav with the global nav we built above
+                        content = content.replace(/<nav[^>]*>.*?<\/nav>/, '<nav>'+ allnav +'</nav>');
+
+                        // auto-expand nav on page load
+                        var collapse = '    var nav = document.querySelectorAll(\'nav .resource-group .heading a[href$="#'+
+                            anchor +'"]\');\n    toggleCollapseNav({target: nav[0]});\n';
+                        content = content.replace(/(window\.onload\s*=\s*function\s*\(\)\s*\{[^}]+)\}/, '$1'+ collapse +'}');
+
+                        return content;
+                    }
+                }
+            }
+        },
+
         concat: {
             options: {
                 banner: 'FORMAT: X-1A' + grunt.util.linefeed +
@@ -93,6 +153,7 @@ module.exports = function(grunt) {
                 dest: 'apiary.apib'
             }
         },
+
         connect: {
             apiary: {
                 options: {
@@ -109,6 +170,7 @@ module.exports = function(grunt) {
                 }
             }
         },
+
         shell: {
             test: {
                 command : function(file) {
@@ -126,6 +188,7 @@ module.exports = function(grunt) {
                 }
             }
         },
+
         watch: {
             apiaryDocs: {
                 files: [ 'services/*.md', 'Gruntfile.js' ],
