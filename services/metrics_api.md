@@ -6,6 +6,10 @@ disposition, and campaign performance.  This reporting data is available in the 
 
 **Deprecation Notice:** The `bindings` and `binding_groups` query parmeters have been deprecated. Please use the `sending_ips` and `ip_pools` query parameters instead.
 
+## Data retention
+
+Metrics API data is retained for 6 months.
+
 ## Using Postman
 
 If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
