@@ -204,7 +204,7 @@ Perform a filtered search for message event data. The response is sorted by desc
 + Parameters
     + bounce_classes (optional, number, `1`) ... Comma-delimited list of bounce classification codes to search. (See [Bounce Classification Codes.](https://support.sparkpost.com/customer/portal/articles/1929896))
     + campaign_ids (optional, string, `Example Campaign Name`) ... Comma-delimited list of campaign ID's to search (i.e. campaign_id used during creation of a transmission).
-    + events (optional, list, `delivery, injection, bounce, delay, policy_rejection, out_of_band, open, click, generation_failure, generation_rejection, spam_complaint, list_unsubscribe, link_unsubscribe, relay_delivery, relay_injection, relay_permfail, relay_rejection, relay_tempfail`) ... Comma-delimited list of event types to search. Defaults to all event types.
+    + events (optional, list, `delivery, injection, bounce, delay, policy_rejection, out_of_band, open, click, generation_failure, generation_rejection, spam_complaint, list_unsubscribe, link_unsubscribe`) ... Comma-delimited list of event types to search. Defaults to all event types.
     + friendly_froms (optional, list, `sender@mail.example.com`) ... Comma-delimited list of friendly_froms to search.
     + from = `One hour ago` (optional, datetime, `2014-07-20T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM.
     + message_ids (optional, list, `0e0d94b7-9085-4e3c-ab30-e3f2cd9c273e`) ... Comma-delimited list of message ID's to search.
@@ -529,61 +529,6 @@ Perform a filtered search for message event data. The response is sorted by desc
         "timestamp": "2014-07-20T08:01-00:00",
         "transmission_id": "65832150921904138",
         "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36"
-      },
-      {
-        "type": "relay_injection",
-        "rcpt_to": "recipient@example.com",
-        "msg_size": "1337",
-        "routing_domain": "example.com",
-        "customer_id": "1",
-        "timestamp": "2014-07-20T08:01-00:00",
-        "msg_from": "sender@example.com",
-        "relay_id": "123-456-789"
-      },
-      {
-        "type": "relay_rejection",
-        "reason": "000 Example Remote MTA Bounce Message",
-        "rcpt_to": "recipient@example.com",
-        "error_code": "554",
-        "msg_from": "sender@example.com",
-        "remote_addr": "127.0.0.1",
-        "timestamp": "2014-07-20T08:01-00:00",
-        "customer_id": "1",
-        "relay_id": "123-456-789"
-      },
-      {
-        "type": "relay_delivery",
-        "routing_domain": "example.com",
-        "msg_from": "sender@example.com",
-        "queue_time": "12",
-        "customer_id": "1",
-        "timestamp": "2014-07-20T08:01-00:00",
-        "num_retries": "2",
-        "relay_id": "123-456-789"
-      },
-      {
-        "type": "relay_tempfail",
-        "routing_domain": "example.com",
-        "msg_from": "sender@example.com",
-        "queue_time": "12",
-        "customer_id": "1",
-        "timestamp": "2014-07-20T08:01-00:00",
-        "num_retries": "2",
-        "reason": "000 Example Remote MTA Bounce Message",
-        "error_code": "554",
-        "relay_id": "123-456-789"
-      },
-      {
-        "type": "relay_permfail",
-        "routing_domain": "example.com",
-        "msg_from": "sender@example.com",
-        "queue_time": "12",
-        "customer_id": "1",
-        "timestamp": "2014-07-20T08:01-00:00",
-        "num_retries": "2",
-        "reason": "000 Example Remote MTA Bounce Message",
-        "error_code": "554",
-        "relay_id": "123-456-789"
       }
     ],
     "total_count": 1000,
