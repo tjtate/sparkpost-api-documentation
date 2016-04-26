@@ -6928,7 +6928,7 @@ If you use [Postman](https://www.getpostman.com/) you can click the following bu
 |dkim | JSON object | JSON object in which DKIM key configuration is defined | no | For a full description, see the DKIM Attributes.|
 |generate_dkim | boolean | Whether to generate a DKIM keypair on creation | no | defaults to true |
 |dkim_key_length | number | Size, in bits, of the DKIM private key to be generated.  | no | This option only applies if generate_dkim is 'true'. Private key size defaults to 1024. Note that public keys for private keys longer than 1024 bits will be longer that 255 characters.  Because of this, the public key TXT record in DNS will need to contain multiple strings, see [RFC 7208, section 3.3](https://tools.ietf.org/html/rfc7208#section-3.3) for an example of how the SPF spec addresses this|
-|shared_with_subaccounts | boolean | Setting to true allows this domain to be used by subaccounts | no | Defaults to true, only available to domains belonging to a master account|
+|shared_with_subaccounts | boolean | Setting to true allows this domain to be used by subaccounts | no | Defaults to false, only available to domains belonging to a master account.|
 
 ### DKIM Attributes
 
