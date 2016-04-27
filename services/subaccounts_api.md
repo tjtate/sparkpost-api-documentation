@@ -129,7 +129,7 @@ Subaccounts are allowed to send mail using the SMTP protocol or Transmissions AP
           ]
         }
 
-## Subaccounts Entity [/subaccounts/:subaccountID]
+## Subaccounts Entity [/subaccounts/{subaccount_id}]
 
 ### List specific subaccount [GET]
 
@@ -144,7 +144,7 @@ Endpoint for retrieving information about a specific subaccount.
 
 + Parameters
 
-    + subaccountID (required, integer, `123`) ... Identifier of subaccount
+    + subaccount_id (required, integer, `123`) ... Identifier of subaccount
 
 + Response 200 (application/json)
 
