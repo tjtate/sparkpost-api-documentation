@@ -122,7 +122,7 @@ Subaccounts are allowed to send mail using the SMTP protocol or Transmissions AP
               "value": null
             },
             {
-              "message": "ip_pool parameter must not exceed 20 characters",
+              "message": "ip_pool must be 20 characters or less",
               "param": "ip_pool",
               "value": "an_ip_pool_name_that_is_too_long"
             },
@@ -204,9 +204,9 @@ Update an existing subaccount's information. You can update the following inform
         {
           "errors": [
             {
-              "message": "ip_pool parameter must not exceed 20 characters",
+              "message": "ip_pool must be 20 characters or less",
               "param": "ip_pool",
-              "value": "an ip pool name that is too long"
+              "value": "an_ip_pool_name_that_is_too_long"
             }
           ]
         }
