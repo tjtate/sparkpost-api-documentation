@@ -314,6 +314,29 @@ It is possible to indicate that a link in your content be used to generate an un
 
 More information can be found [here](https://support.sparkpost.com/customer/portal/articles/1929894-setting-up-unsubscribe-links).
 
+### Per-link Disabling of Click Tracking
+
+When click-tracking is enabled for a transmission individual links can be skipped using the **data-msys-clicktrack** custom attribute. For example:
+
+```
+<a href="http://www.example.com/" data-msys-clicktrack="false">Click</a>
+```
+
+
+### Custom Link Sub-Paths
+
+Is it possible to add a custom sub-path to a tracked URL using the **data-msys-sublink** custom attribute. For example:
+
+```
+<a href="http://www.example.com/" data-msys-sublink="custom_path">Click</a>
+```
+
+The tracked link generated will look like this:
+
+```
+http://<hostname>/f/custom_path/<encoded target url>
+```
+
 ### Substitutions Syntax Examples
 
 This section contains syntax examples based on the following JSON substitution data:
