@@ -304,6 +304,16 @@ If this attribute is not specified, the link name will fall back to **Raw URL**.
 
 The link name will be incorporated into the click-tracked link and will be tracked in engagement events.
 
+### Unsubscribe Links
+
+It is possible to indicate that a link in your content be used to generate an unsubscribe event from SparkPost. This is done with the **data-msys-unsubscribe** custom attribute. For example:
+
+```
+<a href="http://www.example.com/unsub_handler?id=1234" data-msys-unsubscribe="1">Unsubscribe</a>
+```
+
+More information can be found [here](https://support.sparkpost.com/customer/portal/articles/1929894-setting-up-unsubscribe-links).
+
 ### Substitutions Syntax Examples
 
 This section contains syntax examples based on the following JSON substitution data:
