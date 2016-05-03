@@ -9772,6 +9772,118 @@ The example response shows a query on _campaign_id=thanksgiving_, with **templat
         }
         ```
 
+# Group Account API
+
+## Account [/account{?expand}]
+
+## Get your account information [GET]
+
+Get your SparkPost account information, including subscription status and quota usage.
+
+#### Account Properties
+
+| Property   | Type    | Description | Notes |
+|------------|---------|-------------|-------|
+| company_name | string | Account holder company name | |
+| country_code | string | Account holder 2-letter country code | |
+| anniversary_date | string | ISO date of billing anniversary | |
+| created | string | ISO date account was created | |
+| updated | string | ISO date account details were last updated | |
+| status | string | account status - `active` | |
+| status_updated | string | ISO date `status` field was last updated | |
+| subscription | object | current subscription details | see *Subscription Properties* section) |
+| pending_subscription | object | pending subscription details | see *Subscription Properties* section) |
+| options | object | account-level tracking settings | (see *Options Properties* section) |
+| usage | object | account quota usage details | (see *Usage Properties* section) |
+
+#### Subscription Properties
+
+| Property   | Type    | Description |
+|------------|---------|-------------|
+| code       | string  | Code of the plan |
+| name       | string  | Name of the plan |
+| effective_date | string | ISO date of when this subscription has been or will be effective |
+| self_serve | boolean | `true` if the subscription can be managed through the UI |
+
+#### Options Properties
+
+| Property   | Type    | Description |
+|------------|---------|-------------|
+| smtp_tracking_default | boolean  | account-level default for SMTP engagement tracking |
+| rest_tracking_default | boolean  | account-level default for REST API engagement tracking |
+
+#### Usage Properties
+
+| Property   | Type    | Description | Notes |
+|------------|---------|-------------|-------|
+| timestamp | string | ISO date usage data was retrieved | |
+| day | object | daily usage report | See *Daily/Monthly Usage Properties* section |
+| month | object | monthly usage report | See *Daily/Monthly Usage Properties* section |
+
+#### Daily/Monthly Usage Properties
+
+| Property   | Type    | Description |
+|------------|---------|-------------|
+| used | number | total messages sent in this period |
+| limit | number | total allowance for this period |
+| start | string | ISO date when this period started |
+| end | string | ISO date when this period ends |
+
++ Request
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Parameters
+
+  + expand (optional, string) ... The parts of the results to expand. Multiple parts can be specified in a comma separated list. Valid value is currently `usage` only. By default the `usage` results are not expanded.
+
+
++ Response 200 (application/json)
+
+        {
+            "results" : {
+                "company_name": "Example Inc",
+                "country_code": "US",
+                "anniversary_date": "2015-01-11T08:00:00.000Z",
+                "created": "2015-01-11T08:00:00.000Z",
+                "updated": "2015-02-11T08:00:00.000Z",
+                "status": "active",
+                "status_updated": "2015-02-10T08:00:00.000Z",
+                "subscription": {
+                    "code": "bronze1",
+                    "name": "Bronze",
+                    "plan_volume": 10000,
+                    "self_serve": "true"
+                },
+                "pending_subscription": {
+                    "code": "gold1",
+                    "name": "Gold",
+                    "effective_date": "2015-04-11T00:00:00.000Z"
+                },
+                "options": {
+                    "smtp_tracking_default": false
+                },
+                "usage": {
+                    "timestamp": "2016-03-17T05:19:00.932Z",
+                    "day": {
+                        "used": 22003,
+                        "limit": 50000,
+                        "start": "2016-03-16T05:30:00.932Z",
+                        "end": "2016-03-17T05:30:00.932Z"
+                    },
+                    "month": {
+                        "used": 122596,
+                        "limit": 1500000,
+                        "start": "2016-03-11T08:00:00.000Z",
+                        "end": "2016-04-11T08:00:00.000Z"
+                    }
+                }
+            }
+        }
+
 # Group Webhooks
 
 The Webhooks API provides the means to create, review, update, and delete webhooks, which enables you to
