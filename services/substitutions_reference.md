@@ -319,13 +319,13 @@ More information can be found [here](https://support.sparkpost.com/customer/port
 When click-tracking is enabled for a transmission individual links can be skipped using the **data-msys-clicktrack** custom attribute. For example:
 
 ```
-<a href="http://www.example.com/" data-msys-clicktrack="false">Click</a>
+<a href="http://www.example.com/" data-msys-clicktrack="0">Click</a>
 ```
 
 
 ### Custom Link Sub-Paths
 
-Is it possible to add a custom sub-path to a tracked URL using the **data-msys-sublink** custom attribute. For example:
+It is possible to add a custom sub-path to a tracked URL using the **data-msys-sublink** custom attribute. For example:
 
 ```
 <a href="http://www.example.com/" data-msys-sublink="custom_path">Click</a>
@@ -336,6 +336,8 @@ The tracked link generated will look like this:
 ```
 http://<hostname>/f/custom_path/<encoded target url>
 ```
+
+An example of how to use **data-msys-sublink** to support iOS Universal Links in SparkPost Elite can be found [here](https://support.sparkpostelite.com/customer/en/portal/articles/2231112-ios9-universal-links-support?b_id=8730#Creating%20Universal%20Links%20in%20Templates%20&%20Sub-Pathing).
 
 ### Substitutions Syntax Examples
 
