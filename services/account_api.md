@@ -16,7 +16,6 @@ Get your SparkPost account information, including subscription status and quota 
 | created | string | ISO date account was created | |
 | updated | string | ISO date account details were last updated | |
 | status | string | account status - `active` | |
-| status_updated | string | ISO date `status` field was last updated | |
 | subscription | object | current subscription details | see *Subscription Properties* section) |
 | pending_subscription | object | pending subscription details | see *Subscription Properties* section) |
 | options | object | account-level tracking settings | (see *Options Properties* section) |
@@ -77,7 +76,6 @@ Get your SparkPost account information, including subscription status and quota 
                 "created": "2015-01-11T08:00:00.000Z",
                 "updated": "2015-02-11T08:00:00.000Z",
                 "status": "active",
-                "status_updated": "2015-02-10T08:00:00.000Z",
                 "subscription": {
                     "code": "bronze1",
                     "name": "Bronze",
