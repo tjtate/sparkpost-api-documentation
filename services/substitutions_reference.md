@@ -339,6 +339,14 @@ http://<hostname>/f/custom_path/<encoded target url>
 
 An example of how to use **data-msys-sublink** to support iOS Universal Links in SparkPost Elite can be found [here](https://support.sparkpostelite.com/customer/en/portal/articles/2231112-ios9-universal-links-support?b_id=8730#Creating%20Universal%20Links%20in%20Templates%20&%20Sub-Pathing).
 
+### Link Attributes in Text Parts
+
+The sections above describing the **data-msys-*** link attributes all show HTML `<a>` tag examples. However it is also possible to specify all of the same custom attributes for links in the `text` part of a message using a double-square-bracket notation. For example:
+
+```
+http://www.example.com[[data-msys-clicktrack="0"]]
+```
+
 ### Substitutions Syntax Examples
 
 This section contains syntax examples based on the following JSON substitution data:
