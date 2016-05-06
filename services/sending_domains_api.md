@@ -221,7 +221,8 @@ List an overview of all sending domains in the system.
                         "dkim_status": "valid",
                         "compliance_status": "valid",
                         "postmaster_at_status": "valid"
-                    }
+                    },
+                    "shared_with_subaccounts": false
                 },
                 {
                     "domain": "example2.com",
@@ -232,7 +233,8 @@ List an overview of all sending domains in the system.
                         "dkim_status": "pending",
                         "compliance_status": "pending",
                         "postmaster_at_status": "pending"
-                    }
+                    },
+                    "shared_with_subaccounts": false
                 }
             ]
         }
@@ -272,7 +274,8 @@ Retrieve a sending domain by specifying its domain name in the URI path.  The re
                     "headers": "from:to:subject:date",
                     "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
                     "selector": "hello_selector"
-                }
+                },
+                "shared_with_subaccounts": false
             }
         }
         ```
