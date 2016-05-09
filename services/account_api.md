@@ -1,6 +1,6 @@
 # Group Account API
 
-## Account [/account{?expand}]
+## Account [/account{?include}]
 
 ## Get your account information [GET]
 
@@ -19,7 +19,7 @@ Get your SparkPost account information, including subscription status and quota 
 | subscription | object | current subscription details | see *Subscription Properties* section) |
 | pending_subscription | object | pending subscription details | see *Subscription Properties* section) |
 | options | object | account-level tracking settings | (see *Options Properties* section) |
-| usage | object | account quota usage details | (see *Usage Properties* section) |
+| usage | object | account quota usage details | Specify 'include=usage' in query string to include usage info (see *Usage Properties* section) |
 
 #### Subscription Properties
 
@@ -63,7 +63,7 @@ Get your SparkPost account information, including subscription status and quota 
 
 + Parameters
 
-  + expand (optional, string) ... The parts of the results to expand. Multiple parts can be specified in a comma separated list. Valid value is currently `usage` only. By default the `usage` results are not expanded.
+  + include (optional, `usage`, string) ... Additional parts of account details to include. Multiple parts can be specified in a comma separated list. The only valid value is currently `usage` and by default the `usage` details are not included.
 
 
 + Response 200 (application/json)
