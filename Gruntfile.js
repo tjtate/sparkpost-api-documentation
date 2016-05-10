@@ -5,6 +5,7 @@ var matchdep = require('matchdep')
     , services = [
         'introduction.md',
         'substitutions_reference.md',
+        'account_api.md',
         'inbound_domains_api.md',
         'metrics_api.md',
         'message_events_api.md',
@@ -16,7 +17,6 @@ var matchdep = require('matchdep')
         'templates_api.md',
         'tracking_domains_api.md',
         'transmissions_api.md',
-        'account_api.md',
         'webhooks_api.md',
         'smtp_api.md'
     ];
