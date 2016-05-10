@@ -191,10 +191,10 @@ In addition to the list entry attributes, the response body also includes "creat
                 "recipient" : "rcpt_1@example.com",
                 "transactional" : false,
                 "non_transactional" : true,
-                "source" : "Manually Added"
+                "source" : "Manually Added",
                 "description" : "User requested to not receive any non-transactional emails.",
-                "created" : "2015-01-01T12:00:00.000Z'
-                "updated" : "2015-01-01T12:00:00.000Z'
+                "created" : "2015-01-01T12:00:00.000Z",
+                "updated" : "2015-01-01T12:00:00.000Z"
               }
             ]
         }
