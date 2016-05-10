@@ -40,6 +40,7 @@ If you use [Postman](https://www.getpostman.com/) you can click the following bu
 |transactional|boolean|Whether message is transactional or non-transactional for unsubscribe and suppression purposes | no |If not specified, the setting at template level is used, or defaults to false. |
 |sandbox|boolean|Whether or not to use the sandbox sending domain ( **Note:** SparkPost only )| no |Defaults to false. |
 |skip_suppression|boolean|Whether or not to ignore customer suppression rules, for this transmission only.  Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no - Defaults to false |  Unlike most other options, this flag is omitted on a GET transmission response unless the flag's value is true. |
+| ip_pool | string | The name of a dedicated IP pool associated with your account.  If this field is not provided, the account's default dedicated IP pool is used (if such a pool exists).  To explicitly bypass the account's default dedicated IP pool and instead fallback to the shared pool, specify a value of "sp_shared".  Please note that this option does not apply to subaccounts. | no | For more information on dedicated IPs, see the [Support Center](https://support.sparkpost.com/customer/en/portal/articles/2002977-dedicated-ip-addresses)
 |inline_css|boolean|Whether or not to perform CSS inlining in HTML content | no - Defaults to false | |
 
 ### Inline Content Attributes
@@ -82,6 +83,8 @@ necessary.
 
 ### Attachment Attributes
 
+**Note: we do not allow attachments that have been known to contain malicious content including, but not limited to, bat, doc, docx, exe, xls, xlsx, and zip files.**
+
 Attachments for a transmission are specified in the content.attachments JSON array where each JSON object in the array is described by the following fields:
 
 | Field         | Type     | Description                           | Required   | Notes   |
@@ -118,8 +121,7 @@ The following recipients attribute is used when specifying a stored recipient li
 |list_id | string  | Identifier of the stored recipient list to use | yes | Specify this field when using a stored recipient list. |
 
 ### Scheduled Transmissions
-Use the _options.start_time_ attribute to delay generation of messages.  The scheduled time must be in the future and cannot be greater than 1 year from the time of submission.  If the scheduled time does not fall in that range, the transmission is not accepted.
-
+Use the _options.start_time_ attribute to delay generation of messages.  The scheduled time cannot be greater than 1 year from the time of submission.  If the scheduled time does not pass validation, the transmission is not accepted.  Transmissions with a scheduled time in the past _are_ accepted and undergo immediate generation.
 
 ## Create [/transmissions{?num_rcpt_errors}]
 
@@ -715,7 +717,7 @@ Once message generation has been initiated, all messages in the transmission wil
 
 
 
-## Retrieve [/transmissions/{id}]
+## Retrieve and Delete [/transmissions/{id}]
 
 ### Retrieve a Transmission [GET]
 
@@ -787,6 +789,97 @@ The response for a transmission using an inline template will include "template_
             }
 
 
+### Delete a Transmission [DELETE]
+
+Delete a transmission by specifying its ID in the URI path.
+
+Only transmissions which are scheduled for future generation may be deleted.
+
+Scheduled transmissions cannot be deleted if the transmission is within 10 minutes of the scheduled generation time.
+
+
++ Parameters
+    + id (required, string, `11714265276872`) ... ID of the transmission
+
++ Request
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Response 200 (application/json)
+
+    +  Body
+
+        ```
+        {
+        }
+        ```
+
++ Response 404 (application/json)
+
+  + Body
+
+          ```
+          {
+            "errors": [
+              {
+                "message": "resource not found",
+                "code": "1600",
+                "description": "Resource not found:transmission id 999999999"
+              }
+            ]
+          }
+          ```
+
++ Response 409 (application/json)
+
+  + Body
+
+          ```
+          {
+            "errors": [
+              {
+                "message": "too close to generation time to delete transmission",
+                "code": "2003",
+                "description": "Deletion time window (660 seconds) doesn't permit transmission deletion"
+              }
+            ]
+          }
+          ```
+
++ Response 409 (application/json)
+
+  + Body
+
+          ```
+          {
+            "errors": [
+              {
+                "message": "transmission database record is in an invalid state for deletion",
+                "code": "2006",
+                "description": "Unable to delete a transmission that is in progress (state=Generating)"
+              }
+            ]
+          }
+          ```
+
++ Response 409 (application/json)
+
+  + Body
+
+          ```
+          {
+            "errors": [
+              {
+                "message": "transmission database record is in an invalid state for deletion",
+                "code": "2006",
+                "description": "Unable to delete a transmission that has completed (state=Success)"
+              }
+            ]
+          }
+          ```
 ## List [/transmissions{?campaign_id,template_id}]
 
 ### List all Transmissions [GET]
@@ -853,83 +946,3 @@ The example response shows a query on _campaign_id=thanksgiving_, with **templat
           ]
         }
         ```
-
-## Delete [/transmissions/{id}]
-
-### Delete a Transmission [DELETE]
-
-Delete a transmission by specifying its ID in the URI path.
-
-Only transmissions which are scheduled for future generation may be deleted.
-
-Scheduled transmissions cannot be deleted if the transmission is within 10 minutes of the scheduled generation time.
-
-
-+ Parameters
-    + id (required, string, `11714265276872`) ... ID of the transmission
-
-+ Request
-
-    + Headers
-
-            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-            Accept: application/json
-
-+ Response 200 (application/json)
-
-    +  Body
-
-        {
-        }
-
-+ Response 404 (application/json)
-
-  + Body
-          {
-            "errors": [
-              {
-                "message": "resource not found",
-                "code": "1600",
-                "description": "Resource not found:transmission id 999999999"
-              }
-            ]
-          }
-
-+ Response 409 (application/json)
-
-  + Body
-          {
-            "errors": [
-              {
-                "message": "too close to generation time to delete transmission",
-                "code": "2003",
-                "description": "Deletion time window (660 seconds) doesn't permit transmission deletion"
-              }
-            ]
-          }
-
-+ Response 409 (application/json)
-
-  + Body
-          {
-            "errors": [
-              {
-                "message": "transmission database record is in an invalid state for deletion",
-                "code": "2006",
-                "description": "Unable to delete a transmission that is in progress (state=Generating)"
-              }
-            ]
-          }
-
-+ Response 409 (application/json)
-
-  + Body
-          {
-            "errors": [
-              {
-                "message": "transmission database record is in an invalid state for deletion",
-                "code": "2006",
-                "description": "Unable to delete a transmission that has completed (state=Success)"
-              }
-            ]
-          }

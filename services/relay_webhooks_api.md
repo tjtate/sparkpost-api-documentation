@@ -65,7 +65,7 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
 
   + Headers
 
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
 
@@ -95,6 +95,7 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
 
   + Body
 
+          ```
           { "errors": [
               {
                 "message": "invalid params",
@@ -103,11 +104,13 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
               }
             ]
           }
+          ```
 
 + Response 401 (application/json)
 
   + Body
 
+          ```
           { "errors": [
               {
                 "message": "Unauthorized Tenant",
@@ -115,11 +118,13 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
               }
             ]
           }
+          ```
 
 + Response 409 (application/json)
 
   + Body
 
+          ```
           { "errors": [
               {
                 "message": "resource conflict",
@@ -128,11 +133,13 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
               }
             ]
           }
+          ```
 
 + Response 422 (application/json)
 
   + Body
 
+          ```
             {
               "errors" : [
                 {
@@ -142,11 +149,13 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
                 }
               ]
             }
+          ```
 
 + Response 422 (application/json)
 
   + Body
 
+          ```
             {
               "errors" : [
                 {
@@ -156,6 +165,7 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
                 }
               ]
             }
+          ```
 
 ### List all Relay Webhooks [GET]
 
@@ -164,12 +174,15 @@ List all your relay webhooks.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200 (application/json)
 
   + Body
+
+        ```
          { "results": [
               {
                 "id": "12013026328707075",
@@ -184,10 +197,13 @@ List all your relay webhooks.
               }
             ]
           }
+        ```
 
 + Response 401 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -196,6 +212,7 @@ List all your relay webhooks.
               }
             ]
           }
+        ```
 
 ## Retrieve, Update, and Delete [/relay-webhooks/{webhook_id}]
 
@@ -209,12 +226,15 @@ Retrieve a specific relay webhook by specifying the webhook ID in the URI path.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200 (application/json)
 
   + Body
+
+        ```
          {
             "results": {
               "name": "Replies Webhook",
@@ -226,10 +246,13 @@ Retrieve a specific relay webhook by specifying the webhook ID in the URI path.
               }
             }
          }
+        ```
 
 + Response 401 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -238,10 +261,13 @@ Retrieve a specific relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 404 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -250,6 +276,7 @@ Retrieve a specific relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 ### Update a Relay Webhook [PUT]
 
@@ -261,29 +288,36 @@ Update a relay webhook by specifying the webhook ID in the URI path.
 + Request (application/json)
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
 
+        ```
             {
               "name": "New Replies Webhook",
               "target": "https://webhook.customer.example/replies"
             }
+        ```
 
 + Response 200 (application/json)
 
   + Body
 
+        ```
             {
               "results":
                 {
                   "id": "12013026328707075"
                 }
             }
+        ```
 
 + Response 400 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -293,10 +327,13 @@ Update a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 401 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -305,10 +342,13 @@ Update a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 404 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -318,10 +358,13 @@ Update a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 404 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -330,11 +373,13 @@ Update a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 409 (application/json)
 
   + Body
 
+        ```
           { "errors": [
               {
                 "message": "resource conflict",
@@ -343,11 +388,13 @@ Update a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 422 (application/json)
 
   + Body
 
+        ```
             {
               "errors" : [
                 {
@@ -357,6 +404,7 @@ Update a relay webhook by specifying the webhook ID in the URI path.
                 }
               ]
             }
+        ```
 
 ### Delete a Relay Webhook [DELETE]
 
@@ -368,13 +416,16 @@ Delete a relay webhook by specifying the webhook ID in the URI path.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
 + Response 200
 
 + Response 401 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -383,10 +434,13 @@ Delete a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 404 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -396,10 +450,13 @@ Delete a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 404 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -408,3 +465,4 @@ Delete a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```

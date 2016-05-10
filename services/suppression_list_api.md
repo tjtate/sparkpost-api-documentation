@@ -37,6 +37,8 @@ If the recipient entry was added to the list by Compliance, it cannot be updated
 
 If an email address is duplicated in a single request, only the first instance will be processed.
 
+*Note:* `email`, which is an alias of `recipient`, attribute is supported but deprecated.
+
 + Request (application/json)
 
     + Headers
@@ -46,16 +48,16 @@ If an email address is duplicated in a single request, only the first instance w
 
         ```
         {
-        "recipients": [
-          {
-            "email": "rcpt_1@example.com",
-            "transactional": true,
-            "description": "User requested to not receive any transactional emails."
-          },
-          {
-            "email": "rcpt_2@example.com",
-            "non_transactional": true
-              }
+            "recipients": [
+                {
+                    "recipient": "rcpt_1@example.com",
+                    "transactional": true,
+                    "description": "User requested to not receive any transactional emails."
+                },
+                {
+                    "recipient": "rcpt_2@example.com",
+                    "non_transactional": true
+                }
             ]
         }
         ```
@@ -103,7 +105,7 @@ Perform a filtered search for entries in your customer-specific exclusion list.
     + to = `now` (optional, datetime, `2014-07-20T09:00:00%2B0000`) ... Datetime the entries were last updated, in the format of YYYY-MM-DDTHH:mm:ssZ
     + from (optional, datetime, `2014-07-20T09:00:00%2B0000`) ... Datetime the entries were last updated, in the format YYYY-MM-DDTHH:mm:ssZ
     + types (optional, list) ... Types of entries to include in the search, i.e. entries with "transactional" and/or "non_transactional" keys set to true
-    + sources (optional, list) ... Source(s) of the entries to include in the search, i.e. entries that were added by this source
+    + sources (optional, list) ... Sources of the entries to include in the search, i.e. entries that were added by this source
     + limit (optional, int, `5`) ... Maximum number of results to return.  Must be between 1 and 100000. Default value is 100000.
 
 + Request
@@ -189,10 +191,10 @@ In addition to the list entry attributes, the response body also includes "creat
                 "recipient" : "rcpt_1@example.com",
                 "transactional" : false,
                 "non_transactional" : true,
-                "source" : "Manually Added"
+                "source" : "Manually Added",
                 "description" : "User requested to not receive any non-transactional emails.",
-                "created" : "2015-01-01T12:00:00.000Z'
-                "updated" : "2015-01-01T12:00:00.000Z'
+                "created" : "2015-01-01T12:00:00.000Z",
+                "updated" : "2015-01-01T12:00:00.000Z"
               }
             ]
         }

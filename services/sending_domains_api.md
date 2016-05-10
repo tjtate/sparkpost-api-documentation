@@ -14,9 +14,12 @@ If you use [Postman](https://www.getpostman.com/) you can click the following bu
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
 |domain    | string | Name of the sending domain | yes |The domain name will be used as the "From:" header address in the email.|
-|tracking_domain | string | Associated tracking domain | no | example: "click.example1.com". Note that currently we don't allow tracking domains to be linked to sending domains belonging to subaccounts.|
+|tracking_domain | string | Associated tracking domain | no | example: "click.example1.com". **Note**: linking tracking domains to sending domains belonging to subaccounts is coming soon.|
 |status | JSON object | JSON object containing status details, including whether this domain's ownership has been verified  | no | Read only. For a full description, see the Status Attributes.|
 |dkim | JSON object | JSON object in which DKIM key configuration is defined | no | For a full description, see the DKIM Attributes.|
+|generate_dkim | boolean | Whether to generate a DKIM keypair on creation | no | defaults to true |
+|dkim_key_length | number | Size, in bits, of the DKIM private key to be generated.  | no | This option only applies if generate_dkim is 'true'. Private key size defaults to 1024. Note that public keys for private keys longer than 1024 bits will be longer that 255 characters.  Because of this, the public key TXT record in DNS will need to contain multiple strings, see [RFC 7208, section 3.3](https://tools.ietf.org/html/rfc7208#section-3.3) for an example of how the SPF spec addresses this|
+|shared_with_subaccounts | boolean | Setting to true allows this domain to be used by subaccounts | no | Defaults to false, only available to domains belonging to a master account.|
 
 ### DKIM Attributes
 
@@ -71,9 +74,65 @@ These are the valid request options for verifying a Sending Domain:
 
 Create a sending domain by providing a **sending domain object** as the POST request body.
 
+To use a DKIM Signing Domain Identifier different to the Sending Domain, set the dkim.signing_domain field. ( **Note**: dkim.signing_domain is only available in SparkPost Elite. )
+
 **Note**: For some SparkPost Elite customers, Sending Domains will be set to verified automatically when they are created, and can be used to send messages immediately. For these customers, there is no need to use the "verify" endpoint to verify Sending Domains. To find out if this applies in your SparkPost Elite environment, please contact support <support@sparkpostelite.com>, or contact your TAM.
 
-+ Request (application/json)
++ Request Create New Sending Domain with Auto-Generated DKIM Keypair (application/json)
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+    + Body
+
+        ```
+        {
+            "domain": "example1.com"
+        }
+        ```
+
++ Response 200 (application/json; charset=utf-8)
+
+        ```
+        {
+          "results": {
+            "message": "Successfully Created domain.",
+            "domain": "example1.com"
+            "dkim": {
+              "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
+              "selector": "scph0316",
+              "signing_domain": "",
+              "headers": "from:to:subject:date"
+            }
+          }
+        }
+
++ Request Create Sending Domain without DKIM Keypair
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+    + Body
+
+        ```
+        {
+            "domain": "example1.com",
+            "generate_dkim": false
+        }
+        ```
+
++ Response 200 (application/json; charset=utf-8)
+
+        {
+          "results": {
+            "message": "Successfully Created domain.",
+            "domain": "example1.com"
+          }
+        }
+
++ Request Provide Pre-Generated DKIM Keypair (application/json)
 
     + Headers
 
@@ -87,7 +146,7 @@ Create a sending domain by providing a **sending domain object** as the POST req
             "tracking_domain": "click.example1.com",
             "dkim": {  "private": "MIICXgIBAAKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQABAoGBAITb3BCRPBi5lGhHdn+1RgC7cjUQEbSb4eFHm+ULRwQ0UIPWHwiVWtptZ09usHq989fKp1g/PfcNzm8c78uTS6gCxfECweFCRK6EdO6cCCr1cfWvmBdSjzYhODUdQeyWZi2ozqd0FhGWoV4VHseh4iLj36DzleTLtOZj3FhAo1WJAkEA68T+KkGeDyWwvttYtuSiQCCTrXYAWTQnkIUxduCp7Ap6tVeIDn3TaXTj74UbEgaNgLhjG4bX//fdeDW6PaK9YwJBAM6xJmwHLPMgwNVjiz3u/6fhY3kaZTWcxtMkXCjh1QE82KzDwqyrCg7EFjTtFysSHCAZxXZMcivGl4TZLHnydJUCQQCx16+M+mAatuiCnvxlQUMuMiSTNK6Amzm45u9v53nlZeY3weYMYFdHdfe1pebMiwrT7MI9clKebz6svYJVmdtXAkApDAc8VuR3WB7TgdRKNWdyGJGfoD1PO1ZE4iinOcoKV+IT1UCY99Kkgg6C7j62n/8T5OpRBvd5eBPpHxP1F9BNAkEA5Nf2VO9lcTetksHdIeKK+F7sio6UZn0Rv7iUo3ALrN1D1cGfWIh2dj3ko1iSreyNVSwGW0ePP27qDmU+u6/Y1g==",
                 "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
-                "selector": "brisbane",
+                "selector": "scph0316",
                 "headers": "from:to:subject:date"
             }
         }
@@ -96,14 +155,21 @@ Create a sending domain by providing a **sending domain object** as the POST req
 + Response 200 (application/json; charset=utf-8)
 
         {
-            "results": {
-                "message": "Successfully Created domain.",
-                "domain": "example1.com"
+          "results": {
+            "message": "Successfully Created domain.",
+            "domain": "example1.com"
+            "dkim": {
+              "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
+              "selector": "scph0316",
+              "signing_domain": "",
+              "headers": "from:to:subject:date"
             }
+          }
         }
 
 + Response 400 (application/json)
 
+      ```
       {
         "errors": [
           {
@@ -113,9 +179,11 @@ Create a sending domain by providing a **sending domain object** as the POST req
           }
         ]
       }
+      ```
 
 + Response 422 (application/json)
 
+    ```
     {
       "errors": [
         {
@@ -125,6 +193,7 @@ Create a sending domain by providing a **sending domain object** as the POST req
         }
       ]
     }
+    ```
 
 ### List all Sending Domains [GET]
 
@@ -139,6 +208,7 @@ List an overview of all sending domains in the system.
 
 + Response 200 (application/json; charset=utf-8)
 
+        ```
         {
             "results": [
                 {
@@ -152,7 +222,7 @@ List an overview of all sending domains in the system.
                         "compliance_status": "valid",
                         "postmaster_at_status": "valid"
                     },
-                    "subaccount_id": 0
+                    "shared_with_subaccounts": false
                 },
                 {
                     "domain": "example2.com",
@@ -164,10 +234,11 @@ List an overview of all sending domains in the system.
                         "compliance_status": "pending",
                         "postmaster_at_status": "pending"
                     },
-                    "subaccount_id": 12
+                    "shared_with_subaccounts": false
                 }
             ]
         }
+        ```
 
 ## Retrieve, Update, and Delete [/sending-domains/{domain}]
 
@@ -187,6 +258,7 @@ Retrieve a sending domain by specifying its domain name in the URI path.  The re
 
 + Response 200 (application/json; charset=utf-8)
 
+        ```
         {
             "results": {
                 "tracking_domain": "click.example1.com",
@@ -203,9 +275,10 @@ Retrieve a sending domain by specifying its domain name in the URI path.  The re
                     "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
                     "selector": "hello_selector"
                 },
-                "subaccount_id": 0
+                "shared_with_subaccounts": false
             }
         }
+        ```
 
 
 ### Update a Sending Domain [PUT]
@@ -251,6 +324,7 @@ To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty
 
 + Response 400 (application/json)
 
+      ```
       {
         "errors": [
           {
@@ -260,9 +334,11 @@ To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty
           }
         ]
       }
+      ```
 
 + Response 422 (application/json)
 
+    ```
     {
       "errors": [
         {
@@ -272,6 +348,7 @@ To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty
         }
       ]
     }
+    ```
 
 ### Delete a Sending Domain [DELETE]
 
@@ -333,6 +410,7 @@ The domain's "status" object is returned on success.
 
 + Response 200 (application/json; charset=utf-8)
 
+        ```
         {
             "results": {
                 "ownership_verified": true,
@@ -347,6 +425,7 @@ The domain's "status" object is returned on success.
                 "postmaster_at_status": "unverified"
             }
         }
+        ```
 
 + Request Initiate postmaster@ email (application/json)
 
@@ -363,6 +442,7 @@ The domain's "status" object is returned on success.
 
 + Response 200 (application/json; charset=utf-8)
 
+        ```
         {
             "results": {
                 "ownership_verified": false,
@@ -373,6 +453,7 @@ The domain's "status" object is returned on success.
                 "postmaster_at_status": "unverified"
             }
         }
+        ```
 
 + Request Verify postmaster@ correct token (application/json)
 
@@ -389,6 +470,7 @@ The domain's "status" object is returned on success.
 
 + Response 200 (application/json; charset=utf-8)
 
+        ```
         {
             "results": {
                 "ownership_verified": true,
@@ -399,6 +481,7 @@ The domain's "status" object is returned on success.
                 "postmaster_at_status": "valid"
             }
         }
+        ```
 
 + Request Verify abuse@ incorrect token (application/json)
 
@@ -415,6 +498,7 @@ The domain's "status" object is returned on success.
 
 + Response 200 (application/json; charset=utf-8)
 
+        ```
         {
             "results": {
                 "ownership_verified": false,
@@ -425,6 +509,7 @@ The domain's "status" object is returned on success.
                 "postmaster_at_status": "unverified"
             }
         }
+        ```
 
 + Request Unable to process abuse@ request (application/json)
 
@@ -441,6 +526,7 @@ The domain's "status" object is returned on success.
 
 + Response 400 (application/json; charset=utf-8)
 
+        ```
         {
            "errors": [
               {
@@ -450,3 +536,4 @@ The domain's "status" object is returned on success.
               }
            ]
         }
+        ```

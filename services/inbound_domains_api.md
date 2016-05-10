@@ -227,8 +227,6 @@ Retrieve an inbound domain by specifying its domain name in the URI path.
             }
 
 
-## Delete [/inbound-domains/{domain}]
-
 ### Delete an Inbound Domain [DELETE]
 
 Delete an inbound domain by specifying its domain name in the URI path.

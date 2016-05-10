@@ -1,4 +1,4 @@
-# Group Subaccounts - Coming in April!
+# Group Subaccounts
 <a name="subaccounts-api"></a>
 API for retrieving and managing subaccounts associated with your Master Account.
 Subaccounts are a way for service providers to provision and manage their customers separately from each other and to provide assets and reporting data.
@@ -25,6 +25,7 @@ Endpoint for retrieving a list of your subaccounts. This endpoint only returns i
               "id": 123,
               "name": "Joe's Garage",
               "status": "active",
+              "ip_pool": "my_ip_pool",
               "compliance_status": "active"
             },
             {
@@ -44,18 +45,22 @@ Endpoint for retrieving a list of your subaccounts. This endpoint only returns i
 
 ### Create new subaccount [POST]
 
-Provisions a new subaccount and an initial subaccount API key. Subaccount API keys are only allowed very
-specific grants, which are limited to: `smtp/inject`, `sending_domains/manage`, `tracking_domains/view`, `tracking_domains/manage`, `message_events/view` and `suppression_lists/manage`.
-Subaccounts are allowed to send mail using the SMTP protocol, retrieve sending statistics via the Message Events API, and manage their own Sending Domains, Tracking Domains, and Suppression List.
+Provisions a new subaccount and an initial subaccount API key. Subaccount API keys are only allowed very specific grants, which are limited to: `smtp/inject`, `sending_domains/manage`, `tracking_domains/view`, `tracking_domains/manage`, `message_events/view`, `suppression_lists/manage`, `transmissions/view`, and `transmissions/modify`.
+
+Subaccounts are allowed to send mail using the SMTP protocol or Transmissions API, retrieve sending statistics via the Message Events API, manage their Sending Domains, manage their Suppression List.
+
+**Note: Stored recipients lists and stored templates are currently not supported for subaccounts sending mail using the Transmissions API.**
 
 #### Request Body Attributes
 
-| Field         | Required   | Type    | Description                                                                                                                   |
-| ------------  | ---------- | ------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| name          | yes        | string  | User friendly identifier for a specific subaccount                                                                            |
-| key_label     | yes        | string  | User friendly identifier for the initial subaccount api key                                                                   |
-| key_grants    | yes        | Array   | List of grants to give to the initial subaccount api key                                                                      |
-| key_valid_ips | no         | Array   | List of IP's that the initial subaccount api key can be used from. If empty array, then api key is usable on any IP address   |
+| Field         | Required   | Type    | Description                                                               | Notes                                                                                                                                                         |
+| ------------  | ---------- | ------- | --------------------------------------------------------------------------| ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| name          | yes        | string  | User friendly identifier for a specific subaccount                        |                                                                                                                                                               |
+| key_label     | yes        | string  | User friendly identifier for the initial subaccount api key               |                                                                                                                                                               |
+| key_grants    | yes        | Array   | List of grants to give to the initial subaccount api key                  | Valid values are `smtp/inject`, `sending_domains/manage`, `tracking_domains/view`, `tracking_domains/manage`, `message_events/view`, `suppression_lists/manage`, `transmissions/view`, and `transmissions/modify` |
+| key_valid_ips | no         | Array   | List of IP's that the initial subaccount api key can be used from         | If the supplied `key_valid_ips` is an empty array, the api key is usable by any IP address                                                                    |
+| ip_pool       | no         | string  | The ID of the default IP Pool assigned to this subaccount's transmissions | If the supplied `ip_pool` is an empty string or not present, no default `ip_pool` will be assigned                                                            |
+
 
 + Request (application/json)
 
@@ -115,11 +120,16 @@ Subaccounts are allowed to send mail using the SMTP protocol, retrieve sending s
               "message": "`key_valid_ips` must have valid netmask values",
               "param": "key_valid_ips",
               "value": null
+            },
+            {
+              "message": "ip_pool parameter must not exceed 32 characters",
+              "param": "ip_pool",
+              "value": "an ip pool name that is too long"
             }
           ]
         }
 
-## Subaccounts Entity [/subaccounts/:subaccountID]
+## Subaccounts Entity [/subaccounts/{subaccount_id}]
 
 ### List specific subaccount [GET]
 
@@ -134,7 +144,7 @@ Endpoint for retrieving information about a specific subaccount.
 
 + Parameters
 
-    + subaccountID (required, integer, `123`) ... Identifier of subaccount
+    + subaccount_id (required, integer, `123`) ... Identifier of subaccount
 
 + Response 200 (application/json)
 
@@ -143,7 +153,8 @@ Endpoint for retrieving information about a specific subaccount.
                 "id": 123,
                 "name": "Joes Garage",
                 "status": "active",
-                "compliance_status": "active"
+                "compliance_status": "active",
+                "ip_pool": "assigned_ip_pool"
               }
             }
 
@@ -156,6 +167,7 @@ Update an existing subaccount's information. You can update the following inform
 | ------- | ---------- | ------ | -------------------------------------------------- | ----- |
 | name    | no         | string | User friendly identifier for a specific subaccount |       |
 | status  | no         | string | Status of the account                              | Value is one of `active`, `suspended`, or `terminated` |
+| ip_pool | no         | string | The ID of the default IP Pool assigned to this subaccount's transmissions | If the supplied `ip_pool` is an empty string, it will clear any currently specified `ip_pool` |
 
 + Request (application/json)
 
@@ -181,3 +193,15 @@ Update an existing subaccount's information. You can update the following inform
                 "message": "Successfully updated subaccount information"
               }
             }
+
++ Response 400 (application/json)
+
+        {
+          "errors": [
+            {
+              "message": "ip_pool parameter must not exceed 32 characters",
+              "param": "ip_pool",
+              "value": "an ip pool name that is too long"
+            }
+          ]
+        }
