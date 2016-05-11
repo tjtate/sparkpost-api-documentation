@@ -665,7 +665,7 @@ Provides aggregate metrics grouped by domain over the time window specified.
             + `count_spam_complaint`
 
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
 
 + Request
@@ -921,7 +921,7 @@ Provides aggregate metrics grouped by sending IP over the time window specified.
           + `count_accepted`
           + `count_spam_complaint`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
 
 + Request
@@ -1160,7 +1160,7 @@ Provides aggregate metrics grouped by IP pool over the time window specified.
           + `count_accepted`
           + `count_spam_complaint`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
 
 + Request
@@ -1415,7 +1415,7 @@ Provides aggregate metrics grouped by sending domain over the time window specif
           + `count_accepted`
           + `count_spam_complaint`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
 
 + Request
@@ -1669,7 +1669,7 @@ Provides aggregate metrics grouped by subaccount over the time window specified.
           + `count_accepted`
           + `count_spam_complaint`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
 
 + Request
@@ -1911,7 +1911,7 @@ Provides aggregate metrics grouped by campaign over the time window specified.
             + `count_spam_complaint`
 
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-    + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+    + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
     + order_by (optional, string, `count_injected`) ... Metric by which to order results
 
 + Request
@@ -2154,7 +2154,7 @@ Provides aggregate metrics grouped by template over the time window specified.
             + `count_spam_complaint`
 
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
 
 + Request
@@ -2398,7 +2398,7 @@ in the world.
             + `count_spam_complaint`
 
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
 
 + Request
@@ -2837,7 +2837,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
             + `count_outofband_bounce`
 
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-    + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+    + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
 
 + Request
 
@@ -2974,7 +2974,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the domai
             + `count_outofband_bounce`
 
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-    + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+    + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
 
 + Request
 
@@ -3195,7 +3195,7 @@ Provides deliverability metrics, specific to rejection events, grouped by the re
       + Values
           + `smtp`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
 
 + Response 200 (application/json)
 
@@ -3292,7 +3292,7 @@ Provides deliverability metrics, specific to rejection events, grouped by the do
       + Values
           + `smtp`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
 
 + Response 200 (application/json)
 
@@ -3377,7 +3377,7 @@ Provides deliverability metrics, specific to delay events, grouped by the delay 
       + Values
           + `smtp`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
 
 + Request
 
@@ -3475,7 +3475,7 @@ Provides deliverability metrics, specific to delay events, grouped by the domain
       + Values
           + `smtp`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
 
 + Request
 
@@ -3566,7 +3566,7 @@ name (or URL if no link name exists).
     + templates (optional, list, `summer-sale`) ... delimited list of template IDs to include
     + sending_domains (optional, list, `sales.sender.com,company.net`) ... delimited list of sending domains to include
     + subaccounts (optional, list, `123,125,127`) ... delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
-    + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+    + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
 
 + Request
 
