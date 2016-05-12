@@ -74,8 +74,6 @@ The following APIs have subaccount support:
 * [Suppression List API](https://developers.sparkpost.com/api/#/reference/suppression-list)
 * [SMTP API](https://developers.sparkpost.com/api/#/reference/smtp-api)
 * [Transmissions API](https://developers.sparkpost.com/api/#/reference/transmissions)
-
-**Note**: support coming soon for the following
 * [Tracking Domains API](#tracking-domains-api)
 
 ### Terminology
