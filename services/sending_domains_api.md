@@ -14,7 +14,7 @@ If you use [Postman](https://www.getpostman.com/) you can click the following bu
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
 |domain    | string | Name of the sending domain | yes |The domain name will be used as the "From:" header address in the email.|
-|tracking_domain | string | Associated tracking domain | no | example: "click.example1.com". Note: tracking domain and sending domain must belong to the same subaccount to be linked together.|
+|tracking_domain | string | Associated tracking domain | no | example: "click.example1.com". **Note**: tracking domain and sending domain must belong to the same subaccount to be linked together.|
 |status | JSON object | JSON object containing status details, including whether this domain's ownership has been verified  | no | Read only. For a full description, see the Status Attributes.|
 |dkim | JSON object | JSON object in which DKIM key configuration is defined | no | For a full description, see the DKIM Attributes.|
 |generate_dkim | boolean | Whether to generate a DKIM keypair on creation | no | defaults to true |
