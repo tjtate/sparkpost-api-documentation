@@ -30,7 +30,7 @@ Detailed status for this bounce domain is described in a JSON object with the fo
 
 ### Create a Bounce Domain [POST]
 
-Create a Bounce domain. A tracking domain cannot be set as the default until it is verified.
+Create a Bounce domain.
 
 + Request (application/json)
 
@@ -91,7 +91,7 @@ Create a Bounce domain. A tracking domain cannot be set as the default until it 
                 {
                   "code": "1300",
                   "message": "invalid data format/type",
-                  "description": "Tracking domain 'example.domain.com' unverified."
+                  "description": "Bounce domain 'example.domain.com' unverified."
                 }
               ]
             }
@@ -243,9 +243,9 @@ Retrieve an existing bounce domain.
             }
 
 
-### Delete a Tracking Domain [DELETE]
+### Delete a Bounce Domain [DELETE]
 
-Delete an existing tracking domain.
+Delete an existing bounce domain.
 
 + Parameters
   + domain (required, string, `example.domain.com`) ... domain name
