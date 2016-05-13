@@ -2,11 +2,17 @@
 
 **Note:** The Relay Webhooks API is available for SparkPost only.
 
-By configuring a relay webhook for a specified inbound domain, those inbound messages can be forwarded to a specified target over HTTP.  Before you create a relay webhook, be sure to first create an inbound domain that is properly configured. To create an inbound domain for your account, please contact <support@sparkpost.com>. The Relay Webhooks API provides the means to create, list, retrieve, update, and delete a relay webhook.
+By configuring a relay webhook for a specified inbound domain, those inbound messages can be forwarded to a specified target over HTTP.  Before you create a relay webhook, be sure to first create an inbound domain that is properly configured. To create an inbound domain for your account, please use our Inbound Domains API. The Relay Webhooks API provides the means to create, list, retrieve, update, and delete a relay webhook.
+
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
 
 ## Relay Webhooks Object Properties
 
-| Property  | Type   | Description                          | Required | Notes 
+| Property  | Type   | Description                          | Required | Notes
 |-----------|--------|--------------------------------------|----------|----------------------|
 | name      | string | User-friendly name                   | no       | example: `Inbound Customer Replies` |
 | target    | string | URL of the target to which to POST relay batches | yes | example: `https://webhooks.customer.example/replies` |
@@ -15,10 +21,10 @@ By configuring a relay webhook for a specified inbound domain, those inbound mes
 
 ### Match Object Properties
 
-| Property  | Type   | Description                                                 | Required               | Notes 
+| Property  | Type   | Description                                                 | Required               | Notes
 |-----------|--------|-----------------------------------------------------------------------|--------------|----------------------|
 | protocol  | string | Inbound messaging protocol associated with this webhook | no - defaults to "SMTP" |                      |
-| domain    | string | Inbound domain associated with this webhook             | yes | To create an inbound domain for your account, please contact <support@sparkpost.com>. |
+| domain    | string | Inbound domain associated with this webhook             | yes | To create an inbound domain for your account, please use the Inbound Domains API. |
 
 ## Field Defintions
 
@@ -59,7 +65,7 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
 
   + Headers
 
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
 
@@ -89,6 +95,7 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
 
   + Body
 
+          ```
           { "errors": [
               {
                 "message": "invalid params",
@@ -97,11 +104,13 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
               }
             ]
           }
+          ```
 
 + Response 401 (application/json)
 
   + Body
 
+          ```
           { "errors": [
               {
                 "message": "Unauthorized Tenant",
@@ -109,11 +118,13 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
               }
             ]
           }
+          ```
 
 + Response 409 (application/json)
 
   + Body
 
+          ```
           { "errors": [
               {
                 "message": "resource conflict",
@@ -122,11 +133,13 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
               }
             ]
           }
+          ```
 
 + Response 422 (application/json)
 
   + Body
 
+          ```
             {
               "errors" : [
                 {
@@ -136,11 +149,13 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
                 }
               ]
             }
+          ```
 
 + Response 422 (application/json)
 
   + Body
 
+          ```
             {
               "errors" : [
                 {
@@ -150,6 +165,7 @@ Create a relay webhook by providing a **relay webhooks object** as the POST requ
                 }
               ]
             }
+          ```
 
 ### List all Relay Webhooks [GET]
 
@@ -158,12 +174,15 @@ List all your relay webhooks.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200 (application/json)
 
   + Body
+
+        ```
          { "results": [
               {
                 "id": "12013026328707075",
@@ -178,10 +197,13 @@ List all your relay webhooks.
               }
             ]
           }
+        ```
 
 + Response 401 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -190,6 +212,7 @@ List all your relay webhooks.
               }
             ]
           }
+        ```
 
 ## Retrieve, Update, and Delete [/relay-webhooks/{webhook_id}]
 
@@ -203,12 +226,15 @@ Retrieve a specific relay webhook by specifying the webhook ID in the URI path.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200 (application/json)
 
   + Body
+
+        ```
          {
             "results": {
               "name": "Replies Webhook",
@@ -220,10 +246,13 @@ Retrieve a specific relay webhook by specifying the webhook ID in the URI path.
               }
             }
          }
+        ```
 
 + Response 401 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -232,10 +261,13 @@ Retrieve a specific relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 404 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -244,6 +276,7 @@ Retrieve a specific relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 ### Update a Relay Webhook [PUT]
 
@@ -255,29 +288,36 @@ Update a relay webhook by specifying the webhook ID in the URI path.
 + Request (application/json)
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
 
+        ```
             {
               "name": "New Replies Webhook",
               "target": "https://webhook.customer.example/replies"
             }
+        ```
 
 + Response 200 (application/json)
 
   + Body
 
+        ```
             {
               "results":
                 {
                   "id": "12013026328707075"
                 }
             }
+        ```
 
 + Response 400 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -287,10 +327,13 @@ Update a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 401 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -299,10 +342,13 @@ Update a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 404 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -312,10 +358,13 @@ Update a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 404 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -324,11 +373,13 @@ Update a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 409 (application/json)
 
   + Body
 
+        ```
           { "errors": [
               {
                 "message": "resource conflict",
@@ -337,11 +388,13 @@ Update a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 422 (application/json)
 
   + Body
 
+        ```
             {
               "errors" : [
                 {
@@ -351,6 +404,7 @@ Update a relay webhook by specifying the webhook ID in the URI path.
                 }
               ]
             }
+        ```
 
 ### Delete a Relay Webhook [DELETE]
 
@@ -362,13 +416,16 @@ Delete a relay webhook by specifying the webhook ID in the URI path.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
 + Response 200
 
 + Response 401 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -377,10 +434,13 @@ Delete a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 404 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -390,10 +450,13 @@ Delete a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```
 
 + Response 404 (application/json)
 
   + Body
+
+        ```
           {
             "errors": [
               {
@@ -402,3 +465,4 @@ Delete a relay webhook by specifying the webhook ID in the URI path.
               }
             ]
           }
+        ```

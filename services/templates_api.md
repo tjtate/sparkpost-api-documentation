@@ -5,6 +5,12 @@ in a transmission by providing the id of the template at the time of transmissio
 template (headers, text, and html) is run through the substitution engine
 to produce recipient specific email messages.  The Templates API provides the means to manage your templates.
 
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
 ## Template Attributes
 
 | Field         | Type     | Description                           | Required   | Notes   |
@@ -134,14 +140,14 @@ Fully formed email_rfc822 content may be provided instead of the "text", "html",
           }
         }
 
-+ Response 403 (application/json)
++ Response 400 (application/json)
 
         {
           "errors" : [
             {
               "description" : "Unconfigured or unverified sending domain.",
-              "code" : "1100",
-              "message" : "permission denied"
+              "code" : "7001",
+              "message" : "Invalid domain"
             }
           ]
         }
@@ -195,7 +201,7 @@ Fully formed email_rfc822 content may be provided instead of the "text", "html",
               "X-Customer-Campaign-ID": "Summer2014"
             }
           }
-        } 
+        }
         ```
 
 + Response 200 (application/json)
@@ -313,7 +319,8 @@ If the template was used for message generation, the result will also include a 
 
             "options": {
               "open_tracking" : false,
-              "click_tracking" : true
+              "click_tracking" : true,
+              "transactional" : false
             },
 
             "content": {
@@ -353,7 +360,7 @@ and update the content all in one API call. All content fields are included whet
 changed or not.
 
 Publishing a template is a specific case of an update.  The body of the PUT
-request should contain the `"published": true` field as shown in the example. The 
+request should contain the `"published": true` field as shown in the example. The
 **update_published** query parameter does not apply.
 
 + Parameters
@@ -393,7 +400,7 @@ request should contain the `"published": true` field as shown in the example. Th
 + Request Publish (application/json)
 
   + Headers
-      
+
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body

@@ -7,6 +7,12 @@ transmission data, or a stored recipient list id attribute can be specified.
 
 The Recipient List API operates on lists as a whole and does not currently support management of individual recipients.
 
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
 ## Recipient List Attributes
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
@@ -392,6 +398,7 @@ number of rejected recipients will only be returned if a "recipients" array is p
 + Request (application/json)
 
   + Headers
+
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body

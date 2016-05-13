@@ -1,10 +1,17 @@
 # Group Transmissions
+<a name="transmissions-api"></a>
 
 A transmission is a collection of messages belonging to the same campaign.  It is also known as a mailing.  The Transmissions API provides the means to manage transmissions.  Messages in the transmissions are generated and sent to a specified list of recipients using a specified message template. The recipient list can be a stored list created using the Recipient Lists API, or it can be created "inline" as part of a transmission.  Similarly, the message template can be a stored template created using the Templates API, or it can be created "inline" as part of a transmission.  Messages are generated for the transmission for all specified recipients using the message template and performing substitution of data as necessary.
 
 In addition, engagement tracking options can be set in the transmission to track message opens and clicks.
 
-## Transmission Attributes 
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
+## Transmission Attributes
 
 | Field         | Type     | Description                           | Required         | Notes   |
 |--------------------|----------------      |---------------------------------------|--------------------------|--------|
@@ -12,8 +19,8 @@ In addition, engagement tracking options can be set in the transmission to track
 |state |string  |State of the transmission  | no | Read only.  Valid responses are "submitted", "Generating", "Success", or "Canceled". |
 |options | JSON object | JSON object in which transmission options are defined | no | For a full description, see the Options Attributes.
 |recipients | JSON array or JSON object | Inline recipient objects or object containing stored recipient list ID |yes | Specify a stored recipient list or specify recipients inline.  When using a stored recipient list, specify the "list_id" as described in Using a Stored Recipient List.  Otherwise, provide the recipients inline using the fields described in the Recipient List API documentation for Recipient Attributes. |
-|campaign_id | string |Name of the campaign|no|Maximum length - 64 bytes| 
-|description | string |Description of the transmission|no | Maximum length - 1024 bytes| 
+|campaign_id | string |Name of the campaign|no|Maximum length - 64 bytes|
+|description | string |Description of the transmission|no | Maximum length - 1024 bytes|
 |metadata|JSON object|Transmission level metadata containing key/value pairs |no| Metadata is available during events through the Webhooks and is provided to the substitution engine.  A maximum of 1000 bytes of merged metadata (transmission level + recipient level) is available with recipient metadata taking precedence over transmission metadata when there are conflicts.  |
 |substitution_data|JSON object|Key/value pairs that are provided to the substitution engine| no | Recipient substitution data takes precedence over transmission substitution data. Unlike metadata, substitution data is not included in Webhook events. |
 |return_path | string |Email to use for envelope FROM ( **Note:** SparkPost Elite only )| yes | To support Variable Envelope Return Path (VERP), this field can also optionally be specified inside of the address object of a specific recipient in order to give the recipient a unique envelope MAIL FROM. |
@@ -28,11 +35,13 @@ In addition, engagement tracking options can be set in the transmission to track
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
 |start_time | string | Delay generation of messages until this datetime.  For additional information, see Scheduled Transmissions. |no - defaults to immediate generation | Format YYYY-MM-DDTHH:MM:SS+-HH:MM or "now". Example: '2015-02-11T08:00:00-04:00'.|
-|open_tracking|boolean| Whether open tracking is enabled for this transmission| no |If not specified, the setting at template level is used, or defaults to true. | 
-|click_tracking|boolean| Whether click tracking is enabled for this transmission| no |If not specified, the setting at template level is used, or defaults to true. | 
+|open_tracking|boolean| Whether open tracking is enabled for this transmission| no |If not specified, the setting at template level is used, or defaults to true. |
+|click_tracking|boolean| Whether click tracking is enabled for this transmission| no |If not specified, the setting at template level is used, or defaults to true. |
 |transactional|boolean|Whether message is transactional or non-transactional for unsubscribe and suppression purposes | no |If not specified, the setting at template level is used, or defaults to false. |
 |sandbox|boolean|Whether or not to use the sandbox sending domain ( **Note:** SparkPost only )| no |Defaults to false. |
 |skip_suppression|boolean|Whether or not to ignore customer suppression rules, for this transmission only.  Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no - Defaults to false |  Unlike most other options, this flag is omitted on a GET transmission response unless the flag's value is true. |
+| ip_pool | string | The name of a dedicated IP pool associated with your account ( **Note:** SparkPost only ).  If this field is not provided, the account's default dedicated IP pool is used (if such a pool exists).  To explicitly bypass the account's default dedicated IP pool and instead fallback to the shared pool, specify a value of "sp_shared".  Please note that this option does not apply to subaccounts. | no | For more information on dedicated IPs, see the [Support Center](https://support.sparkpost.com/customer/en/portal/articles/2002977-dedicated-ip-addresses)
+|inline_css|boolean|Whether or not to perform CSS inlining in HTML content | no - Defaults to false | |
 
 ### Inline Content Attributes
 
@@ -74,6 +83,8 @@ necessary.
 
 ### Attachment Attributes
 
+**Note: we do not allow attachments that have been known to contain malicious content including, but not limited to, bat, doc, docx, exe, xls, xlsx, and zip files.**
+
 Attachments for a transmission are specified in the content.attachments JSON array where each JSON object in the array is described by the following fields:
 
 | Field         | Type     | Description                           | Required   | Notes   |
@@ -110,18 +121,17 @@ The following recipients attribute is used when specifying a stored recipient li
 |list_id | string  | Identifier of the stored recipient list to use | yes | Specify this field when using a stored recipient list. |
 
 ### Scheduled Transmissions
-Use the _options.start_time_ attribute to delay generation of messages.  The scheduled time must be in the future and cannot be greater than 1 year from the time of submission.  If the scheduled time does not fall in that range, the transmission is not accepted.
-
+Use the _options.start_time_ attribute to delay generation of messages.  The scheduled time cannot be greater than 1 year from the time of submission.  If the scheduled time does not pass validation, the transmission is not accepted.  Transmissions with a scheduled time in the past _are_ accepted and undergo immediate generation.
 
 ## Create [/transmissions{?num_rcpt_errors}]
- 
+
 ### Create a Transmission [POST]
 
 You can create a transmission in a number of ways. In all cases, you can use the **num_rcpt_errors** parameter to limit the number of recipient errors returned.
 
 **Note:** The "return_path" in the POST request body applies to SparkPost Elite only.
 
-**Note:** Sending limits apply to SparkPost only. When a transmission is created in SparkPost, the number of messages in the transmission is compared to the sending limit of your account. If the transmission will cause you to exceed your sending limit, the entire transmission results in an error and no messages are sent.  Note that no messages will be sent for the given transmission, regardless of the number of messages that caused you to exceed your sending limit. In this case, the Transmission API will return an HTTP 420 error code with an error detailing whether you would exceed your hourly, daily, or sandbox sending limit. 
+**Note:** Sending limits apply to SparkPost only. When a transmission is created in SparkPost, the number of messages in the transmission is compared to the sending limit of your account. If the transmission will cause you to exceed your sending limit, the entire transmission results in an error and no messages are sent.  Note that no messages will be sent for the given transmission, regardless of the number of messages that caused you to exceed your sending limit. In this case, the Transmission API will return an HTTP 420 error code with an error detailing whether you would exceed your hourly, daily, or sandbox sending limit.
 
 #### Using Inline Email Part Content
 
@@ -233,21 +243,17 @@ Once message generation has been initiated, all messages in the transmission wil
         }
         ```
 
-+ Response 403 (application/json)
++ Response 400 (application/json)
 
-    + Body
-
-        ```
         {
           "errors" : [
             {
               "description" : "Unconfigured or unverified sending domain.",
-              "code" : "1100",
-              "message" : "permission denied"
+              "code" : "7001",
+              "message" : "Invalid domain"
             }
           ]
         }
-        ```
 
 + Request Create Transmission with Inline RFC822 Content (application/json)
 
@@ -256,7 +262,7 @@ Once message generation has been initiated, all messages in the transmission wil
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
-  
+
             {
               "options": {
                 "open_tracking": true,
@@ -317,7 +323,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 200 (application/json)
 
   + Body
-  
+
             {
               "results": {
                 "total_rejected_recipients": 0,
@@ -326,19 +332,17 @@ Once message generation has been initiated, all messages in the transmission wil
               }
             }
 
-+ Response 403 (application/json)
++ Response 400 (application/json)
 
-  + Body
-
+        {
+          "errors" : [
             {
-              "errors" : [
-                {
-                  "description" : "Unconfigured or unverified sending domain.",
-                  "code" : "1100",
-                  "message" : "permission denied"
-                }
-              ]
+              "description" : "Unconfigured or unverified sending domain.",
+              "code" : "7001",
+              "message" : "Invalid domain"
             }
+          ]
+        }
 
 
 + Request Create Transmission with Stored Recipient List (application/json)
@@ -348,7 +352,7 @@ Once message generation has been initiated, all messages in the transmission wil
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
-  
+
             {
                 "campaign_id": "christmas_campaign",
                 "return_path": "bounces-christmas-campaign@flintstone.com",
@@ -385,7 +389,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 404 (application/json)
 
   + Body
-  
+
             {
               "errors": [
                 {
@@ -403,7 +407,7 @@ Once message generation has been initiated, all messages in the transmission wil
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
-  
+
             {
               "options": {
                 "open_tracking": true,
@@ -467,7 +471,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 200 (application/json)
 
   + Body
-  
+
             {
               "errors": [
                 {
@@ -492,7 +496,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 404 (application/json)
 
   + Body
-  
+
             {
               "errors": [
                 {
@@ -510,7 +514,7 @@ Once message generation has been initiated, all messages in the transmission wil
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
-  
+
             {
                 "campaign_id": "christmas_campaign",
 
@@ -534,7 +538,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 420 (application/json)
 
   + Body
-  
+
             {
               "errors": [
                 {
@@ -547,7 +551,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 420 (application/json)
 
   + Body
-  
+
             {
               "errors": [
                 {
@@ -560,7 +564,7 @@ Once message generation has been initiated, all messages in the transmission wil
 + Response 420 (application/json)
 
   + Body
-  
+
             {
               "errors": [
                 {
@@ -577,7 +581,7 @@ Once message generation has been initiated, all messages in the transmission wil
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
-  
+
             {
                 "name" : "Fall Sale",
                 "campaign_id": "fall",
@@ -713,7 +717,7 @@ Once message generation has been initiated, all messages in the transmission wil
 
 
 
-## Retrieve [/transmissions/{id}]
+## Retrieve and Delete [/transmissions/{id}]
 
 ### Retrieve a Transmission [GET]
 
@@ -785,6 +789,97 @@ The response for a transmission using an inline template will include "template_
             }
 
 
+### Delete a Transmission [DELETE]
+
+Delete a transmission by specifying its ID in the URI path.
+
+Only transmissions which are scheduled for future generation may be deleted.
+
+Scheduled transmissions cannot be deleted if the transmission is within 10 minutes of the scheduled generation time.
+
+
++ Parameters
+    + id (required, string, `11714265276872`) ... ID of the transmission
+
++ Request
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Response 200 (application/json)
+
+    +  Body
+
+        ```
+        {
+        }
+        ```
+
++ Response 404 (application/json)
+
+  + Body
+
+          ```
+          {
+            "errors": [
+              {
+                "message": "resource not found",
+                "code": "1600",
+                "description": "Resource not found:transmission id 999999999"
+              }
+            ]
+          }
+          ```
+
++ Response 409 (application/json)
+
+  + Body
+
+          ```
+          {
+            "errors": [
+              {
+                "message": "too close to generation time to delete transmission",
+                "code": "2003",
+                "description": "Deletion time window (660 seconds) doesn't permit transmission deletion"
+              }
+            ]
+          }
+          ```
+
++ Response 409 (application/json)
+
+  + Body
+
+          ```
+          {
+            "errors": [
+              {
+                "message": "transmission database record is in an invalid state for deletion",
+                "code": "2006",
+                "description": "Unable to delete a transmission that is in progress (state=Generating)"
+              }
+            ]
+          }
+          ```
+
++ Response 409 (application/json)
+
+  + Body
+
+          ```
+          {
+            "errors": [
+              {
+                "message": "transmission database record is in an invalid state for deletion",
+                "code": "2006",
+                "description": "Unable to delete a transmission that has completed (state=Success)"
+              }
+            ]
+          }
+          ```
 ## List [/transmissions{?campaign_id,template_id}]
 
 ### List all Transmissions [GET]
@@ -851,83 +946,3 @@ The example response shows a query on _campaign_id=thanksgiving_, with **templat
           ]
         }
         ```
-
-## Delete [/transmissions/{id}]
-
-### Delete a Transmission [DELETE]
-
-Delete a transmission by specifying its ID in the URI path.
-
-Only transmissions which are scheduled for future generation may be deleted.
-
-Scheduled transmissions cannot be deleted if the transmission is within 10 minutes of the scheduled generation time.
-
-
-+ Parameters
-    + id (required, string, `11714265276872`) ... ID of the transmission 
-
-+ Request
-
-    + Headers
-
-            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-            Accept: application/json
-
-+ Response 200 (application/json)
-
-    +  Body
-
-        {
-        }
-
-+ Response 404 (application/json)
-
-  + Body
-          {
-            "errors": [
-              {
-                "message": "resource not found",
-                "code": "1600",
-                "description": "Resource not found:transmission id 999999999"
-              }
-            ]
-          }
-
-+ Response 409 (application/json)
-
-  + Body
-          {
-            "errors": [
-              {
-                "message": "too close to generation time to delete transmission",
-                "code": "2003",
-                "description": "Deletion time window (660 seconds) doesn't permit transmission deletion"
-              }
-            ]
-          }
-
-+ Response 409 (application/json)
-
-  + Body
-          {
-            "errors": [
-              {
-                "message": "transmission database record is in an invalid state for deletion",
-                "code": "2006",
-                "description": "Unable to delete a transmission that is in progress (state=Generating)"
-              }
-            ]
-          }
-
-+ Response 409 (application/json)
-
-  + Body
-          {
-            "errors": [
-              {
-                "message": "transmission database record is in an invalid state for deletion",
-                "code": "2006",
-                "description": "Unable to delete a transmission that has completed (state=Success)"
-              }
-            ]
-          }

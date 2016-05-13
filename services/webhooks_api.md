@@ -10,6 +10,12 @@ The following are key operational details:
 * When using 'oauth2', auth_request_details must be set by the user (example: `{ "url": "https://oauth.myurl.com/tokens", "body": { "client_id": "<oauth client id>", "client_secret": "<oauth client secret>" }}`). Additionally, auth_credentials is set by the system and cannot be configured by the user.
 * When using 'basic' auth, auth_credentials must be set by the user and should be an object containing "username" (required) and "password" (optional). (example: `{ "username": "basicauthuser", "password": "mypassword" }`)
 
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
 ## Webhooks Object Properties
 
 | Property          | Type   | Description | Required | Notes |
@@ -23,7 +29,7 @@ The following are key operational details:
 | auth_token        | string | Authentication token to present in the X-MessageSystems-Webhook-Token header of POST requests to target | no | Use this token in your target application to confirm that data is coming from the Webhooks API. <br />example: `5ebe2294ecd0e0f08eab7690d2a6ee69`<br /><br />_Note: This field is deprecated, you should use the auth_type field instead._ |
 
 __**The SparkPost webhooks API uses MaxMind software [MaxMind License](/docs/3RD_PARTY_LICENSES.md)**__
- 
+
 ## Events Documentation [/webhooks/events/documentation]
 
 ### Documentation [GET]
@@ -33,7 +39,8 @@ List descriptions of the events, event types, and event fields that could be inc
 + Request
 
   + Headers
-      Accept: application/json
+
+            Accept: application/json
 
 + Response 200 (application/json)
   ```js
@@ -77,7 +84,8 @@ List an example of the event data that will be posted by a Webhook for the speci
 + Request
 
   + Headers
-      Accept: application/json
+
+            Accept: application/json
 
 + Response 200 (application/json)
   ```js
@@ -127,32 +135,33 @@ As described in "Webhooks Object Properties", webhook creation entails a test PO
 + Request (application/json)
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
 
-    ```js
-    {
-      "name": "Example webhook",
-      "target": "http://client.example.com/example-webhook",
-      "auth_type": "oauth2",
-      "auth_request_details": {
-        "url": "http://client.example.com/tokens",
-        "body": {
-            "client_id": "CLIENT123",
-            "client_secret": "9sdfj791d2bsbf",
-            "grant_type": "client_credentials"
+        ```js
+        {
+          "name": "Example webhook",
+          "target": "http://client.example.com/example-webhook",
+          "auth_type": "oauth2",
+          "auth_request_details": {
+            "url": "http://client.example.com/tokens",
+            "body": {
+                "client_id": "CLIENT123",
+                "client_secret": "9sdfj791d2bsbf",
+                "grant_type": "client_credentials"
+            }
+          },
+          "auth_token": "",
+          "events": [
+            "delivery",
+            "injection",
+            "open",
+            "click"
+          ]
         }
-      },
-      "auth_token": "",
-      "events": [
-        "delivery",
-        "injection",
-        "open",
-        "click"
-      ]
-    }
-    ```
+        ```
 
 + Response 200 (application/json)
 
@@ -239,8 +248,9 @@ Retrieve details about a webhook by specifying its id in the URI path.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200 (application/json)
 
@@ -349,8 +359,9 @@ List currently extant webhooks.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200 (application/json)
 
@@ -375,20 +386,21 @@ As described in "Webhooks Object Properties", a change to the _target_ value ent
 + Request (application/json)
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
 
-    ```js
-    {
-      "name": "Renamed webhook",
-      "events": [
-        "rejection",
-        "delay"
-      ],
-      "auth_type": "none"
-    }
-    ```
+        ```js
+        {
+          "name": "Renamed webhook",
+          "events": [
+            "rejection",
+            "delay"
+          ],
+          "auth_type": "none"
+        }
+        ```
 
 + Response 200 (application/json)
 
@@ -418,7 +430,8 @@ delivered are drained.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
 + Response 204
 
@@ -442,17 +455,18 @@ and returns detailed information on the response received from the target.
 + Request (application/json)
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
   + Body
 
-    ```js
-    {
-        "message": {
-            "msys": {}
+        ```js
+        {
+            "message": {
+                "msys": {}
+            }
         }
-    }
-    ```
+        ```
 
 + Response 200 (application/json)
 
@@ -487,8 +501,9 @@ are currently in a failed state.
 + Request
 
   + Headers
-      Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-      Accept: application/json
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
 
 + Response 200 (application/json)
 

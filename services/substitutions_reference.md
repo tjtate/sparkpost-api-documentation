@@ -304,6 +304,49 @@ If this attribute is not specified, the link name will fall back to **Raw URL**.
 
 The link name will be incorporated into the click-tracked link and will be tracked in engagement events.
 
+### Unsubscribe Links
+
+It is possible to indicate that a link in your content be used to generate an unsubscribe event from SparkPost. This is done with the **data-msys-unsubscribe** custom attribute. For example:
+
+```
+<a href="http://www.example.com/unsub_handler?id=1234" data-msys-unsubscribe="1">Unsubscribe</a>
+```
+
+More information can be found [here](https://support.sparkpost.com/customer/portal/articles/1929894-setting-up-unsubscribe-links).
+
+### Per-link Disabling of Click Tracking
+
+When click-tracking is enabled for a transmission individual links can be skipped using the **data-msys-clicktrack** custom attribute. For example:
+
+```
+<a href="http://www.example.com/" data-msys-clicktrack="0">Click</a>
+```
+
+
+### Custom Link Sub-Paths
+
+It is possible to add a custom sub-path to a tracked URL using the **data-msys-sublink** custom attribute. For example:
+
+```
+<a href="http://www.example.com/" data-msys-sublink="custom_path">Click</a>
+```
+
+The tracked link generated will look like this:
+
+```
+http://<hostname>/f/custom_path/<encoded target url>
+```
+
+An example of how to use **data-msys-sublink** to support iOS Universal Links in SparkPost Elite can be found [here](https://support.sparkpostelite.com/customer/en/portal/articles/2231112-ios9-universal-links-support?b_id=8730#Creating%20Universal%20Links%20in%20Templates%20&%20Sub-Pathing).
+
+### Link Attributes in Text Parts
+
+The sections above describing the **data-msys-*** link attributes all show HTML `<a>` tag examples. However it is also possible to specify all of the same custom attributes for links in the `text` part of a message using a double-square-bracket notation. For example:
+
+```
+http://www.example.com[[data-msys-clicktrack="0"]]
+```
+
 ### Substitutions Syntax Examples
 
 This section contains syntax examples based on the following JSON substitution data:
@@ -436,6 +479,10 @@ The relational and logical operators are as follows:
 | and |
 | or |
 | not |
+
+**The Length Operator**
+
+The length operator `#` gives the length of an array. From the sample data above: `#shopping_cart` produces `2`.
 
 ### Array Iteration
 
