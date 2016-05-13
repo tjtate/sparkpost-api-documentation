@@ -25,6 +25,7 @@ Detailed status for this bounce domain is described in a JSON object with the fo
 |------------------------|:-:       |---------------------------------------|-------------|--------|
 | verified | boolean | Whether domain has been verified | false | Read only. This field will return "true" if cname_status is "valid".|
 | cname_status | string | Verification status of CNAME configuration | unverified | Read only. Valid values are "unverified", "pending", "invalid" or "valid".|
+| compliance_status | string | Compliance status | | Valid values are "pending", "valid", or "blocked".|
 
 ## Create and List [/bounce-domains]
 
@@ -191,7 +192,8 @@ Retrieve a list of all bounce domains.
                   "domain": "example.domain.com",
                   "status": {
                     "verified": false,
-                    "cname_status": "pending"
+                    "cname_status": "pending",
+                    "compliance_status": "pending"
                   }
                 } 
               ]
@@ -224,7 +226,8 @@ Retrieve an existing bounce domain.
                 "domain": "example.domain.com",
                 "status": {
                   "verified": false,
-                  "cname_status": "pending"
+                  "cname_status": "pending",
+                  "compliance_status": "valid"
                 }
               }
             }
@@ -294,6 +297,7 @@ Initiate a check against the CNAME DNS record for the specified bounce domain. T
             "results": {
               "verified": true,
               "cname_status": "valid",
+              "compliance_status": "valid"
             }
         }
 
