@@ -122,7 +122,7 @@ Create a Bounce Domain.
                   "code": "1300",
                   "message": "invalid data format/type",
                   "description": "Error domain name length too short for domain: 'ex'"
-                }
+                } 
               ]
             }
 
@@ -240,7 +240,8 @@ Retrieve an existing bounce domain.
               "errors": [
                 {
                   "code": "8001",
-                  "message": "bounce domain does not exist"
+                  "message": "bounce domain does not exist",
+                  "description": "Resource not found: example.domain.com"
                 }
               ]
             }
@@ -269,7 +270,8 @@ Delete an existing bounce domain.
               "errors": [
                 {
                   "code": "8001",
-                  "message": "bounce domain does not exist"
+                  "message": "bounce domain does not exist",
+                  "description": "Resource not found: example.domain.com"
                 }
               ]
             }
