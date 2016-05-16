@@ -16,6 +16,7 @@ If you use [Postman](https://www.getpostman.com/) you can click the following bu
 | Field   | Type   | Description | Required | Notes |
 |------------|--------|-------------|----------|-------|
 | domain | string | Name of the bounce domain | yes | Example: `example.domain.com` |
+| status | JSON object| JSON object containing status details, including whether this domain's ownership has been verified  | no | Read only. For a full description, see the Status Attributes.|
 
 ### Status Attributes
 
@@ -31,7 +32,7 @@ Detailed status for this bounce domain is described in a JSON object with the fo
 
 ### Create a Bounce Domain [POST]
 
-Create a Bounce domain.
+Create a Bounce Domain.
 
 + Request (application/json)
 
@@ -63,8 +64,22 @@ Create a Bounce domain.
               "errors" : [
                 {
                   "code" : "8000",
-                  "message" : "Only one bounce domain can be created",
-                  "description" : "Can't create more than one bounce domain"
+                  "message" : "only one bounce domain can be created",
+                  "description" : "Can't create more than one bounce domain."
+                }
+              ]
+            }
+
++ Response 400 (application/json)
+
+  + Body
+
+            {
+              "errors" : [
+                {
+                  "code" : "7000",
+                  "message" : "restricted domain",
+                  "description" : "Please contact us at support@sparkpost.com to get this domain authorized for your account."
                 }
               ]
             }
@@ -82,21 +97,6 @@ Create a Bounce domain.
                 }
               ]
             }
-
-+ Response 422 (application/json)
-
-  + Body
-
-            {
-              "errors": [
-                {
-                  "code": "1300",
-                  "message": "invalid data format/type",
-                  "description": "Bounce domain 'example.domain.com' unverified."
-                }
-              ]
-            }
-
 
 + Response 422 (application/json)
 
@@ -240,7 +240,7 @@ Retrieve an existing bounce domain.
               "errors": [
                 {
                   "code": "8001",
-                  "message": "Bounce domain does not exist"
+                  "message": "bounce domain does not exist"
                 }
               ]
             }
@@ -259,7 +259,7 @@ Delete an existing bounce domain.
 
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
 
-+ Response 200
++ Response 204
 
 + Response 404 (application/json)
 
@@ -269,7 +269,7 @@ Delete an existing bounce domain.
               "errors": [
                 {
                   "code": "8001",
-                  "message": "Bounce domain does not exist"
+                  "message": "bounce domain does not exist"
                 }
               ]
             }
