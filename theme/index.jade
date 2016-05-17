@@ -1,0 +1,17 @@
+include mixins.jade
+
+!= '---\n'
+!= 'layout: default\n'
+!= 'title: API Reference\n'
+!= '---\n'
+!= '{% raw %}\n'
+
+div(class=self.fullWidth ? 'container-fluid' : 'container')
+    .row
+        #menublock
+            +Nav(false)
+
+        #contentblock
+            +Content()
+
+!= '{% endraw %}\n'

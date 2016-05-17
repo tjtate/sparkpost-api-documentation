@@ -19,14 +19,16 @@ var matchdep = require('matchdep')
         'transmissions_api.md',
         'webhooks_api.md',
         'smtp_api.md'
-    ];
+    ]
+    , staticTempDir = 'static/'
+    , staticOutputDir = '../sparkpost.github.io/_api/'; // Relative to staticTempDir (!)
 
 function _md2html(obj, val, idx) {
     var name = (val.split('.'))[0];
     if (val === 'introduction.md') {
         name = 'index';
     }
-    obj['aglio/'+ name +'.html'] = [ 'services/'+ val ];
+    obj[staticTempDir + name +'.html'] = [ 'services/'+ val ];
     return obj;
 }
 
@@ -40,7 +42,7 @@ function sectionName(md) {
 
 function htmlFile(md) {
     var name = sectionName(md);
-    return 'aglio/'+ name +'.html';
+    return staticTempDir + name +'.html';
 }
 
 module.exports = function(grunt) {
@@ -48,12 +50,19 @@ module.exports = function(grunt) {
     matchdep.filterDev('grunt-*').forEach(grunt.loadNpmTasks);
     var cheerio = require('cheerio');
 
+    // Tell aglio / olio not to cache rendered output
+    process.env.NOCACHE = '1';
+
     // Configure existing grunt tasks and create custom ones
     grunt.initConfig({
         aglio: {
             build: {
                 files: services.reduce(_md2html, {})
             },
+          options: {
+            themeTemplate: 'theme/index.jade',
+            themeFullWidth: true
+          }
         },
 
         dom_munger: {
@@ -66,7 +75,13 @@ module.exports = function(grunt) {
                           function(idx, elt) {
                             var obj = $(elt);
                             var filename = (file.split('/'))[1];
-                            var href = filename + obj.attr('href');
+                            var href;
+                            
+                            if (obj.parent().attr('class') == 'heading') {
+                              href = filename; 
+                            } else {
+                              href = filename + obj.attr('href');
+                            } 
                             // Rename #top anchor so auto-expansion works as expected.
                             if (href == 'substitutions_reference.html#top') {
                                 href = filename + '#substitutions-reference-top';
@@ -75,11 +90,12 @@ module.exports = function(grunt) {
                           }
                         );
 
+                        // TODO: fix this in the template: mixins.jade:Nav()
                         var name = (file.split('.'))[0];
                         name = (name.split('/'))[1];
                         // Fix nav name, it's Overview for some reason
                         if (name == 'substitutions_reference') {
-                            $('nav div.heading a[href^="substitutions_reference.html#"]').text('Substitutions Reference');
+                            $('nav div.heading a[href^="substitutions_reference.html"]').text('Substitutions Reference');
                         }
                         // save a copy of the fixed-up nav from the current page
                         // we'll use this in `copy`, below
@@ -93,7 +109,7 @@ module.exports = function(grunt) {
         },
 
         copy: {
-            main: {
+            fixup_nav: {
                 src: services.map(htmlFile),
                 dest: './',
                 options: {
@@ -119,27 +135,26 @@ module.exports = function(grunt) {
                         $ = cheerio.load(allnav);
                         var file = (srcpath.split('/'))[1];
                         // css selector for current nav
-                        var curNav = 'div.heading a[href^="'+ file +'#"]';
-                        // anchor from current nav
-                        var anchor = (($(curNav).attr('href')).split('#'))[1];
+                        var curNav = 'div.heading a[href^="'+ file +'"]';
 
                         // indicate current page w/in nav
-                        // FIXME: style info doesn't belong in Grunt, put this elsewhere,
-                        // perhaps a per-"service" external stylesheet
-                        $(curNav).attr('style', 'font-weight:bold;background-color:#fa6423;color:#fff;');
+                        $(curNav).parent().addClass('current');
                         allnav = $.html();
 
                         // replace single-page nav with the global nav we built above
-                        content = content.replace(/<nav[^>]*>.*?<\/nav>/, '<nav>'+ allnav +'</nav>');
-
-                        // auto-expand nav on page load
-                        var collapse = '    var nav = document.querySelectorAll(\'nav .resource-group .heading a[href$="#'+
-                            anchor +'"]\');\n    toggleCollapseNav({target: nav[0]});\n';
-                        content = content.replace(/(window\.onload\s*=\s*function\s*\(\)\s*\{[^}]+)\}/, '$1'+ collapse +'}');
+                        content = content.replace(/<nav([^>]*)>.*?<\/nav>/, '<nav$1>'+ allnav +'</nav>');
 
                         return content;
                     }
                 }
+            },
+
+            static_to_devhub: {
+                expand: true,
+                cwd: staticTempDir,
+                src:'**',
+                dest: staticOutputDir,
+                flatten: true
             }
         },
 
@@ -196,6 +211,13 @@ module.exports = function(grunt) {
                 tasks: [ 'generate-apiary-preview' ],
                 options: {
                     livereload: true
+                }
+            },
+            staticDocs: {
+                files: [ 'services/*.md', 'theme/*', 'Gruntfile.js' ],
+                tasks: [ 'static' ],
+                options: {
+                    livereload: false
                 }
             }
         }
@@ -276,6 +298,8 @@ module.exports = function(grunt) {
 
     // grunt compile - concatenates all the individual blueprint files and validates it
     grunt.registerTask('compile', [ 'concat:prod', 'test' ]);
+
+    grunt.registerTask('static', ['aglio', 'dom_munger', 'copy:fixup_nav', 'copy:static_to_devhub']);
 
     // register default grunt command as grunt test
     grunt.registerTask('default', [ 'testFiles' ]);
