@@ -4,14 +4,16 @@ include mixins.jade
 != 'layout: default\n'
 != 'title: API Reference\n'
 != '---\n'
-!= '{% raw %}\n'
 
-div(class=self.fullWidth ? 'container-fluid' : 'container')
+div(class=self.fullWidth ? 'container-fluid' : 'container')#apipage
     .row
         #menublock
             +Nav(false)
 
         #contentblock
+            if self.api.name != "" && self.api.resourceGroups.length == 0
+                != '\n{% raw %}\n'
             +Content()
+            if self.api.name != "" && self.api.resourceGroups.length == 0
+                != '\n{% endraw %}\n'
 
-!= '{% endraw %}\n'

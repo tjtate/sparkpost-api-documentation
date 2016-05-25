@@ -47,58 +47,84 @@ mixin Parameters(params)
                 tr
                     td=self.urldec(param.name)
                     td.markdown
-                        != self.markdown(param.description)
                         if param.required
-                           strong.param-annotation (required) 
+                           strong.param-annotation (required) &nbsp;
+                        != self.markdown(param.description)
                         if param.example
                             | Example:
                             code #{param.name}=#{param.example}
-                    td=param.type || 'string'
-                    // 
-                        td 
-                            if param.values.length == 0
-                                | -
-                            else
-                                ul.list-inline
+                        if param.values.length
+                            .param-value-list
+                                | Values: 
+                                ui.list-inline
                                     each value,idx in param.values
                                         li=self.urldec(value.value) 
-                                          if idx < param.values.length-1
+                                          if param.values.length > 1 && idx < param.values.length-1
                                           | ,
+                    td=param.type || 'string'
 
-mixin RequestResponseII(request, response, action)
-    h3 Example: #{request.name}
+mixin RequestResponse(request, response, action)
+    if request.name
+      h3 Example: #{request.name}
+    else
+      h3 Example
     if request.description
         .markdown
-          .description!= self.markdown(request.description)
-    if request.headers.length || request.body
+            .description!= self.markdown(request.description)
+    .request
         h4 Request
         p.uri 
-          code
-            != action.method + '&nbsp;'
-            != action.colorizedUriTemplate
-        pre: code
-            +Headers(request)
-            if request.body
-                != self.highlight(request.body, null, ['json', 'yaml', 'xml', 'javascript']) + '\n'
-    h4 Response (HTTP status code: #{response.name})
-    pre: code
-        +Headers(response)
-        if request.hasContent
-            != self.highlight(response.body, null, ['json', 'yaml', 'xml', 'javascript']) + '\n'
+            code
+                != action.method + '&nbsp;'
+                != self.baseURI + action.colorizedUriTemplate
+        +Headers('Request Headers', request)
+        +Code(request.body)
+    .response
+        h4 Response (HTTP status code: #{response.name})
+        +Headers('Response Headers', response)
+        +Code(response.body)
 
-mixin Headers(reqres)
-    if Object.keys(reqres.headers).length
-        each item, index in reqres.headers
-            != self.highlight(item.name + ': ' + item.value, 'http')
-            if index < reqres.headers.length - 1
-                br
-        br
-        br
+mixin Headers(title, reqres)
+    // Weed out the noisy obvious headers
+    - var unwanted = {
+    -   "accept": "application/json",
+    -   "content-type": "application/json",
+    -   "authorization": null
+    - };
+    - var unwantedNames = Object.keys(unwanted);
+    - var headers = reqres.headers.filter(function(hdr) {
+    -     var key = hdr.name.toLowerCase();
+    -     if (unwantedNames.indexOf(key) >= 0) {
+    -         var unwantedVal = unwanted[key];
+    -         if (unwantedVal === null) {
+    -             return false;
+    -         }
+    -         return hdr.value != unwantedVal;
+    -     }
+    -     return true;
+    - });
+    - console.log(headers);
+    if headers.length
+        h5!=title 
+        .headers
+            ul
+                each item in headers
+                    li
+                        strong= item.name + ': '
+                        !=item.value
+
+mixin Code(codestr)
+    if codestr
+        != '{% highlight json %}\n'
+        != '{% raw %}\n'
+        !=codestr
+        != '{% endraw %}\n'
+        != '{% endhighlight %}\n'
 
 mixin Examples(resourceGroup, resource, action)
     each example in action.examples
         each req, idx in example.requests
-            +RequestResponseII(req, example.responses[idx], action)
+            +RequestResponse(req, example.responses[idx], action)
             hr
 
 mixin Content()
@@ -113,7 +139,7 @@ mixin Content()
     //- Loop through and display information about all the resource
     //- groups, resources, and actions.
     each resourceGroup in self.api.resourceGroups || []
-        section.resource-group(id=resourceGroup.elementId)
+        section.resource-group(id=resourceGroup.elementId, class="searchable")
             h2.group-heading
                 != resourceGroup.name || 'Resource Group'
                 = " "
@@ -123,7 +149,7 @@ mixin Content()
                   != resourceGroup.descriptionHtml
 
             each resource in resourceGroup.resources || []
-                .resource(id=resource.elementId)
+                .resource(id=resource.elementId, class="searchable")
                     h3.resource-heading
                         != resource.name || ((resource.actions[0] != null) && resource.actions[0].name) || 'Resource'
                         = " "
@@ -133,16 +159,17 @@ mixin Content()
                             != self.markdown(resource.description)
 
                     each action in resource.actions || []
-                        .action(class=action.methodLower, id=action.elementId)
-                            h4.action-heading
-                                .name!= action.name
-                            .method!=action.method
-                              code.uri= self.urldec(action.uriTemplate)
-                            if action.parameters.length
-                                +Parameters(action.parameters)
-                            if action.description
-                                .markdown
-                                    != self.markdown(action.description)
-                            if action.examples
-                                +Examples(resourceGroup, resource, action)
+                        .searchable
+                            .action(class=action.methodLower, id=action.elementId)
+                                h4.action-heading
+                                    .name!= action.name
+                                .method!=action.method
+                                  code.uri= self.baseURI + self.urldec(action.uriTemplate)
+                                if action.parameters.length
+                                    +Parameters(action.parameters)
+                                if action.description
+                                    .markdown
+                                        != self.markdown(action.description)
+                                if action.examples
+                                    +Examples(resourceGroup, resource, action)
 
