@@ -1,11 +1,11 @@
 include mixins.jade
 
 != '---\n'
-!= 'layout: default\n'
+!= 'layout: apidocs\n'
 != 'title: API Reference\n'
 != '---\n'
 
-div(class=self.fullWidth ? 'container-fluid' : 'container')#apipage
+div(class='container-fluid')#apipage
     .row
         #menublock
             +Nav(false)

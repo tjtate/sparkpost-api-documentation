@@ -61,7 +61,6 @@ mixin Parameters(params)
                                         li=self.urldec(value.value) 
                                           if param.values.length > 1 && idx < param.values.length-1
                                           | ,
-                    td=param.type || 'string'
 
 mixin RequestResponse(request, response, action)
     if request.name
@@ -71,18 +70,26 @@ mixin RequestResponse(request, response, action)
     if request.description
         .markdown
             .description!= self.markdown(request.description)
-    .request
-        h4 Request
-        p.uri 
-            code
-                != action.method + '&nbsp;'
-                != self.baseURI + action.colorizedUriTemplate
-        +Headers('Request Headers', request)
-        +Code(request.body)
-    .response
-        h4 Response (HTTP status code: #{response.name})
-        +Headers('Response Headers', response)
-        +Code(response.body)
+    .panel(class='request panel-default')
+        .panel-heading
+            h4.panel-title Request
+        .panel-body
+            p.uri 
+                code
+                    != action.method + '&nbsp;'
+                    != self.baseURI + action.colorizedUriTemplate
+            +Headers('Request Headers', request)
+            +Code(request.body)
+    if response.body
+        .panel(class='response panel-default')
+            .panel-heading
+                h4.panel-title Response (HTTP status code: #{response.name})
+            .panel-body
+                +Headers('Response Headers', response)
+                +Code(response.body)
+    else
+        .response
+            h4 Response: (HTTP status code: #{response.name})
 
 mixin Headers(title, reqres)
     // Weed out the noisy obvious headers
@@ -103,7 +110,6 @@ mixin Headers(title, reqres)
     -     }
     -     return true;
     - });
-    - console.log(headers);
     if headers.length
         h5!=title 
         .headers
@@ -115,11 +121,7 @@ mixin Headers(title, reqres)
 
 mixin Code(codestr)
     if codestr
-        != '{% highlight json %}\n'
-        != '{% raw %}\n'
-        !=codestr
-        != '{% endraw %}\n'
-        != '{% endhighlight %}\n'
+      pre!= self.highlight(codestr, 'json')
 
 mixin Examples(resourceGroup, resource, action)
     each example in action.examples
@@ -139,8 +141,8 @@ mixin Content()
     //- Loop through and display information about all the resource
     //- groups, resources, and actions.
     each resourceGroup in self.api.resourceGroups || []
-        section.resource-group(id=resourceGroup.elementId, class="searchable")
-            h2.group-heading
+        section.resource-group(class="searchable")
+            h2.group-heading(id=resourceGroup.elementId)
                 != resourceGroup.name || 'Resource Group'
                 = " "
                 a.permalink(href=resourceGroup.elementLink)
@@ -149,8 +151,8 @@ mixin Content()
                   != resourceGroup.descriptionHtml
 
             each resource in resourceGroup.resources || []
-                .resource(id=resource.elementId, class="searchable")
-                    h3.resource-heading
+                .resource(class="searchable")
+                    h3.resource-heading(id=resource.elementId)
                         != resource.name || ((resource.actions[0] != null) && resource.actions[0].name) || 'Resource'
                         = " "
                         a.permalink(href=resource.elementLink) &nbsp;
@@ -160,8 +162,8 @@ mixin Content()
 
                     each action in resource.actions || []
                         .searchable
-                            .action(class=action.methodLower, id=action.elementId)
-                                h4.action-heading
+                            .action(class=action.methodLower)
+                                h4.action-heading(id=action.elementId)
                                     .name!= action.name
                                 .method!=action.method
                                   code.uri= self.baseURI + self.urldec(action.uriTemplate)

@@ -302,6 +302,9 @@ module.exports = function(grunt) {
     // grunt compile - concatenates all the individual blueprint files and validates it
     grunt.registerTask('compile', [ 'concat:prod', 'test' ]);
 
+    grunt.registerTask('staticDev', ['static', 'watch:staticDocs']);
+
+    // grunt static: build per-service API HTML files and copy to local DevHub copy
     grunt.registerTask('static', ['aglio', 'dom_munger', 'copy:fixup_nav', 'copy:static_to_devhub']);
 
     // register default grunt command as grunt test
