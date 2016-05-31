@@ -68,15 +68,15 @@ Subaccounts are a way for service providers to provision and manage their custom
 
 The following APIs have subaccount support:
 
-* [Metrics API](https://developers.sparkpost.com/api/#/reference/metrics) **(Note: Not available for Subaccount API keys)**
-* [Message Events API](https://developers.sparkpost.com/api/#/reference/message-events)
-* [Sending Domains API](https://developers.sparkpost.com/api/#/reference/sending-domains)
-* [Suppression List API](https://developers.sparkpost.com/api/#/reference/suppression-list)
-* [SMTP API](https://developers.sparkpost.com/api/#/reference/smtp-api)
-* [Transmissions API](https://developers.sparkpost.com/api/#/reference/transmissions)
+* [Metrics API](metrics_api.html) **(Note: Not available for Subaccount API keys)**
+* [Message Events API](message_events_api.html)
+* [Sending Domains API](sending_domains_api.html)
+* [Suppression List API](suppression_list_api.html)
+* [SMTP API](smtp_api.html)
+* [Transmissions API](transmissions_api.html)
 
 **Note**: support coming soon for the following
-* [Tracking Domains API](#tracking-domains-api)
+* [Tracking Domains API](tracking_domains_api.html)
 
 ### Terminology
 * Master Account - This refers to a Service Provider and their data
@@ -118,4 +118,4 @@ To use SparkPost as an SMTP relay you need to point your SMTP client (or local M
 
 * Please contact your Technical Account Manager for details on your SMTP endpoint.
 
-The SMTP relay optionally supports advanced API features using the [SMTP API](#smtp-api).  To create an API key, login to your SparkPost [Account Credentials](https://app.sparkpost.com/account/credentials) page.
+The SMTP relay optionally supports advanced API features using the [SMTP API](smtp_api.html).  To create an API key, login to your SparkPost [Account Credentials](https://app.sparkpost.com/account/credentials) page.

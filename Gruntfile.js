@@ -62,6 +62,7 @@ module.exports = function(grunt) {
           options: {
             themeTemplate: 'theme/index.jade',
             themeFullWidth: true,
+            themeEmoji: false,
             locals: {
               baseURI: '/api/v1'
             }
