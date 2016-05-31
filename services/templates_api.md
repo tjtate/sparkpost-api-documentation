@@ -319,7 +319,8 @@ If the template was used for message generation, the result will also include a 
 
             "options": {
               "open_tracking" : false,
-              "click_tracking" : true
+              "click_tracking" : true,
+              "transactional" : false
             },
 
             "content": {

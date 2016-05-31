@@ -74,8 +74,6 @@ The following APIs have subaccount support:
 * [Suppression List API](suppression_list_api.html)
 * [SMTP API](smtp_api.html)
 * [Transmissions API](transmissions_api.html)
-
-**Note**: support coming soon for the following
 * [Tracking Domains API](tracking_domains_api.html)
 
 ### Terminology
@@ -119,3 +117,4 @@ To use SparkPost as an SMTP relay you need to point your SMTP client (or local M
 * Please contact your Technical Account Manager for details on your SMTP endpoint.
 
 The SMTP relay optionally supports advanced API features using the [SMTP API](smtp_api.html).  To create an API key, login to your SparkPost [Account Credentials](https://app.sparkpost.com/account/credentials) page.
+

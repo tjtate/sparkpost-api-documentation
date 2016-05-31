@@ -14,7 +14,7 @@ If you use [Postman](https://www.getpostman.com/) you can click the following bu
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
 |domain    | string | Name of the sending domain | yes |The domain name will be used as the "From:" header address in the email.|
-|tracking_domain | string | Associated tracking domain | no | example: "click.example1.com". **Note**: linking tracking domains to sending domains belonging to subaccounts is coming soon.|
+|tracking_domain | string | Associated tracking domain | no | example: "click.example1.com". **Note**: tracking domain and sending domain must belong to the same subaccount to be linked together.|
 |status | JSON object | JSON object containing status details, including whether this domain's ownership has been verified  | no | Read only. For a full description, see the Status Attributes.|
 |dkim | JSON object | JSON object in which DKIM key configuration is defined | no | For a full description, see the DKIM Attributes.|
 |generate_dkim | boolean | Whether to generate a DKIM keypair on creation | no | defaults to true |
@@ -390,6 +390,18 @@ The verify resource operates differently depending on the provided request field
   * Including the fields "dkim_verify" and/or "spf_verify" in the request initiates a check against the associated DNS record type for the specified sending domain.
   * Including the fields "postmaster_at_verify" and/or "abuse_at_verify" in the request results in an email sent to the specified sending domain's postmaster@ and/or abuse@ mailbox where a verification link can be clicked.
   * Including the fields "postmaster_at_token" and/or "abuse_at_token" in the request initiates a check of the provided token(s) against the stored token(s) for the specified sending domain.
+
+DKIM public key verification requires the following:
+  * A valid DKIM record must be in the DNS for the sending domain being verified.
+  * The record must use the sending domain's public key in the "p=" tag.
+  * If a k= tag is defined, it must be set to "rsa".
+  * If an h= tag is defined, it must be set to "sha256".
+
+SPF verification requires the following:
+  * A valid SPF record must be in the DNS for the sending domain being verified.
+  * The record must contain "v=spf1".
+  * The record must contain "include:sparkpostmail.com".
+  * The record must use either "~all" or "-all".
 
 The domain's "status" object is returned on success.
 

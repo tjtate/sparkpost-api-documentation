@@ -77,8 +77,6 @@ The following APIs have subaccount support:
 * [Suppression List API](https://developers.sparkpost.com/api/#/reference/suppression-list)
 * [SMTP API](https://developers.sparkpost.com/api/#/reference/smtp-api)
 * [Transmissions API](https://developers.sparkpost.com/api/#/reference/transmissions)
-
-**Note**: support coming soon for the following
 * [Tracking Domains API](#tracking-domains-api)
 
 ### Terminology
@@ -604,6 +602,10 @@ The relational and logical operators are as follows:
 | and |
 | or |
 | not |
+
+**The Length Operator**
+
+The length operator `#` gives the length of an array. From the sample data above: `#shopping_cart` produces `2`.
 
 ### Array Iteration
 
@@ -2008,7 +2010,7 @@ Provides aggregate metrics grouped by domain over the time window specified.
             + `count_spam_complaint`
 
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
 
 + Request
@@ -2264,7 +2266,7 @@ Provides aggregate metrics grouped by sending IP over the time window specified.
           + `count_accepted`
           + `count_spam_complaint`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
 
 + Request
@@ -2503,7 +2505,7 @@ Provides aggregate metrics grouped by IP pool over the time window specified.
           + `count_accepted`
           + `count_spam_complaint`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
 
 + Request
@@ -2758,7 +2760,7 @@ Provides aggregate metrics grouped by sending domain over the time window specif
           + `count_accepted`
           + `count_spam_complaint`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
 
 + Request
@@ -3012,7 +3014,7 @@ Provides aggregate metrics grouped by subaccount over the time window specified.
           + `count_accepted`
           + `count_spam_complaint`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
 
 + Request
@@ -3254,7 +3256,7 @@ Provides aggregate metrics grouped by campaign over the time window specified.
             + `count_spam_complaint`
 
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-    + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+    + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
     + order_by (optional, string, `count_injected`) ... Metric by which to order results
 
 + Request
@@ -3497,7 +3499,7 @@ Provides aggregate metrics grouped by template over the time window specified.
             + `count_spam_complaint`
 
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
 
 + Request
@@ -3741,7 +3743,7 @@ in the world.
             + `count_spam_complaint`
 
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
   + order_by (optional, string, `count_injected`) ... Metric by which to order results
 
 + Request
@@ -4180,7 +4182,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
             + `count_outofband_bounce`
 
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-    + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+    + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
 
 + Request
 
@@ -4317,7 +4319,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the domai
             + `count_outofband_bounce`
 
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-    + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+    + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
 
 + Request
 
@@ -4538,7 +4540,7 @@ Provides deliverability metrics, specific to rejection events, grouped by the re
       + Values
           + `smtp`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
 
 + Response 200 (application/json)
 
@@ -4635,7 +4637,7 @@ Provides deliverability metrics, specific to rejection events, grouped by the do
       + Values
           + `smtp`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
 
 + Response 200 (application/json)
 
@@ -4720,7 +4722,7 @@ Provides deliverability metrics, specific to delay events, grouped by the delay 
       + Values
           + `smtp`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
 
 + Request
 
@@ -4818,7 +4820,7 @@ Provides deliverability metrics, specific to delay events, grouped by the domain
       + Values
           + `smtp`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
-  + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+  + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
 
 + Request
 
@@ -4909,7 +4911,7 @@ name (or URL if no link name exists).
     + templates (optional, list, `summer-sale`) ... delimited list of template IDs to include
     + sending_domains (optional, list, `sales.sender.com,company.net`) ... delimited list of sending domains to include
     + subaccounts (optional, list, `123,125,127`) ... delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
-    + limit (optional, int, `5`) ... Maximum number of results to return within range [1,10000]
+    + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
 
 + Request
 
@@ -5009,21 +5011,21 @@ Provides aggregate count of deliveries grouped by the attempt number.
 
   [Deliveries By Attempt][]
 
-## Binding Groups List [/metrics/binding-groups{?match,limit}]
+## Binding Groups List [/metrics/binding-groups{?from,to,timezone,match,limit}]
 
 **Deprecation Notice:** This endpoint has been deprecated. Please use the IP Pools listing endpoint instead.
 
 ### Bindings Groups List [GET]
 
 
-## Bindings List [/metrics/bindings]
+## Binding Groups List [/metrics/bindings{?from,to,timezone,match,limit}]
 
 **Deprecation Notice:** This endpoint has been deprecated. Please use the Sending IPs listing endpoint instead.
 
 ### Bindings List [GET]
 
 
-## IP Pools List [/metrics/ip-pools{?match,limit}]
+## IP Pools List [/metrics/ip-pools{?from,to,timezone,match,limit}]
 
 + Model (application/json)
 
@@ -5071,6 +5073,9 @@ Returns a list of IP pools that the Metrics API contains data on.
 + Parameters
     + match (optional, string, `example`) ... Only return results containing this string
     + limit (optional, int, `5`) ... Maximum number of results to return
+    + from (optional, datetime, `2015-12-01T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + to = `now` (optional, datetime, `2014-12-01T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
 
 + Request
 
@@ -5084,7 +5089,7 @@ Returns a list of IP pools that the Metrics API contains data on.
     [IP Pools List][]
 
 
-## Sending IPs List [/metrics/sending-ips{?match,limit}]
+## Sending IPs List [/metrics/sending-ips{?from,to,timezone,match,limit}]
 
 + Model (application/json)
 
@@ -5132,6 +5137,9 @@ Returns a list of sending IPs that the Metrics API contains data on.
 + Parameters
     + match (optional, string, `example`) ... Only return results containing this string
     + limit (optional, int, `5`) ... Maximum number of results to return
+    + from (optional, datetime, `2015-12-01T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + to = `now` (optional, datetime, `2014-12-01T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
 
 + Request
 
@@ -5145,7 +5153,7 @@ Returns a list of sending IPs that the Metrics API contains data on.
  [Sending IPs List][]
 
 
-## Campaigns List [/metrics/campaigns{?match,limit}]
+## Campaigns List [/metrics/campaigns{?from,to,timezone,limit,match}]
 
 + Model (application/json)
 
@@ -5193,6 +5201,9 @@ Returns a list of campaigns that the Metrics API contains data on.
 + Parameters
     + match (optional, string, `example`) ... Only return results containing this string
     + limit (optional, int, `5`) ... Maximum number of results to return
+    + from (optional, datetime, `2015-12-01T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + to = `now` (optional, datetime, `2014-12-01T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
 
 + Request
 
@@ -5206,7 +5217,7 @@ Returns a list of campaigns that the Metrics API contains data on.
   [Campaigns List][]
 
 
-## Domains List [/metrics/domains{?match,limit}]
+## Domains List [/metrics/domains{?from,to,timezone,limit,match}]
 
 + Model (application/json)
 
@@ -5254,6 +5265,9 @@ Returns a list of domains that the Metrics API contains data on.
 + Parameters
     + match (optional, string, `example`) ... Only return results containing this string
     + limit (optional, int, `5`) ... Maximum number of results to return
+    + from (optional, datetime, `2015-12-01T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + to = `now` (optional, datetime, `2014-12-01T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
 
 + Request
 
@@ -5266,7 +5280,7 @@ Returns a list of domains that the Metrics API contains data on.
 
   [Domains List][]
 
-## Nodes List [/metrics/nodes]
+## Nodes List [/metrics/nodes{?from,to,timezone,limit,match}]
 
 + Model (application/json)
 
@@ -5313,6 +5327,13 @@ Returns a list of domains that the Metrics API contains data on.
 
 Returns a list of nodes that the Metrics API contains data on.
 
++ Parameters
+    + match (optional, string, `example`) ... Only return results containing this string
+    + limit (optional, int, `5`) ... Maximum number of results to return
+    + from (optional, datetime, `2015-12-01T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + to = `now` (optional, datetime, `2014-12-01T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
+
 + Request
 
   + Headers
@@ -5325,7 +5346,7 @@ Returns a list of nodes that the Metrics API contains data on.
  [Nodes List][]
 
 
-## Protocols List [/metrics/protocols]
+## Protocols List [/metrics/protocols{?from,to,timezone,limit,match}]
 
 + Model (application/json)
 
@@ -5371,6 +5392,13 @@ Returns a list of nodes that the Metrics API contains data on.
 **Note:** This endpoint is available in SparkPost Elite only.
 
 Returns a list of protocols that the Metrics API contains data on.
+
++ Parameters
+    + match (optional, string, `example`) ... Only return results containing this string
+    + limit (optional, int, `5`) ... Maximum number of results to return
+    + from (optional, datetime, `2015-12-01T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + to = `now` (optional, datetime, `2014-12-01T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
 
 + Request
 
@@ -7056,7 +7084,7 @@ If you use [Postman](https://www.getpostman.com/) you can click the following bu
 | Field         | Type     | Description                           | Required   | Notes   |
 |------------------------|:-:       |---------------------------------------|-------------|--------|
 |domain    | string | Name of the sending domain | yes |The domain name will be used as the "From:" header address in the email.|
-|tracking_domain | string | Associated tracking domain | no | example: "click.example1.com". **Note**: linking tracking domains to sending domains belonging to subaccounts is coming soon.|
+|tracking_domain | string | Associated tracking domain | no | example: "click.example1.com". **Note**: tracking domain and sending domain must belong to the same subaccount to be linked together.|
 |status | JSON object | JSON object containing status details, including whether this domain's ownership has been verified  | no | Read only. For a full description, see the Status Attributes.|
 |dkim | JSON object | JSON object in which DKIM key configuration is defined | no | For a full description, see the DKIM Attributes.|
 |generate_dkim | boolean | Whether to generate a DKIM keypair on creation | no | defaults to true |
@@ -7433,6 +7461,18 @@ The verify resource operates differently depending on the provided request field
   * Including the fields "postmaster_at_verify" and/or "abuse_at_verify" in the request results in an email sent to the specified sending domain's postmaster@ and/or abuse@ mailbox where a verification link can be clicked.
   * Including the fields "postmaster_at_token" and/or "abuse_at_token" in the request initiates a check of the provided token(s) against the stored token(s) for the specified sending domain.
 
+DKIM public key verification requires the following:
+  * A valid DKIM record must be in the DNS for the sending domain being verified.
+  * The record must use the sending domain's public key in the "p=" tag.
+  * If a k= tag is defined, it must be set to "rsa".
+  * If an h= tag is defined, it must be set to "sha256".
+
+SPF verification requires the following:
+  * A valid SPF record must be in the DNS for the sending domain being verified.
+  * The record must contain "v=spf1".
+  * The record must contain "include:sparkpostmail.com".
+  * The record must use either "~all" or "-all".
+
 The domain's "status" object is returned on success.
 
 + Request Verify DKIM and SPF (application/json)
@@ -7627,7 +7667,7 @@ Endpoint for retrieving a list of your subaccounts. This endpoint only returns i
 
 ### Create new subaccount [POST]
 
-Provisions a new subaccount and an initial subaccount API key. Subaccount API keys are only allowed very specific grants, which are limited to: `smtp/inject`, `sending_domains/manage`, `message_events/view`, `suppression_lists/manage`, `transmissions/view`, and `transmissions/modify`.
+Provisions a new subaccount and an initial subaccount API key. Subaccount API keys are only allowed very specific grants, which are limited to: `smtp/inject`, `sending_domains/manage`, `tracking_domains/view`, `tracking_domains/manage`, `message_events/view`, `suppression_lists/manage`, `transmissions/view`, and `transmissions/modify`.
 
 Subaccounts are allowed to send mail using the SMTP protocol or Transmissions API, retrieve sending statistics via the Message Events API, manage their Sending Domains, manage their Suppression List.
 
@@ -7639,9 +7679,9 @@ Subaccounts are allowed to send mail using the SMTP protocol or Transmissions AP
 | ------------  | ---------- | ------- | --------------------------------------------------------------------------| ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | name          | yes        | string  | User friendly identifier for a specific subaccount                        |                                                                                                                                                               |
 | key_label     | yes        | string  | User friendly identifier for the initial subaccount api key               |                                                                                                                                                               |
-| key_grants    | yes        | Array   | List of grants to give to the initial subaccount api key                  | Valid values are `smtp/inject`, `sending_domains/manage`, `message_events/view`, `suppression_lists/manage`, `transmissions/view`, and `transmissions/modify` |
+| key_grants    | yes        | Array   | List of grants to give to the initial subaccount api key                  | Valid values are `smtp/inject`, `sending_domains/manage`, `tracking_domains/view`, `tracking_domains/manage`, `message_events/view`, `suppression_lists/manage`, `transmissions/view`, and `transmissions/modify` |
 | key_valid_ips | no         | Array   | List of IP's that the initial subaccount api key can be used from         | If the supplied `key_valid_ips` is an empty array, the api key is usable by any IP address                                                                    |
-| ip_pool       | no         | string  | The ID of the default IP Pool assigned to this subaccount's transmissions | If the supplied `ip_pool` is an empty string or not present, no default `ip_pool` will be assigned                                                            |
+| ip_pool       | no         | string  | The ID of the default IP Pool assigned to this subaccount's transmissions ( **Note:** SparkPost only ) | If the supplied `ip_pool` is an empty string or not present, no default `ip_pool` will be assigned                                                            |
 
 
 + Request (application/json)
@@ -7655,7 +7695,7 @@ Subaccounts are allowed to send mail using the SMTP protocol or Transmissions AP
             {
               "name": "Sparkle Ponies",
               "key_label": "API Key for Sparkle Ponies Subaccount",
-              "key_grants": ["smtp/inject", "sending_domains/manage", "message_events/view", "suppression_lists/manage"]
+              "key_grants": ["smtp/inject", "sending_domains/manage", "message_events/view", "suppression_lists/manage", "tracking_domains/view", "tracking_domains/manage"]
             }
 
 + Response 200 (application/json)
@@ -7704,9 +7744,14 @@ Subaccounts are allowed to send mail using the SMTP protocol or Transmissions AP
               "value": null
             },
             {
-              "message": "ip_pool parameter must not exceed 32 characters",
+              "message": "ip_pool must be 20 characters or less",
               "param": "ip_pool",
-              "value": "an ip pool name that is too long"
+              "value": "an_ip_pool_name_that_is_too_long"
+            },
+            {
+              "message": "ip_pool must be alphanumeric and underscore",
+              "param": "ip_pool",
+              "value": "$invalid chars"
             }
           ]
         }
@@ -7781,13 +7826,12 @@ Update an existing subaccount's information. You can update the following inform
         {
           "errors": [
             {
-              "message": "ip_pool parameter must not exceed 32 characters",
+              "message": "ip_pool must be 20 characters or less",
               "param": "ip_pool",
-              "value": "an ip pool name that is too long"
+              "value": "an_ip_pool_name_that_is_too_long"
             }
           ]
         }
-
 
 # Group Suppression List
 <a name="suppression-list-api"></a>
@@ -8364,7 +8408,8 @@ If the template was used for message generation, the result will also include a 
 
             "options": {
               "open_tracking" : false,
-              "click_tracking" : true
+              "click_tracking" : true,
+              "transactional" : false
             },
 
             "content": {
@@ -8583,7 +8628,6 @@ With a tracking domain you can replace the domain part of the link. So if your t
 ```
 
 **Note:** Use of a tracking domain requires modification of your DNS records to include a CNAME record.
-**Note:** Currently subaccounts can only use their master account's default tracking domain. Feature coming soon.
 
 ## Using Postman
 
@@ -9048,7 +9092,7 @@ If you use [Postman](https://www.getpostman.com/) you can click the following bu
 |transactional|boolean|Whether message is transactional or non-transactional for unsubscribe and suppression purposes | no |If not specified, the setting at template level is used, or defaults to false. |
 |sandbox|boolean|Whether or not to use the sandbox sending domain ( **Note:** SparkPost only )| no |Defaults to false. |
 |skip_suppression|boolean|Whether or not to ignore customer suppression rules, for this transmission only.  Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no - Defaults to false |  Unlike most other options, this flag is omitted on a GET transmission response unless the flag's value is true. |
-| ip_pool | string | The name of a dedicated IP pool associated with your account.  If this field is not provided, the account's default dedicated IP pool is used (if such a pool exists).  To explicitly bypass the account's default dedicated IP pool and instead fallback to the shared pool, specify a value of "sp_shared".  Please note that this option does not apply to subaccounts. | no | For more information on dedicated IPs, see the [Support Center](https://support.sparkpost.com/customer/en/portal/articles/2002977-dedicated-ip-addresses)
+| ip_pool | string | The name of a dedicated IP pool associated with your account ( **Note:** SparkPost only ).  If this field is not provided, the account's default dedicated IP pool is used (if such a pool exists).  To explicitly bypass the account's default dedicated IP pool and instead fallback to the shared pool, specify a value of "sp_shared".  Please note that this option does not apply to subaccounts. | no | For more information on dedicated IPs, see the [Support Center](https://support.sparkpost.com/customer/en/portal/articles/2002977-dedicated-ip-addresses)
 |inline_css|boolean|Whether or not to perform CSS inlining in HTML content | no - Defaults to false | |
 
 ### Inline Content Attributes
@@ -10530,7 +10574,7 @@ The fields supported in the X-MSYS-API header are as follows:
 | transactional | boolean | Whether message is transactional or non-transactional for unsubscribe and suppression purposes | no | Defaults to false. |
 | sandbox| boolean| Whether or not to use the sandbox sending domain ( **Note:** SparkPost only ) | no | Defaults to false. |
 | skip_suppression| boolean| Whether or not to ignore customer suppression rules, for this SMTP message only. Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no | Defaults to false. |
-| ip_pool | string | The name of a dedicated IP pool associated with your account.  If this field is not provided, the account's default dedicated IP pool is used (if such a pool exists).  To explicitly bypass the account's default dedicated IP pool and instead fallback to the shared pool, specify a value of "sp_shared". Please note that this option does not apply to subaccounts. | no | For more information on dedicated IPs, see the [Support Center](https://support.sparkpost.com/customer/en/portal/articles/2002977-dedicated-ip-addresses)
+| ip_pool | string | The name of a dedicated IP pool associated with your account ( **Note:** SparkPost only ).  If this field is not provided, the account's default dedicated IP pool is used (if such a pool exists).  To explicitly bypass the account's default dedicated IP pool and instead fallback to the shared pool, specify a value of "sp_shared". Please note that this option does not apply to subaccounts. | no | For more information on dedicated IPs, see the [Support Center](https://support.sparkpost.com/customer/en/portal/articles/2002977-dedicated-ip-addresses)
 | inline_css| boolean| Whether or not to perform CSS inlining in HTML content | no | Defaults to false. |
 
 ## Sending Messages with cc, bcc, and archive Recipients
