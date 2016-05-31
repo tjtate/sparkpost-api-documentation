@@ -20,8 +20,7 @@ var matchdep = require('matchdep')
         'webhooks_api.md',
         'smtp_api.md'
     ]
-    , staticTempDir = 'static/'
-    , staticOutputDir = '../sparkpost.github.io/_api/'; // Relative to staticTempDir (!)
+    , staticTempDir = 'static/';
 
 function _md2html(obj, val, idx) {
     var name = (val.split('.'))[0];
@@ -46,6 +45,8 @@ function htmlFile(md) {
 }
 
 module.exports = function(grunt) {
+    var staticOutputDir = grunt.option('output') || '../sparkpost.github.io/_api/'; // Relative to staticTempDir (!)
+
     // Dynamically load any preexisting grunt tasks/modules
     matchdep.filterDev('grunt-*').forEach(grunt.loadNpmTasks);
     var cheerio = require('cheerio');
@@ -94,7 +95,6 @@ module.exports = function(grunt) {
                           }
                         );
 
-                        // TODO: fix this in the template: mixins.jade:Nav()
                         var name = (file.split('.'))[0];
                         name = (name.split('/'))[1];
                         // Fix nav name, it's Overview for some reason
@@ -303,11 +303,15 @@ module.exports = function(grunt) {
     // grunt compile - concatenates all the individual blueprint files and validates it
     grunt.registerTask('compile', [ 'concat:prod', 'test' ]);
 
+    // grunt staticDev: build API HTML files, copy to local DevHub copy and then watch for changes
+    // Use --output change the location of the API HTML
     grunt.registerTask('staticDev', ['static', 'watch:staticDocs']);
 
     // grunt static: build per-service API HTML files and copy to local DevHub copy
+    // Use --output change the location of the API HTML
     grunt.registerTask('static', ['aglio', 'dom_munger', 'copy:fixup_nav', 'copy:static_to_devhub']);
 
     // register default grunt command as grunt test
     grunt.registerTask('default', [ 'testFiles' ]);
 };
+

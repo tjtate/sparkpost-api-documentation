@@ -8,7 +8,7 @@ include mixins.jade
 div(class='container-fluid')#apipage
     .row
         #menublock
-            +Nav(false)
+            +Nav()
 
         #contentblock
             if self.api.name != "" && self.api.resourceGroups.length == 0
