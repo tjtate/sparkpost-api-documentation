@@ -45,7 +45,10 @@ function htmlFile(md) {
 }
 
 module.exports = function(grunt) {
-    var staticOutputDir = grunt.option('output') || '../sparkpost.github.io/_api/' // Relative to staticTempDir (!)
+    // Relative to staticTempDir (!)
+    if (!grunt.option('output')) {
+      grunt.option('output', '../sparkpost.github.io/_api/');
+    }
 
     grunt.option('aglioTemplate', 'production');
 
@@ -158,10 +161,15 @@ module.exports = function(grunt) {
             static_to_devhub: {
                 expand: true,
                 cwd: staticTempDir,
-                src:'**',
-                dest: staticOutputDir,
+                src:'*.html',
+                dest: '<%= grunt.option("output") %>',
                 flatten: true
-            }
+            },
+
+          static_preview_css: {
+            src: 'templates/preview/main.css',
+            dest: '<%= grunt.option("output") %>/' 
+          }
         },
 
         concat: {
@@ -187,6 +195,20 @@ module.exports = function(grunt) {
                             require('connect-livereload')(),
                             connect.static('apiary-previews'),
                             connect.directory('apiary-previews')
+                        ];
+                    }
+                }
+            },
+            staticPreview: {
+                options: {
+                    port: 4000,
+                    hostname: '0.0.0.0',
+                    open: true,
+                    middleware: function(connect) {
+                        return [
+                            require('connect-livereload')(),
+                            connect.static('static'),
+                            connect.directory('static')
                         ];
                     }
                 }
@@ -306,31 +328,34 @@ module.exports = function(grunt) {
         'watch:apiaryDocs'
     ]);
 
+    // Internal: grunt genStaticPreview: build preview HTML under static/
     grunt.registerTask('genStaticPreview', '', function() {
       // Call aglio with a preview template
       grunt.option('aglioTemplate', 'preview');
       grunt.option('output', 'static');
-      grunt.task.run(['aglio', 'dom_munger', 'copy:fixup_nav']);
+      grunt.task.run(['aglio', 'dom_munger', 'copy:fixup_nav', 'copy:static_preview_css']);
     });
 
+    // grunt staticPreview: build preview HTML under static/, open a browser and watch for changes
     grunt.registerTask('staticPreview', 'View the static generated HTML files in the browser', [
         'genStaticPreview',
+        'connect:staticPreview',
         'watch:staticPreview'
     ]);
 
     // grunt test - runs apiary-blueprint-validator on combined apiary.apib file
     grunt.registerTask('test', [ 'shell:test' ]);
 
-    // grunt compile - concatenates all the individual blueprint files and validates it
+    // DEPRECATED: grunt compile - concatenates all the individual blueprint files and validates it
     grunt.registerTask('compile', [ 'concat:prod', 'test' ]);
 
     // grunt staticDev: build API HTML files, copy to local DevHub copy and then watch for changes
-    // Use --output change the location of the API HTML
+    // Use --output change the location of the resulting API doc files.
     grunt.registerTask('staticDev', ['static', 'watch:staticDocs']);
 
-    // grunt static: build per-service API HTML files and copy to local DevHub copy
-    // Use --output change the location of the API HTML
-    grunt.registerTask('static', ['aglio', 'dom_munger', 'copy:fixup_nav', 'copy:static_to_devhub']);
+    // grunt static: validate apiary blueprint, build API HTML files and copy to local DevHub copy
+    // Use --output change the location of the resulting API doc files.
+    grunt.registerTask('static', ['test', 'aglio', 'dom_munger', 'copy:fixup_nav', 'copy:static_to_devhub']);
 
     // register default grunt command as grunt test
     grunt.registerTask('default', [ 'testFiles' ]);
