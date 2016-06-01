@@ -45,7 +45,9 @@ function htmlFile(md) {
 }
 
 module.exports = function(grunt) {
-    var staticOutputDir = grunt.option('output') || '../sparkpost.github.io/_api/'; // Relative to staticTempDir (!)
+    var staticOutputDir = grunt.option('output') || '../sparkpost.github.io/_api/' // Relative to staticTempDir (!)
+
+    grunt.option('aglioTemplate', 'production');
 
     // Dynamically load any preexisting grunt tasks/modules
     matchdep.filterDev('grunt-*').forEach(grunt.loadNpmTasks);
@@ -61,7 +63,7 @@ module.exports = function(grunt) {
                 files: services.reduce(_md2html, {})
             },
           options: {
-            themeTemplate: 'theme/index.jade',
+            themeTemplate: 'templates/<%= grunt.option("aglioTemplate") %>/index.jade',
             themeFullWidth: true,
             themeEmoji: false,
             locals: {
@@ -218,10 +220,17 @@ module.exports = function(grunt) {
                 }
             },
             staticDocs: {
-                files: [ 'services/*.md', 'theme/*', 'Gruntfile.js' ],
+                files: [ 'services/*.md', 'templates/production/*.jade', 'Gruntfile.js' ],
                 tasks: [ 'static' ],
                 options: {
                     livereload: false
+                }
+            },
+            staticPreview: {
+                files: [ 'services/*.md', 'templates/preview/*.jade', 'Gruntfile.js' ],
+                tasks: [ 'genStaticPreview' ],
+                options: {
+                    livereload: true
                 }
             }
         }
@@ -295,6 +304,18 @@ module.exports = function(grunt) {
         'generate-apiary-preview',
         'connect:apiary',
         'watch:apiaryDocs'
+    ]);
+
+    grunt.registerTask('genStaticPreview', '', function() {
+      // Call aglio with a preview template
+      grunt.option('aglioTemplate', 'preview');
+      grunt.option('output', 'static');
+      grunt.task.run(['aglio', 'dom_munger', 'copy:fixup_nav']);
+    });
+
+    grunt.registerTask('staticPreview', 'View the static generated HTML files in the browser', [
+        'genStaticPreview',
+        'watch:staticPreview'
     ]);
 
     // grunt test - runs apiary-blueprint-validator on combined apiary.apib file
