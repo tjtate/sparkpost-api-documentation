@@ -48,6 +48,14 @@ Once all the dependencies are installed, you can execute the Apiary Blueprint Va
 * Concatenate ALL /services/ files into a single apiary.apib file, then test the compiled file
   ```grunt compile```
 
+#### Static Docs Development Workflow
+
+You can use `grunt staticPreview` to generate API docs under `static/` and start an auto-regen watch process.
+
+Open `static/index.html` to view the rendered files.
+
+*Note: the output of this command is not identical to production renders. Its intended as a usable preview for development work.*
+
 ### Contributing
 [Guidelines for adding issues](docs/ADDING_ISSUES.markdown)
 
