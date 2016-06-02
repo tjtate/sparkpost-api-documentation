@@ -21,7 +21,7 @@ Click and open tracking are disabled by default in SMTP messages sent through Sp
 X-MSYS-API: { "options" : { "open_tracking" : true, "click_tracking" : true } }
 ```
 
-**Note**: Key-Value [Substitutions](substitutions_reference.html) are not supported in SMTP API.
+**Note**: Key-Value [Substitutions](substitutions-reference.html) are not supported in SMTP API.
 substitution_data provided in the X-MSYS-API header will be ignored.
 
 The fields supported in the X-MSYS-API header are as follows:

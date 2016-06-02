@@ -93,7 +93,7 @@ module.exports = function(grunt) {
                               href = filename + obj.attr('href');
                             }
                             // Rename #top anchor so auto-expansion works as expected.
-                            if (href == 'substitutions_reference.html#top') {
+                            if (href == 'substitutions-reference.html#top') {
                                 href = filename + '#substitutions-reference-top';
                             }
                             obj.attr('href', href);
@@ -103,8 +103,8 @@ module.exports = function(grunt) {
                         var name = (file.split('.'))[0];
                         name = (name.split('/'))[1];
                         // Fix nav name, it's Overview for some reason
-                        if (name == 'substitutions_reference') {
-                            $('nav div.heading a[href^="substitutions_reference.html"]').text('Substitutions Reference');
+                        if (name == 'substitutions-reference') {
+                            $('nav div.heading a[href^="substitutions-reference.html"]').text('Substitutions Reference');
                         }
                         // save a copy of the fixed-up nav from the current page
                         // we'll use this in `copy`, below
