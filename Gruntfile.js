@@ -4,21 +4,21 @@ var matchdep = require('matchdep')
     , request = require('request')
     , services = [
         'introduction.md',
-        'substitutions_reference.md',
-        'account_api.md',
-        'inbound_domains_api.md',
-        'metrics_api.md',
-        'message_events_api.md',
-        'recipient_list_api.md',
-        'relay_webhooks_api.md',
-        'sending_domains_api.md',
-        'subaccounts_api.md',
-        'suppression_list_api.md',
-        'templates_api.md',
-        'tracking_domains_api.md',
-        'transmissions_api.md',
-        'webhooks_api.md',
-        'smtp_api.md'
+        'substitutions-reference.md',
+        'account.md',
+        'inbound-domains.md',
+        'metrics.md',
+        'message-events.md',
+        'recipient-list.md',
+        'relay-webhooks.md',
+        'sending-domains.md',
+        'subaccounts.md',
+        'suppression-list.md',
+        'templates.md',
+        'tracking-domains.md',
+        'transmissions.md',
+        'webhooks.md',
+        'smtp-api.md'
     ]
     , staticTempDir = 'static/';
 
@@ -86,12 +86,12 @@ module.exports = function(grunt) {
                             var obj = $(elt);
                             var filename = (file.split('/'))[1];
                             var href;
-                            
+
                             if (obj.parent().attr('class') == 'heading') {
-                              href = filename; 
+                              href = filename;
                             } else {
                               href = filename + obj.attr('href');
-                            } 
+                            }
                             // Rename #top anchor so auto-expansion works as expected.
                             if (href == 'substitutions_reference.html#top') {
                                 href = filename + '#substitutions-reference-top';
@@ -168,7 +168,7 @@ module.exports = function(grunt) {
 
           static_preview_css: {
             src: 'templates/preview/main.css',
-            dest: '<%= grunt.option("output") %>/' 
+            dest: '<%= grunt.option("output") %>/'
           }
         },
 
