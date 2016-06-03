@@ -6,4 +6,5 @@
 .node-version
 apiary-previews
 node_modules
+/devhub
 /static
