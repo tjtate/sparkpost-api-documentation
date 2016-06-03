@@ -84,7 +84,7 @@ module.exports = function(grunt) {
                         $('nav a[href^=#]').each(
                           function(idx, elt) {
                             var obj = $(elt);
-                            var filename = (file.split('/'))[1];
+                            var filename = (file.split('/'))[1].replace('.html', '');
                             var href;
 
                             if (obj.parent().attr('class') == 'heading') {
@@ -104,7 +104,7 @@ module.exports = function(grunt) {
                         name = (name.split('/'))[1];
                         // Fix nav name, it's Overview for some reason
                         if (name == 'substitutions-reference') {
-                            $('nav div.heading a[href^="substitutions-reference.html"]').text('Substitutions Reference');
+                            $('nav div.heading a[href^="substitutions-reference"]').text('Substitutions Reference');
                         }
                         // save a copy of the fixed-up nav from the current page
                         // we'll use this in `copy`, below
@@ -144,7 +144,7 @@ module.exports = function(grunt) {
                         $ = cheerio.load(allnav);
                         var file = (srcpath.split('/'))[1];
                         // css selector for current nav
-                        var curNav = 'div.heading a[href^="'+ file +'"]';
+                        var curNav = 'div.heading a[href^="'+ file.replace('.html', '') +'"]';
 
                         // indicate current page w/in nav
                         $(curNav).parent().addClass('current');
