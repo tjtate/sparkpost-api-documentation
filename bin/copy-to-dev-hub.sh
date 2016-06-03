@@ -25,7 +25,7 @@ echo ""
 # if this is run in Travis CI, make some magic
 if env | grep -q ^TRAVIS=; then
   # no need to proceed if this is a PR build
-  if env | grep -q ^TRAVIS_PULL_REQUEST=; then
+  if [[ $TRAVIS_PULL_REQUEST -gt 0 ]]; then
     echo "Pull request detected. Not proceeding with deploy."
     exit 255
   fi
