@@ -26,12 +26,12 @@ If you use [Postman](https://www.getpostman.com/) you can click the following bu
 | protocol  | string | Inbound messaging protocol associated with this webhook | no - defaults to "SMTP" |                      |
 | domain    | string | Inbound domain associated with this webhook             | yes | To create an inbound domain for your account, please use the Inbound Domains API. |
 
-## Field Defintions
+## Field Definitions
 
 The following fields will be included in the JSON object posted to the relay webhooks target:
 
 | Field     | Type   | Description                                                 | Notes
-|-----------|--------|-----------------------------------------------------------------------|--------------|----------------------|
+|-----------|--------|-----------------------------------------------------------------------|--------------|
 | content   | object | Content that will be used to construct a relay message           | For a full description, see the Content Attributes. |
 | friendly_from | string | Email address used to compose the "From" header |
 | msg_from | string | SMTP envelope from |

@@ -1,7 +1,7 @@
 # Group SMTP API
 <a name="smtp-api"></a>
 
-**Note**: See [SMTP Relay Endpoints](#smtp-relay-endpoints) for the SMTP client configuration needed to use SparkPost or SparkPost Elite as an SMTP relay.
+**Note**: See [SMTP Relay Endpoints](index.html#header-smtp-relay-endpoints) for the SMTP client configuration needed to use SparkPost or SparkPost Elite as an SMTP relay.
 
 Through use of the X-MSYS-API header in a message sent to SparkPost and SparkPost Elite through SMTP,
 you can now specify a campaign id, metadata,
@@ -21,7 +21,7 @@ Click and open tracking are disabled by default in SMTP messages sent through Sp
 X-MSYS-API: { "options" : { "open_tracking" : true, "click_tracking" : true } }
 ```
 
-**Note**: Key-Value [Substitutions](#substitutions-reference) are not supported in SMTP API.
+**Note**: Key-Value [Substitutions](substitutions-reference.html) are not supported in SMTP API.
 substitution_data provided in the X-MSYS-API header will be ignored.
 
 The fields supported in the X-MSYS-API header are as follows:

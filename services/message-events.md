@@ -15,7 +15,7 @@ If you use [Postman](https://www.getpostman.com/) you can click the following bu
 
 
 ## Copyrights
-__**The SparkPost message events API uses MaxMind software [MaxMind License](/docs/3RD_PARTY_LICENSES.md)**__
+__**The SparkPost message events API uses MaxMind software [MaxMind License](https://www.maxmind.com/download/geoip/database/LICENSE.txt)**__
 
 ## Events Documentation [/message-events/events/documentation]
 

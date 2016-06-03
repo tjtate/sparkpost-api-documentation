@@ -1,0 +1,19 @@
+include mixins.jade
+
+!= '---\n'
+!= 'layout: default\n'
+!= 'title: API Reference\n'
+!= '---\n'
+
+div(class='container-fluid')#apipage
+    .row
+        #menublock
+            +Nav()
+
+        #contentblock
+            if self.api.name != "" && self.api.resourceGroups.length == 0
+                != '\n{% raw %}\n'
+            +Content()
+            if self.api.name != "" && self.api.resourceGroups.length == 0
+                != '\n{% endraw %}\n'
+
