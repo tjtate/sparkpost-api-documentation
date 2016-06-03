@@ -52,9 +52,15 @@ Once all the dependencies are installed, you can execute the Apiary Blueprint Va
 
 You can use `grunt staticPreview` to generate API docs under `static/` and start an auto-regen watch process.
 
-Open `static/index.html` to view the rendered files.
-
 *Note: the output of this command is not identical to production renders. Its intended as a usable preview for development work.*
+
+### Deploying
+
+The API documentation lives at https://developers.sparkpost.com/api/. When a commit is made to the `master` branch of this repo, it triggers a Travis CI run that executes the code in `bin/copy-to-devhub.sh`. The workflow is as follows:
+
+* Clone the develop branch of the [SparkPost/sparkpost.github.io](https://github.com/SparkPost/sparkpost.github.io) repo
+* Generate the HTML files for the API docs into `sparkpost.gitub.io/_api`
+* Commit the changes, which triggers a Travis CI build for the `sparkpost.github.io` repo
 
 ### Contributing
 [Guidelines for adding issues](docs/ADDING_ISSUES.markdown)
