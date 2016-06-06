@@ -9,7 +9,7 @@ var matchdep = require('matchdep')
         'inbound-domains.md',
         'metrics.md',
         'message-events.md',
-        'recipient-list.md',
+        'recipient-lists.md',
         'relay-webhooks.md',
         'sending-domains.md',
         'subaccounts.md',
