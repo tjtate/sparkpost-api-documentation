@@ -49,7 +49,7 @@ For example:
 curl -v \
 -H "Content-Type: application/json" \
 -H "Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf" \
--X GET "https://api.sparkpost.com/api/v1/metrics/deliverability/aggregate?campaigns=testjob&from=2014-01-23T14:00&metrics=count_targeted,count_sent,count_accepted&protocols=smtp&timezone=America%2FNew_York&to=2014-06-23T15:50"
+-X GET "https://api.sparkpost.com/api/v1/metrics/deliverability/aggregate?campaigns=testjob&from=2014-01-23T14:00&metrics=count_targeted,count_sent,count_accepted&timezone=America%2FNew_York&to=2014-06-23T15:50"
 ```
 
 or
@@ -58,7 +58,7 @@ or
 curl -v \
 -H "Content-Type: application/json" \
 -u <APIKey>: \
--X GET "https://api.sparkpost.com/api/v1/metrics/deliverability/aggregate?campaigns=testjob&from=2014-01-23T14:00&metrics=count_targeted,count_sent,count_accepted&protocols=smtp&timezone=America%2FNew_York&to=2014-06-23T15:50"
+-X GET "https://api.sparkpost.com/api/v1/metrics/deliverability/aggregate?campaigns=testjob&from=2014-01-23T14:00&metrics=count_targeted,count_sent,count_accepted&timezone=America%2FNew_York&to=2014-06-23T15:50"
 ```
 
 ## Subaccounts
@@ -117,4 +117,3 @@ To use SparkPost as an SMTP relay you need to point your SMTP client (or local M
 * Please contact your Technical Account Manager for details on your SMTP endpoint.
 
 The SMTP relay optionally supports advanced API features using the [SMTP API](smtp-api.html).  To create an API key, login to your SparkPost [Account Credentials](https://app.sparkpost.com/account/credentials) page.
-
