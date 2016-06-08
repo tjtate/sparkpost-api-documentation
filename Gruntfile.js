@@ -2,6 +2,7 @@ var matchdep = require('matchdep')
     , fs = require('fs')
     , q = require('q')
     , request = require('request')
+    , rewriteRulesSnippet = require("grunt-connect-rewrite/lib/utils").rewriteRequest
     , services = [
         'introduction.md',
         'substitutions-reference.md',
@@ -185,36 +186,42 @@ module.exports = function(grunt) {
             }
         },
 
-        connect: {
-            apiary: {
-                options: {
-                    port: 4000,
-                    hostname: '0.0.0.0',
-                    open: true,
-                    middleware: function(connect) {
-                        return [
-                            require('connect-livereload')(),
-                            connect.static('apiary-previews'),
-                            connect.directory('apiary-previews')
-                        ];
-                    }
-                }
-            },
-            staticPreview: {
-                options: {
-                    port: 4000,
-                    hostname: '0.0.0.0',
-                    open: true,
-                    middleware: function(connect) {
-                        return [
-                            require('connect-livereload')(),
-                            connect.static('static'),
-                            connect.directory('static')
-                        ];
-                    }
-                }
-            }
+      connect: {
+        options: {
+          port: 4000,
+          hostname: '0.0.0.0',
+          open: true,
         },
+        rules: [
+          {
+            from: '(^((?!css|html|js|img|fonts|\/$).)*$)',
+            to: '$1.html'
+          }
+        ],
+        apiary: {
+          options: {
+            middleware: function(connect) {
+              return [
+                require('connect-livereload')(),
+                connect.static('apiary-previews'),
+                connect.directory('apiary-previews')
+              ];
+            }
+          }
+        },
+        staticPreview: {
+          options: {
+            middleware: function(connect) {
+              return [
+                rewriteRulesSnippet,
+                require('connect-livereload')(),
+                connect.static('static'),
+                connect.directory('static')
+              ];
+            }
+          }
+        }
+      },
 
         shell: {
             test: {
@@ -339,6 +346,7 @@ module.exports = function(grunt) {
 
     // grunt staticPreview: build preview HTML under static/, open a browser and watch for changes
     grunt.registerTask('staticPreview', 'View the static generated HTML files in the browser', [
+        'configureRewriteRules',
         'genStaticPreview',
         'connect:staticPreview',
         'watch:staticPreview'
