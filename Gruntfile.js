@@ -16,7 +16,7 @@ var matchdep = require('matchdep')
         'suppression-list.md',
         'templates.md',
         'tracking-domains.md',
-        'bounce_domains_api.md',
+        'bounce-domains.md',
         'transmissions.md',
         'webhooks.md',
         'smtp-api.md'
