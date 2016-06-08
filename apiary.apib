@@ -9005,15 +9005,11 @@ Initiate a check against the CNAME DNS record for the specified tracking domain.
 # Group Bounce Domains
 <a name="bounce-domains-api"></a>
 
+**Note:** The Bounce Domains API is available for SparkPost only.
+
 Bounce domains are used to report bounces, emails that were rejected from the recipient server.  By adding a custom bounce domain to your account, you can customize the address that is used for the Return Path header (which denotes the destination for out of band bounces). This custom bounce domain overrides the default Return-Path (also known as the envelope FROM) value of "sparkpostmail.com" for all messages sent.
 
 **Note:** Use of a bounce domain requires modification of your DNS records to include a CNAME record.
-
-## Using Postman TODO
-
-If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
-
-[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
 
 ## Bounce Domains Attributes
 
