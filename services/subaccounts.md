@@ -2,7 +2,7 @@
 <a name="subaccounts-api"></a>
 API for retrieving and managing subaccounts associated with your Master Account.
 Subaccounts are a way for service providers to provision and manage their customers separately from each other and to provide assets and reporting data.
-For more general information pertaining to subaccounts, please see the [Subaccounts Introduction](#subaccounts-intro)
+For more general information pertaining to subaccounts, please see the [Subaccounts Introduction](index.html#header-subaccounts)
 
 ## Subaccounts Collection [/subaccounts]
 
@@ -59,7 +59,7 @@ Subaccounts are allowed to send mail using the SMTP protocol or Transmissions AP
 | key_label     | yes        | string  | User friendly identifier for the initial subaccount api key               |                                                                                                                                                               |
 | key_grants    | yes        | Array   | List of grants to give to the initial subaccount api key                  | Valid values are `smtp/inject`, `sending_domains/manage`, `tracking_domains/view`, `tracking_domains/manage`, `message_events/view`, `suppression_lists/manage`, `transmissions/view`, and `transmissions/modify` |
 | key_valid_ips | no         | Array   | List of IP's that the initial subaccount api key can be used from         | If the supplied `key_valid_ips` is an empty array, the api key is usable by any IP address                                                                    |
-| ip_pool       | no         | string  | The ID of the default IP Pool assigned to this subaccount's transmissions | If the supplied `ip_pool` is an empty string or not present, no default `ip_pool` will be assigned                                                            |
+| ip_pool       | no         | string  | The ID of the default IP Pool assigned to this subaccount's transmissions ( **Note:** SparkPost only ) | If the supplied `ip_pool` is an empty string or not present, no default `ip_pool` will be assigned                                                            |
 
 
 + Request (application/json)
@@ -122,9 +122,14 @@ Subaccounts are allowed to send mail using the SMTP protocol or Transmissions AP
               "value": null
             },
             {
-              "message": "ip_pool parameter must not exceed 32 characters",
+              "message": "ip_pool must be 20 characters or less",
               "param": "ip_pool",
-              "value": "an ip pool name that is too long"
+              "value": "an_ip_pool_name_that_is_too_long"
+            },
+            {
+              "message": "ip_pool must be alphanumeric and underscore",
+              "param": "ip_pool",
+              "value": "$invalid chars"
             }
           ]
         }
@@ -199,9 +204,9 @@ Update an existing subaccount's information. You can update the following inform
         {
           "errors": [
             {
-              "message": "ip_pool parameter must not exceed 32 characters",
+              "message": "ip_pool must be 20 characters or less",
               "param": "ip_pool",
-              "value": "an ip pool name that is too long"
+              "value": "an_ip_pool_name_that_is_too_long"
             }
           ]
         }

@@ -52,7 +52,7 @@ For example:
 curl -v \
 -H "Content-Type: application/json" \
 -H "Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf" \
--X GET "https://api.sparkpost.com/api/v1/metrics/deliverability/aggregate?campaigns=testjob&from=2014-01-23T14:00&metrics=count_targeted,count_sent,count_accepted&protocols=smtp&timezone=America%2FNew_York&to=2014-06-23T15:50"
+-X GET "https://api.sparkpost.com/api/v1/metrics/deliverability/aggregate?campaigns=testjob&from=2014-01-23T14:00&metrics=count_targeted,count_sent,count_accepted&timezone=America%2FNew_York&to=2014-06-23T15:50"
 ```
 
 or
@@ -61,7 +61,7 @@ or
 curl -v \
 -H "Content-Type: application/json" \
 -u <APIKey>: \
--X GET "https://api.sparkpost.com/api/v1/metrics/deliverability/aggregate?campaigns=testjob&from=2014-01-23T14:00&metrics=count_targeted,count_sent,count_accepted&protocols=smtp&timezone=America%2FNew_York&to=2014-06-23T15:50"
+-X GET "https://api.sparkpost.com/api/v1/metrics/deliverability/aggregate?campaigns=testjob&from=2014-01-23T14:00&metrics=count_targeted,count_sent,count_accepted&timezone=America%2FNew_York&to=2014-06-23T15:50"
 ```
 
 ## Subaccounts
@@ -71,13 +71,13 @@ Subaccounts are a way for service providers to provision and manage their custom
 
 The following APIs have subaccount support:
 
-* [Metrics API](https://developers.sparkpost.com/api/#/reference/metrics) **(Note: Not available for Subaccount API keys)**
-* [Message Events API](https://developers.sparkpost.com/api/#/reference/message-events)
-* [Sending Domains API](https://developers.sparkpost.com/api/#/reference/sending-domains)
-* [Suppression List API](https://developers.sparkpost.com/api/#/reference/suppression-list)
-* [SMTP API](https://developers.sparkpost.com/api/#/reference/smtp-api)
-* [Transmissions API](https://developers.sparkpost.com/api/#/reference/transmissions)
-* [Tracking Domains API](#tracking-domains-api)
+* [Metrics API](metrics.html) **(Note: Not available for Subaccount API keys)**
+* [Message Events API](message-events.html)
+* [Sending Domains API](sending-domains.html)
+* [Suppression List API](suppression-list.html)
+* [SMTP API](smtp-api.html)
+* [Transmissions API](transmissions.html)
+* [Tracking Domains API](tracking-domains.html)
 
 ### Terminology
 * Master Account - This refers to a Service Provider and their data
@@ -119,7 +119,7 @@ To use SparkPost as an SMTP relay you need to point your SMTP client (or local M
 
 * Please contact your Technical Account Manager for details on your SMTP endpoint.
 
-The SMTP relay optionally supports advanced API features using the [SMTP API](#smtp-api).  To create an API key, login to your SparkPost [Account Credentials](https://app.sparkpost.com/account/credentials) page.
+The SMTP relay optionally supports advanced API features using the [SMTP API](smtp-api.html).  To create an API key, login to your SparkPost [Account Credentials](https://app.sparkpost.com/account/credentials) page.
 
 ## Substitutions Reference
 <a name="substitutions-reference"></a>
@@ -602,6 +602,10 @@ The relational and logical operators are as follows:
 | and |
 | or |
 | not |
+
+**The Length Operator**
+
+The length operator `#` gives the length of an array. From the sample data above: `#shopping_cart` produces `2`.
 
 ### Array Iteration
 
@@ -1444,16 +1448,6 @@ list of URIs that exists within the Metrics API.
                   "href": "/api/v1/metrics/sending-ips",
                   "rel": "sending-ips",
                   "method": "GET"
-                },
-                {
-                  "href": "/api/v1/metrics/nodes",
-                  "rel": "nodes",
-                  "method": "GET"
-                },
-                {
-                  "href": "/api/v1/metrics/protocols",
-                  "rel": "protocols",
-                  "method": "GET"
                 }
             ]
         }
@@ -1502,7 +1496,7 @@ list of URIs that exists within the Metrics API.
 
 Provides links to all child URIs within the Metrics API.
 
-**Note:** Links in the response for binding-groups, bindings, nodes, and protocols apply to SparkPost Elite only.
+**Note:** Links in the response for binding-groups, bindings apply to SparkPost Elite only.
 
 + Request
 
@@ -1516,7 +1510,7 @@ Provides links to all child URIs within the Metrics API.
     [Discoverability Links][]
 
 
-## Deliverability Metrics [/metrics/deliverability{?from,to,delimiter,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,metrics,timezone}]
+## Deliverability Metrics [/metrics/deliverability{?from,to,delimiter,domains,campaigns,templates,sending_ips,ip_pools,sending_domains,subaccounts,metrics,timezone}]
 
 
 + Model
@@ -1721,14 +1715,10 @@ aggregate data, which can be used as "group by" qualifiers.
     + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... delimited list of domains to include
     + campaigns (optional, list, `Black Friday`) ... delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... delimited list of template IDs to include
-    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... delimited list of nodes to include ( **Note:** SparkPost Elite only )
     + sending_ips (optional, list, `Confirmation`) ... delimited list of sending IPs to include
     + ip_pools (optional, list, `Transaction`) ... delimited list of IP pools to include
     + sending_domains (optional, list, `sales.sender.com,company.net`) ... delimited list of sending domains to include
     + subaccounts (optional, list, `123,125,127`) ... delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
-    + protocols (optional, list, `smtp`) ... delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
-        + Values
-            + `smtp`
     + metrics (required, list) ... delimited list of metrics for filtering
 
         + Values
@@ -1778,7 +1768,7 @@ aggregate data, which can be used as "group by" qualifiers.
 
 
 
-## Deliverability Metrics by Domain [/metrics/deliverability/domain{?from,to,delimiter,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,metrics,timezone,order_by,limit}]
+## Deliverability Metrics by Domain [/metrics/deliverability/domain{?from,to,delimiter,domains,campaigns,templates,sending_ips,ip_pools,sending_domains,subaccounts,metrics,timezone,order_by,limit}]
 
 + Model
 
@@ -1963,14 +1953,10 @@ Provides aggregate metrics grouped by domain over the time window specified.
   + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... delimited list of domains to include
   + campaigns (optional, list, `Black Friday`) ... delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... delimited list of template IDs to include
-  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + sending_ips (optional, list, `Confirmation`) ... delimited list of sending IPs to include
   + ip_pools (optional, list, `Transaction`) ... delimited list of IP pools to include
   + sending_domains (optional, list, `sales.sender.com,company.net`) ... delimited list of sending domains to include
   + subaccounts (optional, list, `123,125,127`) ... delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
-  + protocols (optional, list, `smtp`) ... delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
-      + Values
-          + `smtp`
   + metrics (required, list) ... delimited list of metrics for filtering
 
         + Values
@@ -2021,21 +2007,21 @@ Provides aggregate metrics grouped by domain over the time window specified.
   [Deliverability Metrics by Domain][]
 
 
-## Deliverability Metrics by Binding [/metrics/deliverability/binding{?from,to,delimiter,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Binding [/metrics/deliverability/binding{?from,to,delimiter,domains,campaigns,templates,bindings,binding_groups,subaccounts,metrics,timezone,limit,order_by}]
 
 **Deprecation Notice:** This endpoint has been deprecated. Please use the Deliverability Metrics by Sending IP endpoint instead.
 
 ### Deliverability Metrics by Binding [GET]
 
 
-## Deliverability Metrics by Binding Group [/metrics/deliverability/binding-group{?from,to,delimiter,domains,campaigns,templates,nodes,bindings,binding_groups,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Binding Group [/metrics/deliverability/binding-group{?from,to,delimiter,domains,campaigns,templates,bindings,binding_groups,subaccounts,metrics,timezone,limit,order_by}]
 
 **Deprecation Notice:** This endpoint has been deprecated. Please use the Deliverability Metrics by IP Pool endpoint instead.
 
 ### Deliverability Metrics by Binding Group [GET]
 
 
-## Deliverability Metrics by Sending IP [/metrics/deliverability/sending-ip{?from,to,delimiter,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Sending IP [/metrics/deliverability/sending-ip{?from,to,delimiter,domains,campaigns,templates,sending_ips,ip_pools,sending_domains,subaccounts,metrics,timezone,limit,order_by}]
 
 + Model
 
@@ -2221,14 +2207,10 @@ Provides aggregate metrics grouped by sending IP over the time window specified.
   + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... delimited list of domains to include
   + campaigns (optional, list, `Black Friday`) ... delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... delimited list of template IDs to include
-  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + sending_ips (optional, list, `Confirmation`) ... delimited list of sending IPs to include
   + ip_pools (optional, list, `Transaction`) ... delimited list of IP pools to include
   + sending_domains (optional, list, `sales.sender.com,company.net`) ... delimited list of sending domains to include
   + subaccounts (optional, list, `123,125,127`) ... delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
-  + protocols (optional, list, `smtp`) ... delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
-      + Values
-          + `smtp`
   + metrics (required, list, `count_targeted`) ... delimited list of metrics for filtering
       + Values
           + `count_injected`
@@ -2275,7 +2257,7 @@ Provides aggregate metrics grouped by sending IP over the time window specified.
 + Response 200
 
 
-## Deliverability Metrics by IP Pool [/metrics/deliverability/ip-pool{?from,to,delimiter,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by IP Pool [/metrics/deliverability/ip-pool{?from,to,delimiter,domains,campaigns,templates,sending_ips,ip_pools,sending_domains,subaccounts,metrics,timezone,limit,order_by}]
 
 + Model
 
@@ -2460,14 +2442,10 @@ Provides aggregate metrics grouped by IP pool over the time window specified.
   + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... delimited list of domains to include
   + campaigns (optional, list, `Black Friday`) ... delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... delimited list of template IDs to include
-  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + sending_ips (optional, list, `Confirmation`) ... delimited list of sending IPs to include
   + ip_pools (optional, list, `Transaction`) ... delimited list of IP pools to include
   + sending_domains (optional, list, `sales.sender.com,company.net`) ... delimited list of sending domains to include
   + subaccounts (optional, list, `123,125,127`) ... delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
-  + protocols (optional, list, `smtp`) ... delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
-      + Values
-          + `smtp`
   + metrics (required, list, `count_targeted`) ... delimited list of metrics for filtering
       + Values
           + `count_injected`
@@ -2516,7 +2494,7 @@ Provides aggregate metrics grouped by IP pool over the time window specified.
   [Deliverability Metrics by IP Pool][]
 
 
-## Deliverability Metrics by Sending Domain [/metrics/deliverability/sending-domain{?from,to,delimiter,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Sending Domain [/metrics/deliverability/sending-domain{?from,to,delimiter,domains,campaigns,templates,sending_ips,ip_pools,sending_domains,subaccounts,metrics,timezone,limit,order_by}]
 
 + Model
 
@@ -2715,14 +2693,10 @@ Provides aggregate metrics grouped by sending domain over the time window specif
   + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... delimited list of domains to include
   + campaigns (optional, list, `Black Friday`) ... delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... delimited list of template IDs to include
-  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + sending_ips (optional, list, `Confirmation`) ... delimited list of sending IPs to include
   + ip_pools (optional, list, `Transaction`) ... delimited list of IP pools to include
   + sending_domains (optional, list, `sales.sender.com,company.net`) ... delimited list of sending domains to include
   + subaccounts (optional, list, `123,125,127`) ... delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
-  + protocols (optional, list, `smtp`) ... delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
-      + Values
-          + `smtp`
   + metrics (required, list, `count_targeted`) ... delimited list of metrics for filtering
       + Values
           + `count_injected`
@@ -2770,7 +2744,7 @@ Provides aggregate metrics grouped by sending domain over the time window specif
 
   [Deliverability Metrics by Sending Domain][]
 
-## Deliverability Metrics by Subaccount [/metrics/deliverability/subaccount{?from,to,delimiter,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Subaccount [/metrics/deliverability/subaccount{?from,to,delimiter,domains,campaigns,templates,sending_ips,ip_pools,sending_domains,subaccounts,metrics,timezone,limit,order_by}]
 
 + Model
 
@@ -2969,14 +2943,10 @@ Provides aggregate metrics grouped by subaccount over the time window specified.
   + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... delimited list of domains to include
   + campaigns (optional, list, `Black Friday`) ... delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... delimited list of template IDs to include
-  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + sending_ips (optional, list, `Confirmation`) ... delimited list of sending IPs to include
   + ip_pools (optional, list, `Transaction`) ... delimited list of IP pools to include
   + sending_domains (optional, list, `sales.sender.com,company.net`) ... delimited list of sending domains to include
   + subaccounts (optional, list, `123,125,127`) ... delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
-  + protocols (optional, list, `smtp`) ... delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
-      + Values
-          + `smtp`
   + metrics (required, list, `count_targeted`) ... delimited list of metrics for filtering
       + Values
           + `count_injected`
@@ -3024,7 +2994,7 @@ Provides aggregate metrics grouped by subaccount over the time window specified.
 
   [Deliverability Metrics by Subaccount][]
 
-## Deliverability Metrics by Campaign [/metrics/deliverability/campaign{?from,to,delimiter,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Campaign [/metrics/deliverability/campaign{?from,to,delimiter,domains,campaigns,templates,sending_ips,ip_pools,sending_domains,subaccounts,metrics,timezone,limit,order_by}]
 
 + Model
 
@@ -3209,14 +3179,10 @@ Provides aggregate metrics grouped by campaign over the time window specified.
     + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... delimited list of domains to include
     + campaigns (optional, list, `Black Friday`) ... delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... delimited list of template IDs to include
-    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... delimited list of nodes to include ( **Note:** SparkPost Elite only )
     + sending_ips (optional, list, `Confirmation`) ... delimited list of sending IPs to include
     + ip_pools (optional, list, `Transaction`) ... delimited list of IP pools to include
     + sending_domains (optional, list, `sales.sender.com,company.net`) ... delimited list of sending domains to include
     + subaccounts (optional, list, `123,125,127`) ... delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
-    + protocols (optional, list, `smtp`) ... delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
-      + Values
-          + `smtp`
     + metrics (required, list) ... delimited list of metrics for filtering
 
         + Values
@@ -3267,7 +3233,7 @@ Provides aggregate metrics grouped by campaign over the time window specified.
   [Deliverability Metrics by Campaign][]
 
 
-## Deliverability Metrics by Template [/metrics/deliverability/template{?from,to,delimiter,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Template [/metrics/deliverability/template{?from,to,delimiter,domains,campaigns,templates,sending_ips,ip_pools,sending_domains,subaccounts,metrics,timezone,limit,order_by}]
 
 + Model
 
@@ -3452,14 +3418,10 @@ Provides aggregate metrics grouped by template over the time window specified.
     + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... delimited list of domains to include
     + campaigns (optional, list, `Black Friday`) ... delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... delimited list of template IDs to include
-    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... delimited list of nodes to include ( **Note:** SparkPost Elite only )
     + sending_ips (optional, list, `Confirmation`) ... delimited list of sending IPs to include
     + ip_pools (optional, list, `Transaction`) ... delimited list of IP pools to include
     + sending_domains (optional, list, `sales.sender.com,company.net`) ... delimited list of sending domains to include
     + subaccounts (optional, list, `123,125,127`) ... delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
-    + protocols (optional, list, `smtp`) ... delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
-        + Values
-            + `smtp`
     + metrics (required, list) ... delimited list of metrics for filtering
 
         + Values
@@ -3510,7 +3472,7 @@ Provides aggregate metrics grouped by template over the time window specified.
   [Deliverability Metrics by Template][]
 
 
-## Deliverability Metrics by Watched Domain [/metrics/deliverability/watched-domain{?from,to,delimiter,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,metrics,timezone,limit,order_by}]
+## Deliverability Metrics by Watched Domain [/metrics/deliverability/watched-domain{?from,to,delimiter,domains,campaigns,templates,sending_ips,ip_pools,sending_domains,subaccounts,metrics,timezone,limit,order_by}]
 
 + Model
 
@@ -3697,14 +3659,10 @@ in the world.
     + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... delimited list of domains to include
     + campaigns (optional, list, `Black Friday`) ... delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... delimited list of template IDs to include
-    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... delimited list of nodes to include ( **Note:** SparkPost Elite only )
     + sending_ips (optional, list, `Confirmation`) ... delimited list of sending IPs to include
     + ip_pools (optional, list, `Transaction`) ... delimited list of IP pools to include
     + subaccounts (optional, list, `123,125,127`) ... delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
     + sending_domains (optional, list, `sales.sender.com,company.net`) ... delimited list of sending domains to include
-    + protocols (optional, list, `smtp`) ... delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
-        + Values
-            + `smtp`
     + metrics (required, list) ... delimited list of metrics for filtering
         + Values
             + `count_injected`
@@ -3754,7 +3712,7 @@ in the world.
   [Deliverability Metrics by Watched Domain][]
 
 
-## Time Series [/metrics/deliverability/time-series{?from,to,delimiter,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,precision,metrics,timezone}]
+## Time Series [/metrics/deliverability/time-series{?from,to,delimiter,domains,campaigns,templates,sending_ips,ip_pools,sending_domains,subaccounts,precision,metrics,timezone}]
 
 + Model
 
@@ -3993,14 +3951,10 @@ The following table describes the validation for the **precision** parameter:
     + domains (optional, list `gmail.com,yahoo.com,hotmail.com`) ... delimited list of domains for filtering
     + campaigns (optional, list, `summerSale,promotionX`) ... delimited list of campaigns for filtering
     + templates (optional, list, `summer-sale`) ... delimited list of template IDs to include
-    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... delimited list of nodes by which to filter ( **Note:** SparkPost Elite only )
     + sending_ips (optional, list, `sending-ip-A,sending-ip-B,sending-ip-C`) ... delimited list of sending IPs to include
     + ip_pools (optional, list, `ip-pool-1,ip-pool-2,ip-pool-3`) ... delimited list of IP pools to include
     + sending_domains (optional, list, `sales.sender.com,company.net`) ... delimited list of sending domains to include
     + subaccounts (optional, list, `123,125,127`) ... delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
-    + protocols (optional, list, `smtp`) ... delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
-      + Values
-          + `smtp`
     + precision (optional, string, `day`) ... Precision of timeseries data returned
 
         + Values
@@ -4061,7 +4015,7 @@ The following table describes the validation for the **precision** parameter:
   [Time Series][]
 
 
-## Bounce Reasons [/metrics/deliverability/bounce-reason{?from,to,delimiter,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,metrics,timezone,limit}]
+## Bounce Reasons [/metrics/deliverability/bounce-reason{?from,to,delimiter,domains,campaigns,templates,sending_ips,ip_pools,sending_domains,subaccounts,metrics,timezone,limit}]
 
 + Model
 
@@ -4162,14 +4116,10 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
     + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... delimited list of domains to include
     + campaigns (optional, list, `Black Friday`) ... delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... delimited list of template IDs to include
-    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... delimited list of nodes to include ( **Note:** SparkPost Elite only )
     + sending_ips (optional, list, `Confirmation`) ... delimited list of sending IPs to include
     + ip_pools (optional, list, `Transaction`) ... delimited list of IP pools to include
     + sending_domains (optional, list, `sales.sender.com,company.net`) ... delimited list of sending domains to include
     + subaccounts (optional, list, `123,125,127`) ... delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
-    + protocols (optional, list, `smtp`) ... delimited list of protocols to include ( **Note:** SparkPost Elite only )
-        + Values
-            + `smtp`
     + metrics (required, list) ... delimited list of metrics to include
 
         + Values
@@ -4192,7 +4142,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
   [Bounce Reasons][]
 
 
-## Bounce Reasons By Domain [/metrics/deliverability/bounce-reason/domain{?from,to,delimiter,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,metrics,timezone,limit}]
+## Bounce Reasons By Domain [/metrics/deliverability/bounce-reason/domain{?from,to,delimiter,domains,campaigns,templates,sending_ips,ip_pools,sending_domains,subaccounts,metrics,timezone,limit}]
 
 + Model
 
@@ -4299,14 +4249,10 @@ Provides deliverability metrics, specific to bounce events, grouped by the domai
     + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... delimited list of domains to include
     + campaigns (optional, list, `Black Friday`) ... delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... delimited list of template IDs to include
-    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3`) ... delimited list of nodes to include ( **Note:** SparkPost Elite only )
     + sending_ips (optional, list, `Confirmation`) ... delimited list of sending IPs to include
     + ip_pools (optional, list, `Transaction`) ... delimited list of IP pools to include
     + sending_domains (optional, list, `sales.sender.com,company.net`) ... delimited list of sending domains to include
     + subaccounts (optional, list, `123,125,127`) ... delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
-    + protocols (optional, list, `smtp`) ... delimited list of protocols to include ( **Note:** SparkPost Elite only )
-        + Values
-            + `smtp`
     + metrics (required, list) ... delimited list of metrics to include
 
         + Values
@@ -4329,7 +4275,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the domai
   [Bounce Reasons By Domain][]
 
 
-## Bounce Classifications [/metrics/deliverability/bounce-classification{?from,to,delimiter,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,metrics,timezone,limit}]
+## Bounce Classifications [/metrics/deliverability/bounce-classification{?from,to,delimiter,domains,campaigns,templates,sending_ips,ip_pools,sending_domains,subaccounts,metrics,timezone,limit}]
 
 + Model
 
@@ -4422,14 +4368,10 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
     + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... delimited list of domains to include
     + campaigns (optional, list, `Black Friday`) ... delimited list of campaigns to include
     + templates (optional, list, `summer-sale`) ... delimited list of template IDs to include
-    + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... delimited list of nodes to include ( **Note:** SparkPost Elite only )
     + sending_ips (optional, list, `Confirmation`) ... delimited list of sending IPs to include
     + ip_pools (optional, list, `Transaction`) ... delimited list of IP pools to include
     + sending_domains (optional, list, `sales.sender.com,company.net`) ... delimited list of sending domains to include
     + subaccounts (optional, list, `123,125,127`) ... delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
-    + protocols (optional, list, `smtp`) ... delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
-        + Values
-            + `smtp`
     + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
     + metrics (required, list) ... delimited list of metrics to include
 
@@ -4452,7 +4394,7 @@ Provides deliverability metrics, specific to bounce events, grouped by the bounc
   [Bounce Classifications][]
 
 
-## Rejection Reasons [/metrics/deliverability/rejection-reason{?from,to,delimiter,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,timezone,limit}]
+## Rejection Reasons [/metrics/deliverability/rejection-reason{?from,to,delimiter,domains,campaigns,templates,sending_ips,ip_pools,sending_domains,subaccounts,timezone,limit}]
 
 + Model
 
@@ -4527,14 +4469,10 @@ Provides deliverability metrics, specific to rejection events, grouped by the re
   + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... delimited list of domains to include
   + campaigns (optional, list, `Black Friday`) ... delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... delimited list of template IDs to include
-  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + sending_ips (optional, list, `Confirmation`) ... delimited list of sending IPs to include
   + ip_pools (optional, list, `Transaction`) ... delimited list of IP pools to include
   + sending_domains (optional, list, `sales.sender.com,company.net`) ... delimited list of sending domains to include
   + subaccounts (optional, list, `123,125,127`) ... delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
-  + protocols (optional, list, `smtp`) ... delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
-      + Values
-          + `smtp`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
   + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
 
@@ -4543,7 +4481,7 @@ Provides deliverability metrics, specific to rejection events, grouped by the re
   [Rejection Reasons][]
 
 
-## Rejection Reasons By Domain [/metrics/deliverability/rejection-reason/domain{?from,to,delimiter,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,timezone,limit}]
+## Rejection Reasons By Domain [/metrics/deliverability/rejection-reason/domain{?from,to,delimiter,domains,campaigns,templates,sending_ips,ip_pools,sending_domains,subaccounts,timezone,limit}]
 
 + Model
 
@@ -4624,14 +4562,10 @@ Provides deliverability metrics, specific to rejection events, grouped by the do
   + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... delimited list of domains to include
   + campaigns (optional, list, `Black Friday`) ... delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... delimited list of template IDs to include
-  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + sending_ips (optional, list, `Confirmation`) ... delimited list of sending IPs to include
   + ip_pools (optional, list, `Transaction`) ... delimited list of IP pools to include
   + sending_domains (optional, list, `sales.sender.com,company.net`) ... delimited list of sending domains to include
   + subaccounts (optional, list, `123,125,127`) ... delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
-  + protocols (optional, list, `smtp`) ... delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
-      + Values
-          + `smtp`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
   + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
 
@@ -4640,7 +4574,7 @@ Provides deliverability metrics, specific to rejection events, grouped by the do
   [Rejection Reasons By Domain][]
 
 
-## Delay Reasons [/metrics/deliverability/delay-reason{?from,to,delimiter,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,timezone,limit}]
+## Delay Reasons [/metrics/deliverability/delay-reason{?from,to,delimiter,domains,campaigns,templates,sending_ips,ip_pools,sending_domains,subaccounts,timezone,limit}]
 
 + Model
 
@@ -4709,14 +4643,10 @@ Provides deliverability metrics, specific to delay events, grouped by the delay 
   + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... delimited list of domains to include
   + campaigns (optional, list, `Black Friday`) ... delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... delimited list of template IDs to include
-  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + sending_ips (optional, list, `Confirmation`) ... delimited list of sending IPs to include
   + ip_pools (optional, list, `Transaction`) ... delimited list of IP pools to include
   + sending_domains (optional, list, `sales.sender.com,company.net`) ... delimited list of sending domains to include
   + subaccounts (optional, list, `123,125,127`) ... delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
-  + protocols (optional, list, `smtp`) ... delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
-      + Values
-          + `smtp`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
   + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
 
@@ -4732,7 +4662,7 @@ Provides deliverability metrics, specific to delay events, grouped by the delay 
   [Delay Reasons][]
 
 
-## Delay Reasons By Domain [/metrics/deliverability/delay-reason/domain{?from,to,delimiter,domains,campaigns,templates,nodes,sending_ips,ip_pools,sending_domains,subaccounts,protocols,timezone,limit}]
+## Delay Reasons By Domain [/metrics/deliverability/delay-reason/domain{?from,to,delimiter,domains,campaigns,templates,sending_ips,ip_pools,sending_domains,subaccounts,timezone,limit}]
 
 + Model
 
@@ -4807,14 +4737,10 @@ Provides deliverability metrics, specific to delay events, grouped by the domain
   + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... delimited list of domains to include
   + campaigns (optional, list, `Black Friday`) ... delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... delimited list of template IDs to include
-  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + sending_ips (optional, list, `Confirmation`) ... delimited list of sending IPs to include
   + ip_pools (optional, list, `Transaction`) ... delimited list of IP pools to include
   + sending_domains (optional, list, `sales.sender.com,company.net`) ... delimited list of sending domains to include
   + subaccounts (optional, list, `123,125,127`) ... delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
-  + protocols (optional, list, `smtp`) ... delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
-      + Values
-          + `smtp`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
   + limit=1000 (optional, int, `5`) ... Maximum number of results to return within range [1, 10000]
 
@@ -4921,7 +4847,7 @@ name (or URL if no link name exists).
   [Engagement Details][]
 
 
-## Deliveries By Attempt [/metrics/deliverability/attempt{?from,to,delimiter,domains,campaigns,templates,nodes,sending_ips,ip_pools,bindings,binding_groups,sending_domains,subaccounts,protocols,timezone}]
+## Deliveries By Attempt [/metrics/deliverability/attempt{?from,to,delimiter,domains,campaigns,templates,sending_ips,ip_pools,bindings,binding_groups,sending_domains,subaccounts,timezone}]
 
 + Model
 
@@ -4984,16 +4910,12 @@ Provides aggregate count of deliveries grouped by the attempt number.
   + domains (optional, list, `gmail.com,yahoo.com,hotmail.com`) ... delimited list of domains to include
   + campaigns (optional, list, `Black Friday`) ... delimited list of campaigns to include
   + templates (optional, list, `summer-sale`) ... delimited list of template IDs to include
-  + nodes (optional, list, `Email-MSys-1,Email-MSys-2,Email-MSys-3,Email-MSys-4,Email-MSys-5`) ... delimited list of nodes to include ( **Note:** SparkPost Elite only )
   + sending_ips (optional, list, `Confirmation`) ... delimited list of sending IPs to include
   + ip_pools (optional, list, `Transaction`) ... delimited list of IP pools to include
   + sending_domains (optional, list, `sales.sender.com,company.net`) ... delimited list of sending domains to include
   + bindings (optional, list, `Confirmation`) ... delimited list of bindings to include ( **Note:** SparkPost Elite only )
   + binding_groups (optional, list, `Transaction`) ... delimited list of binding groups to include ( **Note:** SparkPost Elite only )
   + subaccounts (optional, list, `123,125,127`) ... delimited list of subaccount ids to include (**Note:** providing ?subaccounts=0 will filter out all subaccount data, and only return master account data)
-  + protocols (optional, list, `smtp`) ... delimited list of protocols for filtering ( **Note:** SparkPost Elite only )
-      + Values
-          + `smtp`
   + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
 
 + Request
@@ -5007,21 +4929,21 @@ Provides aggregate count of deliveries grouped by the attempt number.
 
   [Deliveries By Attempt][]
 
-## Binding Groups List [/metrics/binding-groups{?match,limit}]
+## Binding Groups List [/metrics/binding-groups{?from,to,timezone,match,limit}]
 
 **Deprecation Notice:** This endpoint has been deprecated. Please use the IP Pools listing endpoint instead.
 
 ### Bindings Groups List [GET]
 
 
-## Bindings List [/metrics/bindings]
+## Binding Groups List [/metrics/bindings{?from,to,timezone,match,limit}]
 
 **Deprecation Notice:** This endpoint has been deprecated. Please use the Sending IPs listing endpoint instead.
 
 ### Bindings List [GET]
 
 
-## IP Pools List [/metrics/ip-pools{?match,limit}]
+## IP Pools List [/metrics/ip-pools{?from,to,timezone,match,limit}]
 
 + Model (application/json)
 
@@ -5069,6 +4991,9 @@ Returns a list of IP pools that the Metrics API contains data on.
 + Parameters
     + match (optional, string, `example`) ... Only return results containing this string
     + limit (optional, int, `5`) ... Maximum number of results to return
+    + from (optional, datetime, `2015-12-01T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + to = `now` (optional, datetime, `2014-12-01T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
 
 + Request
 
@@ -5082,7 +5007,7 @@ Returns a list of IP pools that the Metrics API contains data on.
     [IP Pools List][]
 
 
-## Sending IPs List [/metrics/sending-ips{?match,limit}]
+## Sending IPs List [/metrics/sending-ips{?from,to,timezone,match,limit}]
 
 + Model (application/json)
 
@@ -5130,6 +5055,9 @@ Returns a list of sending IPs that the Metrics API contains data on.
 + Parameters
     + match (optional, string, `example`) ... Only return results containing this string
     + limit (optional, int, `5`) ... Maximum number of results to return
+    + from (optional, datetime, `2015-12-01T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + to = `now` (optional, datetime, `2014-12-01T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
 
 + Request
 
@@ -5143,7 +5071,7 @@ Returns a list of sending IPs that the Metrics API contains data on.
  [Sending IPs List][]
 
 
-## Campaigns List [/metrics/campaigns{?match,limit}]
+## Campaigns List [/metrics/campaigns{?from,to,timezone,limit,match}]
 
 + Model (application/json)
 
@@ -5191,6 +5119,9 @@ Returns a list of campaigns that the Metrics API contains data on.
 + Parameters
     + match (optional, string, `example`) ... Only return results containing this string
     + limit (optional, int, `5`) ... Maximum number of results to return
+    + from (optional, datetime, `2015-12-01T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + to = `now` (optional, datetime, `2014-12-01T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
 
 + Request
 
@@ -5204,7 +5135,7 @@ Returns a list of campaigns that the Metrics API contains data on.
   [Campaigns List][]
 
 
-## Domains List [/metrics/domains{?match,limit}]
+## Domains List [/metrics/domains{?from,to,timezone,limit,match}]
 
 + Model (application/json)
 
@@ -5252,6 +5183,9 @@ Returns a list of domains that the Metrics API contains data on.
 + Parameters
     + match (optional, string, `example`) ... Only return results containing this string
     + limit (optional, int, `5`) ... Maximum number of results to return
+    + from (optional, datetime, `2015-12-01T08:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + to = `now` (optional, datetime, `2014-12-01T09:00`) ... Datetime in format of YYYY-MM-DDTHH:MM
+    + timezone =`UTC` (optional, string, `America/New_York`) ... Standard timezone identification string, defaults to `UTC`
 
 + Request
 
@@ -5263,123 +5197,6 @@ Returns a list of domains that the Metrics API contains data on.
 + Response 200
 
   [Domains List][]
-
-## Nodes List [/metrics/nodes]
-
-+ Model (application/json)
-
-    + Body
-
-        ```
-        {
-          "results": {
-             "nodes": [
-               "advertising-1.example.com",
-               "advertising-2.example.com",
-               "affiliate-1.example.com",
-               "affiliate-2.example.com",
-               "affiliate-3.example.com"
-            ]
-          }
-        }
-        ```
-
-    + Schema
-
-        ```
-        {
-          "type": "object",
-          "required": true,
-          "properties": {
-            "results": {
-              "type": "object",
-              "required": true,
-              "properties": {
-                "nodes": {
-                  "type": "array",
-                  "required": false
-                }
-              }
-            }
-          }
-        }
-        ```
-
-### Nodes List [GET]
-
-**Note:** This endpoint is available in SparkPost Elite only.
-
-Returns a list of nodes that the Metrics API contains data on.
-
-+ Request
-
-  + Headers
-
-            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-            Accept: application/json
-
-+ Response 200
-
- [Nodes List][]
-
-
-## Protocols List [/metrics/protocols]
-
-+ Model (application/json)
-
-    + Body
-
-        ```
-        {
-          "results": {
-             "protocols": [
-               "smtp",
-               "smpp",
-               "mm7",
-               "gcm",
-               "apns"
-            ]
-          }
-        }
-        ```
-
-    + Schema
-
-        ```
-        {
-          "type": "object",
-          "required": true,
-          "properties": {
-            "results": {
-              "type": "object",
-              "required": true,
-              "properties": {
-                "protocols": {
-                  "type": "array",
-                  "required": false
-                }
-              }
-            }
-          }
-        }
-        ```
-
-### Protocols List [GET]
-
-**Note:** This endpoint is available in SparkPost Elite only.
-
-Returns a list of protocols that the Metrics API contains data on.
-
-+ Request
-
-  + Headers
-
-            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-            Accept: application/json
-
-+ Response 200
-
- [Protocols List][]
 
 # Group Message Events
 <a name="message-events-api"></a>
@@ -5398,7 +5215,7 @@ If you use [Postman](https://www.getpostman.com/) you can click the following bu
 
 
 ## Copyrights
-__**The SparkPost message events API uses MaxMind software [MaxMind License](/docs/3RD_PARTY_LICENSES.md)**__
+__**The SparkPost message events API uses MaxMind software [MaxMind License](https://www.maxmind.com/download/geoip/database/LICENSE.txt)**__
 
 ## Events Documentation [/message-events/events/documentation]
 
@@ -6597,12 +6414,12 @@ If you use [Postman](https://www.getpostman.com/) you can click the following bu
 | protocol  | string | Inbound messaging protocol associated with this webhook | no - defaults to "SMTP" |                      |
 | domain    | string | Inbound domain associated with this webhook             | yes | To create an inbound domain for your account, please use the Inbound Domains API. |
 
-## Field Defintions
+## Field Definitions
 
 The following fields will be included in the JSON object posted to the relay webhooks target:
 
 | Field     | Type   | Description                                                 | Notes
-|-----------|--------|-----------------------------------------------------------------------|--------------|----------------------|
+|-----------|--------|-----------------------------------------------------------------------|--------------|
 | content   | object | Content that will be used to construct a relay message           | For a full description, see the Content Attributes. |
 | friendly_from | string | Email address used to compose the "From" header |
 | msg_from | string | SMTP envelope from |
@@ -7431,6 +7248,18 @@ The verify resource operates differently depending on the provided request field
   * Including the fields "postmaster_at_verify" and/or "abuse_at_verify" in the request results in an email sent to the specified sending domain's postmaster@ and/or abuse@ mailbox where a verification link can be clicked.
   * Including the fields "postmaster_at_token" and/or "abuse_at_token" in the request initiates a check of the provided token(s) against the stored token(s) for the specified sending domain.
 
+DKIM public key verification requires the following:
+  * A valid DKIM record must be in the DNS for the sending domain being verified.
+  * The record must use the sending domain's public key in the "p=" tag.
+  * If a k= tag is defined, it must be set to "rsa".
+  * If an h= tag is defined, it must be set to "sha256".
+
+SPF verification requires the following:
+  * A valid SPF record must be in the DNS for the sending domain being verified.
+  * The record must contain "v=spf1".
+  * The record must contain "include:sparkpostmail.com".
+  * The record must use either "~all" or "-all".
+
 The domain's "status" object is returned on success.
 
 + Request Verify DKIM and SPF (application/json)
@@ -7582,7 +7411,7 @@ The domain's "status" object is returned on success.
 <a name="subaccounts-api"></a>
 API for retrieving and managing subaccounts associated with your Master Account.
 Subaccounts are a way for service providers to provision and manage their customers separately from each other and to provide assets and reporting data.
-For more general information pertaining to subaccounts, please see the [Subaccounts Introduction](#subaccounts-intro)
+For more general information pertaining to subaccounts, please see the [Subaccounts Introduction](index.html#header-subaccounts)
 
 ## Subaccounts Collection [/subaccounts]
 
@@ -7639,7 +7468,7 @@ Subaccounts are allowed to send mail using the SMTP protocol or Transmissions AP
 | key_label     | yes        | string  | User friendly identifier for the initial subaccount api key               |                                                                                                                                                               |
 | key_grants    | yes        | Array   | List of grants to give to the initial subaccount api key                  | Valid values are `smtp/inject`, `sending_domains/manage`, `tracking_domains/view`, `tracking_domains/manage`, `message_events/view`, `suppression_lists/manage`, `transmissions/view`, and `transmissions/modify` |
 | key_valid_ips | no         | Array   | List of IP's that the initial subaccount api key can be used from         | If the supplied `key_valid_ips` is an empty array, the api key is usable by any IP address                                                                    |
-| ip_pool       | no         | string  | The ID of the default IP Pool assigned to this subaccount's transmissions | If the supplied `ip_pool` is an empty string or not present, no default `ip_pool` will be assigned                                                            |
+| ip_pool       | no         | string  | The ID of the default IP Pool assigned to this subaccount's transmissions ( **Note:** SparkPost only ) | If the supplied `ip_pool` is an empty string or not present, no default `ip_pool` will be assigned                                                            |
 
 
 + Request (application/json)
@@ -7702,9 +7531,14 @@ Subaccounts are allowed to send mail using the SMTP protocol or Transmissions AP
               "value": null
             },
             {
-              "message": "ip_pool parameter must not exceed 32 characters",
+              "message": "ip_pool must be 20 characters or less",
               "param": "ip_pool",
-              "value": "an ip pool name that is too long"
+              "value": "an_ip_pool_name_that_is_too_long"
+            },
+            {
+              "message": "ip_pool must be alphanumeric and underscore",
+              "param": "ip_pool",
+              "value": "$invalid chars"
             }
           ]
         }
@@ -7779,9 +7613,9 @@ Update an existing subaccount's information. You can update the following inform
         {
           "errors": [
             {
-              "message": "ip_pool parameter must not exceed 32 characters",
+              "message": "ip_pool must be 20 characters or less",
               "param": "ip_pool",
-              "value": "an ip pool name that is too long"
+              "value": "an_ip_pool_name_that_is_too_long"
             }
           ]
         }
@@ -8361,7 +8195,8 @@ If the template was used for message generation, the result will also include a 
 
             "options": {
               "open_tracking" : false,
-              "click_tracking" : true
+              "click_tracking" : true,
+              "transactional" : false
             },
 
             "content": {
@@ -9356,10 +9191,10 @@ If you use [Postman](https://www.getpostman.com/) you can click the following bu
 |start_time | string | Delay generation of messages until this datetime.  For additional information, see Scheduled Transmissions. |no - defaults to immediate generation | Format YYYY-MM-DDTHH:MM:SS+-HH:MM or "now". Example: '2015-02-11T08:00:00-04:00'.|
 |open_tracking|boolean| Whether open tracking is enabled for this transmission| no |If not specified, the setting at template level is used, or defaults to true. |
 |click_tracking|boolean| Whether click tracking is enabled for this transmission| no |If not specified, the setting at template level is used, or defaults to true. |
-|transactional|boolean|Whether message is transactional or non-transactional for unsubscribe and suppression purposes | no |If not specified, the setting at template level is used, or defaults to false. |
+|transactional|boolean|Whether message is transactional or non-transactional for unsubscribe and suppression purposes (**Note:** no List-Unsubscribe header is included in transactional messages)| no |If not specified, the setting at template level is used, or defaults to false. |
 |sandbox|boolean|Whether or not to use the sandbox sending domain ( **Note:** SparkPost only )| no |Defaults to false. |
 |skip_suppression|boolean|Whether or not to ignore customer suppression rules, for this transmission only.  Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no - Defaults to false |  Unlike most other options, this flag is omitted on a GET transmission response unless the flag's value is true. |
-| ip_pool | string | The name of a dedicated IP pool associated with your account.  If this field is not provided, the account's default dedicated IP pool is used (if such a pool exists).  To explicitly bypass the account's default dedicated IP pool and instead fallback to the shared pool, specify a value of "sp_shared".  Please note that this option does not apply to subaccounts. | no | For more information on dedicated IPs, see the [Support Center](https://support.sparkpost.com/customer/en/portal/articles/2002977-dedicated-ip-addresses)
+| ip_pool | string | The name of a dedicated IP pool associated with your account ( **Note:** SparkPost only ).  If this field is not provided, the account's default dedicated IP pool is used (if such a pool exists).  To explicitly bypass the account's default dedicated IP pool and instead fallback to the shared pool, specify a value of "sp_shared".  Please note that this option does not apply to subaccounts. | no | For more information on dedicated IPs, see the [Support Center](https://support.sparkpost.com/customer/en/portal/articles/2002977-dedicated-ip-addresses)
 |inline_css|boolean|Whether or not to perform CSS inlining in HTML content | no - Defaults to false | |
 
 ### Inline Content Attributes
@@ -10296,7 +10131,7 @@ If you use [Postman](https://www.getpostman.com/) you can click the following bu
 | auth_credentials         | JSON | Object containing credentials needed to make authorized POST requests to target | no | examples: `{ "access_token": "<oauth token>", expires_in: 3600 }`, `{ "username": "basicauthuser", "password": "mypassword" }` |
 | auth_token        | string | Authentication token to present in the X-MessageSystems-Webhook-Token header of POST requests to target | no | Use this token in your target application to confirm that data is coming from the Webhooks API. <br />example: `5ebe2294ecd0e0f08eab7690d2a6ee69`<br /><br />_Note: This field is deprecated, you should use the auth_type field instead._ |
 
-__**The SparkPost webhooks API uses MaxMind software [MaxMind License](/docs/3RD_PARTY_LICENSES.md)**__
+__**The SparkPost webhooks API uses MaxMind software [MaxMind License](https://www.maxmind.com/download/geoip/database/LICENSE.txt)**__
 
 ## Events Documentation [/webhooks/events/documentation]
 
@@ -10797,7 +10632,7 @@ are currently in a failed state.
 # Group SMTP API
 <a name="smtp-api"></a>
 
-**Note**: See [SMTP Relay Endpoints](#smtp-relay-endpoints) for the SMTP client configuration needed to use SparkPost or SparkPost Elite as an SMTP relay.
+**Note**: See [SMTP Relay Endpoints](index.html#header-smtp-relay-endpoints) for the SMTP client configuration needed to use SparkPost or SparkPost Elite as an SMTP relay.
 
 Through use of the X-MSYS-API header in a message sent to SparkPost and SparkPost Elite through SMTP,
 you can now specify a campaign id, metadata,
@@ -10817,7 +10652,7 @@ Click and open tracking are disabled by default in SMTP messages sent through Sp
 X-MSYS-API: { "options" : { "open_tracking" : true, "click_tracking" : true } }
 ```
 
-**Note**: Key-Value [Substitutions](#substitutions-reference) are not supported in SMTP API.
+**Note**: Key-Value [Substitutions](substitutions-reference.html) are not supported in SMTP API.
 substitution_data provided in the X-MSYS-API header will be ignored.
 
 The fields supported in the X-MSYS-API header are as follows:
@@ -10838,10 +10673,10 @@ The fields supported in the X-MSYS-API header are as follows:
 |-------|------|-------------|----------|-------|
 | open_tracking | boolean | Whether open tracking is enabled for this SMTP message | no | Defaults to false. |
 | click_tracking | boolean | Whether click tracking is enabled for this SMTP message | no | Defaults to false. |
-| transactional | boolean | Whether message is transactional or non-transactional for unsubscribe and suppression purposes | no | Defaults to false. |
+| transactional | boolean | Whether message is transactional or non-transactional for unsubscribe and suppression purposes (**Note:** no List-Unsubscribe header is included in transactional messages)| no | Defaults to false. |
 | sandbox| boolean| Whether or not to use the sandbox sending domain ( **Note:** SparkPost only ) | no | Defaults to false. |
 | skip_suppression| boolean| Whether or not to ignore customer suppression rules, for this SMTP message only. Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no | Defaults to false. |
-| ip_pool | string | The name of a dedicated IP pool associated with your account.  If this field is not provided, the account's default dedicated IP pool is used (if such a pool exists).  To explicitly bypass the account's default dedicated IP pool and instead fallback to the shared pool, specify a value of "sp_shared". Please note that this option does not apply to subaccounts. | no | For more information on dedicated IPs, see the [Support Center](https://support.sparkpost.com/customer/en/portal/articles/2002977-dedicated-ip-addresses)
+| ip_pool | string | The name of a dedicated IP pool associated with your account ( **Note:** SparkPost only ).  If this field is not provided, the account's default dedicated IP pool is used (if such a pool exists).  To explicitly bypass the account's default dedicated IP pool and instead fallback to the shared pool, specify a value of "sp_shared". Please note that this option does not apply to subaccounts. | no | For more information on dedicated IPs, see the [Support Center](https://support.sparkpost.com/customer/en/portal/articles/2002977-dedicated-ip-addresses)
 | inline_css| boolean| Whether or not to perform CSS inlining in HTML content | no | Defaults to false. |
 
 ## Sending Messages with cc, bcc, and archive Recipients
