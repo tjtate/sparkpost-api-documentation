@@ -6,6 +6,7 @@ var matchdep = require('matchdep')
         'introduction.md',
         'substitutions-reference.md',
         'account.md',
+        'bounce-domains.md',
         'inbound-domains.md',
         'metrics.md',
         'message-events.md',
@@ -16,7 +17,6 @@ var matchdep = require('matchdep')
         'suppression-list.md',
         'templates.md',
         'tracking-domains.md',
-        'bounce-domains.md',
         'transmissions.md',
         'webhooks.md',
         'smtp-api.md'
