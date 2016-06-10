@@ -195,6 +195,16 @@ inserted into the HTML part of the content.  Substitution values inserted into
 plain text portions of content are not HTML escaped.  In order to prevent
 HTML escaping, use triple curly braces.
 
+## Escaping Links
+
+A URL can be inserted into the template with triple curlies:
+
+```
+<a href="https://{{{link}}}">click me</a>
+
+```
+Note: The protocol ("https://") needs to be included before the variable.
+
 ## Preventing HTML Escaping
 
 The substitution engine supports triple curly braces to signify that HTML escaping should not occur.
@@ -285,12 +295,6 @@ Triple curlies are also necessary if the entire URL resides in substitution data
 {
   "the_entire_url" : "http://www.company.com/dailydeals?user=foo&offercode=bar"
 }
-```
-
-This URL can be inserted into the template using triple curlies:
-
-```
-<a href="{{{the_entire_url}}}">Go!</a>
 ```
 
 ## Link Names
