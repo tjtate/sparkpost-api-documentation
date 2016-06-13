@@ -9,11 +9,13 @@ var matchdep = require('matchdep')
         'account.md',
         'bounce-domains.md',
         'inbound-domains.md',
+        'ip-pools.md',
         'metrics.md',
         'message-events.md',
         'recipient-lists.md',
         'relay-webhooks.md',
         'sending-domains.md',
+        'sending-ips.md',
         'subaccounts.md',
         'suppression-list.md',
         'templates.md',
@@ -369,4 +371,3 @@ module.exports = function(grunt) {
     // register default grunt command as grunt test
     grunt.registerTask('default', [ 'testFiles' ]);
 };
-

@@ -1,40 +1,36 @@
 FORMAT: X-1A
 HOST: https://api.sparkpost.com/api/v1
 
-# SparkPost API v1
+# SparkPost API
 There are two service types available:  [SparkPost](http://sparkpost.com/), our self-service product, and [SparkPost Elite](https://www.sparkpost.com/products/sparkpost-elite), a managed service with guaranteed burst rates and white-glove support. These services have shared and unique aspects, with those unique aspects indicated in our consolidated API documentation as follows:
 * Features specific to **SparkPost** are indicated as "SparkPost only".
 * Features specific to **SparkPost Elite** products are indicated by "SparkPost Elite only".
 
 ## API Endpoints
-* JSON is the basis for its request input and response format.
-* SparkPost and SparkPost Elite listen on port 443, so no explicit port number is required.
 
-### SparkPost API Endpoint
-**https\://api.sparkpost.com/api/v1**
+| Endpoint   | Use for |
+|------------|---------|
+| https\://api.sparkpost.com/api/v1 | SparkPost |
+| https\://yourdomain.sparkpostelite.com/api/v1 | SparkPost Elite |
+| https\://yourdomain.msyscloud.com/api/v1 | SparkPost Elite (prior to June 2015) |
 
-Note: To prevent abuse, our servers enforce request rate limiting, which may trigger responses with HTTP code 429.
-
-### SparkPost Elite API Endpoint
-**https\://yourdomain.msyscloud.com/api/v1**
-
+Note: To prevent abuse, our servers enforce request rate limiting, which may trigger responses with HTTP status code 429.
 
 ## API Conventions
 * API versioning is handled using a major version number in the URL, e.g. /api/v1/endpoint.
 * /something is equivalent to /something/.
-* URL paths, URL query parameter names, JSON field names, and XML element names are case sensitive.
+* URL paths, URL query parameter names, and JSON field names are case sensitive.
 * URL paths use lower case, with dashes separating words.
 * Query parameters and JSON fields use lower case, with underscores separating words.
 * The HTTP status indicates whether an operation failed or succeeded, with extra information included in the HTTP response body.
 * All APIs return standard error code formats.
 * Unexpected query parameters are ignored.
-* Unexpected JSON fields or XML elements in the request body are ignored.
+* Unexpected JSON fields in the request body are ignored.
 * The JSON number type is bounded to a signed 32-bit integer.
 
 ## Authentication
-* All API's require that you authenticate with every request.
-* To authenticate with the various API's, specify the "Authorization" header with each request. The value of the "Authorization" header must be a valid API key or conform to the standard for Basic authentication.
-* Administrators can generate an API key using the UI. Please take care to record and safeguard your API keys at all times. You cannot retrieve an API key after it has been created.
+* To authenticate with the APIs, specify the "Authorization" header with each request. The value of the Authorization header must be a valid API key or basic auth with the API key as username and an empty password.
+* Administrators can [generate an API key](https://app.sparkpost.com/account/credentials). Please take care to record and safeguard your API keys at all times. You cannot retrieve an API key after it has been created.
 * For examples of supplying the Authorization header, refer to the cURL example below or any of the individual API request examples.
 
 ## Using Postman
@@ -44,7 +40,7 @@ If you use [Postman](https://www.getpostman.com/) you can click the following bu
 [![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
 
 ## Using cURL
-If you are using cURL to call the API, you must include the resource URI in quotes when you pass in multiple query parameters separated by an **&**.
+If you are using cURL to call the API, you must include the resource URI in quotes when you pass in multiple query parameters separated by an `&`.
 
 For example:
 
@@ -124,7 +120,7 @@ The SMTP relay optionally supports advanced API features using the [SMTP API](sm
 ## Substitutions Reference
 <a name="substitutions-reference"></a>
 
-### Key Features
+## Key Features
 
 * Substitutions applied in top-level headers, text/plain, and text/html parts of REST API injected messages (SMTP message substitutions currently not supported)
 * Key/value substitutions using substitution data provided in an arbitrary JSON object format
@@ -135,7 +131,7 @@ The SMTP relay optionally supports advanced API features using the [SMTP API](sm
 * Automatic HTML escaping of substitution values appearing in HTML parts of content
 * Automatic encoding of UTF-8 substitution values appearing in email headers
 
-### Substitution Data
+## Substitution Data
 
 Substitutions are applied per recipient using substitution data provided as part of
 the transmission and recipient JSON structures.  In the simplest case, substitution data is a JSON
@@ -174,7 +170,7 @@ Metadata can be used in substitutions in the same way as substitution data.
 
 
 
-### Template Start and End Markers
+## Template Start and End Markers
 
 As with some other templating languages, the start and end markers are defined as double curly braces.  For example:
 
@@ -206,7 +202,7 @@ The following will not be interpreted as a template:
 { { value } }
 ```
 
-### Determination of Expressions and Statements
+## Determination of Expressions and Statements
 
 When compiling a template, the substitution engine looks at the text between each pair of curly braces
 and determines whether it should be treated as an expression or a statement.  The
@@ -233,7 +229,7 @@ each.  The following are examples:
 {{ end }}
 ```
 
-### Missing Substitution Values
+## Missing Substitution Values
 
 An empty string is substituted for keys that do not appear in the substitution
 data or are present in the substitution data but have a value of JSON null.
@@ -262,7 +258,8 @@ Price is {{loop_var}}
 {{ end }}
 ```
 
-### Statements on Their Own Line
+## Statements on Their Own Line
+
 Substitution statements that exist on their own line of the template will **not**
 produce a blank line in the resulting output.  This is a convenience to the
 template writer.  In addition, any whitespace after the closing **}}** and before
@@ -288,7 +285,7 @@ Maryland
 End of template
 ```
 
-### Escaping Start and End Tags
+## Escaping Start and End Tags
 
 If you want a pair of opening or closing braces to appear in the content,
 you must escape them.  Use one of the following macros:
@@ -310,14 +307,23 @@ will yield:
 Here is a curly: {{
 ```
 
-### Escaping HTML Values
+## Escaping HTML Values
 
 The substitution engine automatically HTML escapes substitution values before they are
 inserted into the HTML part of the content.  Substitution values inserted into
 plain text portions of content are not HTML escaped.  In order to prevent
 HTML escaping, use triple curly braces.
 
-### Preventing HTML Escaping
+## Escaping Links
+
+A URL can be inserted into the template with triple curlies:
+
+```
+<a href="https://{{{link}}}">click me</a>
+```
+Note: The protocol ("https://") needs to be included before the variable.
+
+## Preventing HTML Escaping
 
 The substitution engine supports triple curly braces to signify that HTML escaping should not occur.
 
@@ -353,7 +359,7 @@ Example of using double curly braces renders angle brackets incorrectly:
 </body>
 ```
 
-### Personalized Links
+## Personalized Links
 
 Personalized links are supported.  A personalized link is defined as a target link that has one or more substitutions.
 For example:
@@ -409,13 +415,7 @@ Triple curlies are also necessary if the entire URL resides in substitution data
 }
 ```
 
-This URL can be inserted into the template using triple curlies:
-
-```
-<a href="{{{the_entire_url}}}">Go!</a>
-```
-
-### Link Names
+## Link Names
 
 Name all links using the **data-msys-linkname** custom attribute.  The link name has a maximum length of 63 characters and is truncated if it exceeds that limit. For example:
 
@@ -427,7 +427,7 @@ If this attribute is not specified, the link name will fall back to **Raw URL**.
 
 The link name will be incorporated into the click-tracked link and will be tracked in engagement events.
 
-### Unsubscribe Links
+## Unsubscribe Links
 
 It is possible to indicate that a link in your content be used to generate an unsubscribe event from SparkPost. This is done with the **data-msys-unsubscribe** custom attribute. For example:
 
@@ -437,7 +437,7 @@ It is possible to indicate that a link in your content be used to generate an un
 
 More information can be found [here](https://support.sparkpost.com/customer/portal/articles/1929894-setting-up-unsubscribe-links).
 
-### Per-link Disabling of Click Tracking
+## Per-link Disabling of Click Tracking
 
 When click-tracking is enabled for a transmission individual links can be skipped using the **data-msys-clicktrack** custom attribute. For example:
 
@@ -446,7 +446,7 @@ When click-tracking is enabled for a transmission individual links can be skippe
 ```
 
 
-### Custom Link Sub-Paths
+## Custom Link Sub-Paths
 
 It is possible to add a custom sub-path to a tracked URL using the **data-msys-sublink** custom attribute. For example:
 
@@ -462,7 +462,7 @@ http://<hostname>/f/custom_path/<encoded target url>
 
 An example of how to use **data-msys-sublink** to support iOS Universal Links in SparkPost Elite can be found [here](https://support.sparkpostelite.com/customer/en/portal/articles/2231112-ios9-universal-links-support?b_id=8730#Creating%20Universal%20Links%20in%20Templates%20&%20Sub-Pathing).
 
-### Link Attributes in Text Parts
+## Link Attributes in Text Parts
 
 The sections above describing the **data-msys-*** link attributes all show HTML `<a>` tag examples. However it is also possible to specify all of the same custom attributes for links in the `text` part of a message using a double-square-bracket notation. For example:
 
@@ -470,7 +470,7 @@ The sections above describing the **data-msys-*** link attributes all show HTML 
 http://www.example.com[[data-msys-clicktrack="0"]]
 ```
 
-### Substitutions Syntax Examples
+## Substitutions Syntax Examples
 
 This section contains syntax examples based on the following JSON substitution data:
 
@@ -511,19 +511,19 @@ This section contains syntax examples based on the following JSON substitution d
 }
 ```
 
-#### Basic Substitution
+### Basic Substitution
 
 ```
 Hello {{name}}
 ```
 
-#### Referencing a Nested Object
+### Referencing a Nested Object
 
 ```
 Street: {{address.street}}
 ```
 
-#### if then else Syntax
+### if then else Syntax
 
 Notice the "then" is not required.  The following are equivalent: 
 
@@ -541,7 +541,7 @@ Don't forget to sign up!
 {{end}}
 ```
 
-#### if not Syntax
+### if not Syntax
 
 ```
 {{if not signed_up}}
@@ -549,7 +549,7 @@ Don't forget to sign up!
 {{end}}
 ```
 
-#### elseif Syntax
+### elseif Syntax
 
 ```
 {{if signed_up}}
@@ -561,7 +561,7 @@ Please sign up
 {{end}}
 ```
 
-#### Expressions in Conditionals (`==`, `!=`, `<`, `>`, `and`, `or`)
+### Expressions in Conditionals (`==`, `!=`, `<`, `>`, `and`, `or`)
 
 ```
 {{if age > 30}}
@@ -580,7 +580,7 @@ do something
 {{end}}
 ```
 
-### Relational and Logical Operators
+## Relational and Logical Operators
 
 The relational and logical operators are as follows: 
 
@@ -607,7 +607,7 @@ The relational and logical operators are as follows:
 
 The length operator `#` gives the length of an array. From the sample data above: `#shopping_cart` produces `2`.
 
-### Array Iteration
+## Array Iteration
 
 The substitution language uses the `each` keyword for iteration.
 The value at each index of an array can be accessed within the each loop by using the `loop_var` variable. When using the `each` keyword to iterate over an array, the `loop_index` variable can be used to get the current index.
@@ -651,7 +651,7 @@ The following example uses `shopping_cart` and `a_nested_array`:
 The preceding example uses indentation for ease of reading.
 The indentation will appear in the rendered content, so it is not advisable to indent a production template. 
 
-### Links and Substitution Expressions Within Substitution Values
+## Links and Substitution Expressions Within Substitution Values
 
 Sometimes it may be convenient to place links and substitution expressions not only within
 a template, but within substitution values themselves.  For example, the 'my_html_chunk' substitution value
@@ -841,7 +841,7 @@ Finally, as a more realistic example, render_dynamic_content can also be used in
 }
 ```
 
-### Default Values
+## Default Values
 
 To create default values, use `or` syntax.  In the following example,
 if `name` does not exist as a substitution key, then the expression `null or 'Customer'`
@@ -851,7 +851,7 @@ will evaluate as `Customer`.
 Hello {{ name or 'Customer' }}
 ```
 
-### Macros
+## Macros
 
 Macros are function calls that may or may not take arguments.  The currently available macros are:
 
@@ -893,7 +893,7 @@ The four macros for outputting braces are listed below followed by their output:
 
 
 
-###  Reserved Recipient Substitution Variables
+##  Reserved Recipient Substitution Variables
 
 The following substitution variables are reserved and automatically available for each recipient:
 
@@ -915,7 +915,7 @@ Hello {{address.name}}
 Your email is {{address.email}} and your return path is {{return_path}}
 ```
 
-### Substitutions in email_rfc822 Headers
+## Substitutions in email_rfc822 Headers
 
 When it is desirable to have substitutions in RFC2047 encoded headers which are folded, be sure that
 each line of the header is separately RFC2047 encoded.  Otherwise, the server will not be able to decode
@@ -935,7 +935,7 @@ Subject: =?gb2312?B?ztLE3M3Mz8Kyo8Gntviyu8nLye3M5c7SxNzNzM/CsqPBp7b4srvJy8ntzOU=
    ztLE3M3Mz8Kyo8Gntvg=?=
 ```
 
-### Encoding Rules
+## Encoding Rules
 
 * If after substitution, a text/plain or text/html part contains 8-bit data,
 then that part will be quoted-printable encoded before being placed back into the
@@ -967,8 +967,8 @@ Get your SparkPost account information, including subscription status and quota 
 | created | string | ISO date account was created | |
 | updated | string | ISO date account details were last updated | |
 | status | string | account status - `active` | |
-| subscription | object | current subscription details | see *Subscription Properties* section) |
-| pending_subscription | object | pending subscription details | see *Subscription Properties* section) |
+| subscription | object | current subscription details | (see *Subscription Properties* section) |
+| pending_subscription | object | pending subscription details | (see *Subscription Properties* section) |
 | options | object | account-level tracking settings | (see *Options Properties* section) |
 | usage | object | account quota usage details | Specify 'include=usage' in query string to include usage info (see *Usage Properties* section) |
 
@@ -1058,6 +1058,327 @@ Get your SparkPost account information, including subscription status and quota 
                 }
             }
         }
+
+# Group Bounce Domains
+<a name="bounce-domains-api"></a>
+
+**Note:** The Bounce Domains API is available for SparkPost only.
+
+Bounce domains are used to report bounces, emails that were rejected from the recipient server.  By adding a custom bounce domain to your account, you can customize the address that is used for the Return Path header (which denotes the destination for out of band bounces). This custom bounce domain overrides the default Return-Path (also known as the envelope FROM) value of "sparkpostmail.com" for all messages sent.
+
+**Note:** Use of a bounce domain requires modification of your DNS records to include a CNAME record.
+
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
+## Bounce Domains Attributes
+
+| Field   | Type   | Description | Required | Notes |
+|------------|--------|-------------|----------|-------|
+| domain | string | Name of the bounce domain | yes | Example: `example.domain.com` |
+| status | JSON object| JSON object containing status details, including whether this domain's ownership has been verified  | no | Read only. For a full description, see the Status Attributes.|
+
+### Status Attributes
+
+Detailed status for this bounce domain is described in a JSON object with the following fields:
+
+| Field         | Type     | Description                           | Default   | Notes   |
+|------------------------|:-:       |---------------------------------------|-------------|--------|
+| verified | boolean | Whether domain has been verified | false | Read only. This field will return "true" if cname_status is "valid".|
+| cname_status | string | Verification status of CNAME configuration | unverified | Read only. Valid values are "unverified", "pending", "invalid" or "valid".|
+| compliance_status | string | Compliance status | | Valid values are "pending", "valid", or "blocked".|
+
+## Create and List [/bounce-domains]
+
+### Create a Bounce Domain [POST]
+
+Create a Bounce Domain.
+
++ Request (application/json)
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+  + Body
+
+            {
+              "domain": "example.domain.com"
+            }
+
++ Response 200
+
+  + Body
+
+            {
+              "results": {
+                "domain": "example.domain.com"
+              }
+            }
+
++ Response 400 (application/json)
+
+  + Body
+
+            {
+              "errors" : [
+                {
+                  "code" : "8000",
+                  "message" : "only one bounce domain can be created",
+                  "description" : "Can't create more than one bounce domain."
+                }
+              ]
+            }
+
++ Response 400 (application/json)
+
+  + Body
+
+            {
+              "errors" : [
+                {
+                  "code" : "7000",
+                  "message" : "restricted domain",
+                  "description" : "Please contact us at support@sparkpost.com to get this domain authorized for your account."
+                }
+              ]
+            }
+
++ Response 409 (application/json)
+
+  + Body
+
+            {
+              "errors" : [
+                {
+                  "code" : "1602",
+                  "message" : "resource conflict",
+                  "description" : "A bounce domain with similar attributes already exists."
+                }
+              ]
+            }
+
++ Response 422 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "code": "1300",
+                  "message": "invalid data format/type",
+                  "description": "Error validating domain name syntax for domain: 'example..domain.com'"
+                }
+              ]
+            }
+
++ Response 422 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "code": "1300",
+                  "message": "invalid data format/type",
+                  "description": "Error domain name length too short for domain: 'ex'"
+                } 
+              ]
+            }
+
++ Response 422 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "code": "1300",
+                  "message": "invalid data format/type",
+                  "description": "Error domain name contains no '.'(s) for domain: 'exampledomaincom'"
+                }
+              ]
+            }
+
++ Response 422 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "code": "1300",
+                  "message": "invalid data format/type",
+                  "description": "Error domain name contains invalid characters or spaces for domain: 'example*&#.domain.com'"
+                }
+              ]
+            }
+
++ Response 422 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "code": "1400",
+                  "message": "required field is missing",
+                  "description": "Missing required field: (domain) is required"
+                }
+              ]
+            }
+
+
+### List Bounce Domains [GET]
+
+Retrieve a list of all bounce domains.
+
+**NOTE:** Only one custom bounce domain is permitted per account at this time.
+
++ Request
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Response 200 (application/json)
+
+  + Body
+
+            {
+              "results": [
+                {
+                  "domain": "example.domain.com",
+                  "status": {
+                    "verified": false,
+                    "cname_status": "pending",
+                    "compliance_status": "pending"
+                  }
+                } 
+              ]
+            }
+
+
+## Retrieve and Delete [/bounce-domains/{domain}]
+
+### Retrieve a Bounce Domain [GET]
+
+Retrieve an existing bounce domain.
+
++ Parameters
+  + domain (required, string, `example.domain.com`) ... domain name
+
+
++ Request
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+            Accept: application/json
+
++ Response 200 (application/json)
+
+  + Body
+
+            {
+              "results": {
+                "domain": "example.domain.com",
+                "status": {
+                  "verified": false,
+                  "cname_status": "pending",
+                  "compliance_status": "valid"
+                }
+              }
+            }
+
++ Response 404 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "code": "8001",
+                  "message": "bounce domain does not exist",
+                  "description": "Resource not found: example.domain.com"
+                }
+              ]
+            }
+
+
+### Delete a Bounce Domain [DELETE]
+
+Delete an existing bounce domain.
+
++ Parameters
+  + domain (required, string, `example.domain.com`) ... domain name
+
++ Request
+
+  + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
++ Response 204
+
++ Response 404 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "code": "8001",
+                  "message": "bounce domain does not exist",
+                  "description": "Resource not found: example.domain.com"
+                }
+              ]
+            }
+
+
+## Verify [/bounce-domains/{domain}/verify]
+
+### Verify a Bounce Domain [POST]
+Initiate a check against the CNAME DNS record for the specified bounce domain. The domain's `status` object is returned on success.
+
++ Parameters
+  + domain (required, string, `example.domain.com`) ... domain name
+
+
++ Request
+
+    + Headers
+
+            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
+
+
++ Response 200 (application/json; charset=utf-8)
+
+        {
+            "results": {
+              "verified": true,
+              "cname_status": "valid",
+              "compliance_status": "valid"
+            }
+        }
+
++ Response 404 (application/json)
+
+  + Body
+
+            {
+              "errors": [
+                {
+                  "code": "1600",
+                  "message": "resource not found",
+                  "description": "Resource not found: example.domain.com"
+                }
+              ]
+            }
 
 # Group Inbound Domains
 
@@ -1339,6 +1660,227 @@ Delete an inbound domain by specifying its domain name in the URI path.
                   "message": "resource conflict",
                   "description": "Domain currently being used in a relay-webhook. Please delete the relay-webhook first.",
                   "code": "1602"
+                }
+              ]
+            }
+
+# Group IP Pools
+
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
+#### IP Pool Properties
+
+| Property   | Type    | Description | Notes |
+|------------|---------|-------------|-------|
+| id | string | Unique pool identifier | Autogenerated on create, used for Transmissions API & SMTP |
+| name | string | Pool name | |
+| ips | array of objects | Sending IPs within the pool | Sending IP objects include fields `external_ip` & `hostname` |
+
+## IP Pools [/ip-pools]
+
+## List IP Pools [GET]
+
+Lists all IP Pools.
+
++ Request
+
+    + Headers
+
+            Accept: application/json
+            Authorization: aHR0cDovL2kuaW1ndXIuY29tL293UndTR3AucG5n
+
+
++ Response 200 (application/json)
+
+            {
+                "results": [{
+                    "id": "marketing_ip_pool",
+                    "name": "Marketing IP Pool",
+                    "ips": []
+                }, {
+                    "id": "default",
+                    "name": "Default",
+                    "ips": [{
+                        "external_ip": "54.244.54.135",
+                        "hostname": "mta472a.sparkpostmail.com"
+                    }]
+                }]
+            }
+
+## Create an IP Pool [POST]
+
+Creates an IP Pool and returns a unique ID based on the name. This ID is used for sending with this pool.
+
+#### Request Body Attributes
+
+| Field              | Type           | Description                                                            | Required      |
+|--------------------|----------------|------------------------------------------------------------------------|---------------|
+| name               | string         | Name of the IP Pool                                                    | yes           |
+
+
++ Request
+
+    + Headers
+
+            Accept: application/json
+            Authorization: aHR0cDovL2kuaW1ndXIuY29tL293UndTR3AucG5n
+
+    + Body
+
+            {
+              "name" : "Marketing IP Pool"
+            }
+
++ Response 200 (application/json)
+
+            {
+                "results": {
+                    "id": "marketing_ip_pool"
+                }
+            }
+
+## IP Pools Resource [/ip-pools/{id}]
+
+## Get IP Pool [GET]
+
+Retrieves a specific IP Pool.
+
++ Request
+
+    + Headers
+
+            Accept: application/json
+            Authorization: aHR0cDovL2kuaW1ndXIuY29tL293UndTR3AucG5n
+
++ Parameters
+
+  + id (required, string, `marketing`) ... The IP Pool's ID
+
+
++ Response 200 (application/json)
+
+            {
+                "results": {
+                    "id": "marketing_ip_pool",
+                    "name": "Marketing IP Pool",
+                    "ips": [{
+                        "external_ip": "54.244.54.135",
+                        "hostname": "mta472a.sparkpostmail.com"
+                    }, {
+                        "external_ip": "54.244.54.137",
+                        "hostname": "mta474a.sparkpostmail.com"
+                    }]
+                }
+            }
+
++ Response 404 (application/json)
+
+            {
+              "errors": [
+                {
+                  "message": "IP pool not found."
+                }
+              ]
+            }
+
+
+## Update an IP Pool [PUT]
+
+Updates an IP pool's name. To update sending IP pool assignments see [Sending IPs](sending-ips.html).
+
+#### Request Body Attributes
+
+| Field          | Type           | Description                                | Required      |
+|----------------|----------------|--------------------------------------------|---------------|
+| name           | string         | Name of the IP Pool                        | yes           |
+
+
++ Request
+
+    + Headers
+
+            AUTHORIZATION: aHR0cDovL2kuaW1ndXIuY29tL293UndTR3AucG5n
+            Accept: application/json
+
+    + Body
+
+            {
+                "name": "Updated Marketing Pool"
+            }
+
++ Parameters
+
+  + id (required, string, `marketing`) ... The IP Pool's ID
+
+
++ Response 200 (application/json)
+
+    ```json
+    {
+        "results": {
+          "name": "Updated Marketing Pool",
+          "id": "marketing"
+        }
+    }
+    ```
+
++ Response 400 (application/json)
+
+    ```json
+    {
+        "errors": [{"message": "IP Pool default is reserved and cannot be updated."}]
+    }
+    ```
+
++ Response 404 (application/json)
+
+    ```json
+    {
+        "errors": [{"message": "IP Pool not_a_real_pool does not exist."}]
+    }
+    ```
+
+
+## Delete an IP Pool [DELETE]
+
+Deletes an IP Pool and moves all sending IPs in that pool to the default pool. The default pool cannot be deleted.
+
+
++ Request
+
+    + Headers
+
+            Accept: application/json
+            Authorization: aHR0cDovL2kuaW1ndXIuY29tL293UndTR3AucG5n
+
++ Parameters
+
+  + id (required, string, `marketing`) ... The IP Pool's ID
+
+
++ Response 204
+
+
++ Response 400 (application/json)
+
+            {
+              "errors": [
+                {
+                  "message": "IP Pool default is reserved."
+                }
+              ]
+            }
+
++ Response 404 (application/json)
+
+            {
+              "errors": [
+                {
+                  "message": "IP Pool marketing does not exist."
                 }
               ]
             }
@@ -6390,6 +6932,8 @@ submitted or generating.
 
 **Note:** The Relay Webhooks API is available for SparkPost only.
 
+Relay Webhooks are a way to instruct SparkPost to accept inbound email on your behalf and forward it to you over HTTP for your own consumption.
+
 By configuring a relay webhook for a specified inbound domain, those inbound messages can be forwarded to a specified target over HTTP.  Before you create a relay webhook, be sure to first create an inbound domain that is properly configured. To create an inbound domain for your account, please use our Inbound Domains API. The Relay Webhooks API provides the means to create, list, retrieve, update, and delete a relay webhook.
 
 ## Using Postman
@@ -7406,6 +7950,153 @@ The domain's "status" object is returned on success.
            ]
         }
         ```
+
+# Group Sending IPs
+
+## Using Postman
+
+If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
+
+[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
+
+#### Sending IP Properties
+
+| Property   | Type    | Description | Notes |
+|------------|---------|-------------|-------|
+| external_ip | string | Public-facing IP address of this sending IP | |
+| hostname | string | Reverse DNS hostname associated with this IP | |
+| ip_pool | string | IP pool this sending IP is held in | |
+
+## Sending IPs [/sending-ips]
+
+## Get all sending IPs [GET]
+
+Gets all IP addresses.
+
++ Request
+
+    + Headers
+
+            Authorization: aHR0cDovL2kuaW1ndXIuY29tL293UndTR3AucG5n
+            Accept: application/json
+
++ Response 200 (application/json)
+
+    ```json
+    {
+        "results": [{
+          "external_ip": "123.456.789.123",
+          "hostname": "mta472a.sparkpostmail.com",
+          "ip_pool": "marketing"
+        }, {
+          "external_ip": "123.456.789.124",
+          "hostname": "mta474a.sparkpostmail.com",
+          "ip_pool": "default"
+        }]
+    }
+    ```
+
+## Sending IP Resource [/sending-ips/{external_ip}]
+
+## Get a Sending IP [GET]
+
+Retrieves a specific sending IP.
+
++ Request
+
+    + Headers
+
+            AUTHORIZATION: aHR0cDovL2kuaW1ndXIuY29tL293UndTR3AucG5n
+            Accept: application/json
+
++ Parameters
+
+  + external_ip (required, string, `123.456.789.012`) ... The external IP of the sending IP
+
+
++ Response 200 (application/json)
+
+    ```json
+    {
+        "results": {
+          "external_ip": "123.456.789.012",
+          "hostname": "mta472a.sparkpostmail.com",
+          "ip_pool": "cool_kids"
+        }
+    }
+
+    ```
+
++ Response 400 (application/json)
+
+    ```json
+    {
+        "errors": [{"message": "external ip must be a valid IPv4 address"}]
+    }
+    ```
+
++ Response 404 (application/json)
+
+    ```json
+    {
+        "errors": [{"message": "Sending IP does not exist"}]
+    }
+    ```
+
+## Update a Sending IP [PUT]
+
+Updates the IP Pool of a sending IP.
+
+#### Request Body Attributes
+
+| Field          | Type           | Description                                | Required      |
+|----------------|----------------|--------------------------------------------|---------------|
+| ip_pool        | string         | The IP pool to add this sending IP to.     | yes           |
+
+
++ Request
+
+    + Headers
+
+            AUTHORIZATION: aHR0cDovL2kuaW1ndXIuY29tL293UndTR3AucG5n
+            Accept: application/json
+
+    + Body
+
+            {
+                "ip_pool": "too_cool_for_pool"
+            }
+
++ Parameters
+
+  + external_ip (required, string, `123.456.789.012`) ... The external IP of the sending IP to update
+
+
++ Response 200 (application/json)
+
+    ```json
+    {
+        "results": {
+          "message": "Updated IP Pool."
+        }
+    }
+    ```
+
++ Response 400 (application/json)
+
+    ```json
+    {
+        "errors": [{"message": "IP Pool glibglob does not exist."}]
+    }
+    ```
+
++ Response 404 (application/json)
+
+    ```json
+    {
+        "errors": [{"message": "Sending IP does not exist"}]
+    }
+    ```
 
 # Group Subaccounts
 <a name="subaccounts-api"></a>
@@ -8801,327 +9492,6 @@ Delete an existing tracking domain.
 
 ### Verify a Tracking Domain [POST]
 Initiate a check against the CNAME DNS record for the specified tracking domain. The domain's `status` object is returned on success.
-
-+ Parameters
-  + domain (required, string, `example.domain.com`) ... domain name
-
-
-+ Request
-
-    + Headers
-
-            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-
-
-+ Response 200 (application/json; charset=utf-8)
-
-        {
-            "results": {
-              "verified": true,
-              "cname_status": "valid",
-              "compliance_status": "valid"
-            }
-        }
-
-+ Response 404 (application/json)
-
-  + Body
-
-            {
-              "errors": [
-                {
-                  "code": "1600",
-                  "message": "resource not found",
-                  "description": "Resource not found: example.domain.com"
-                }
-              ]
-            }
-
-# Group Bounce Domains
-<a name="bounce-domains-api"></a>
-
-**Note:** The Bounce Domains API is available for SparkPost only.
-
-Bounce domains are used to report bounces, emails that were rejected from the recipient server.  By adding a custom bounce domain to your account, you can customize the address that is used for the Return Path header (which denotes the destination for out of band bounces). This custom bounce domain overrides the default Return-Path (also known as the envelope FROM) value of "sparkpostmail.com" for all messages sent.
-
-**Note:** Use of a bounce domain requires modification of your DNS records to include a CNAME record.
-
-## Using Postman
-
-If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
-
-[![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
-
-## Bounce Domains Attributes
-
-| Field   | Type   | Description | Required | Notes |
-|------------|--------|-------------|----------|-------|
-| domain | string | Name of the bounce domain | yes | Example: `example.domain.com` |
-| status | JSON object| JSON object containing status details, including whether this domain's ownership has been verified  | no | Read only. For a full description, see the Status Attributes.|
-
-### Status Attributes
-
-Detailed status for this bounce domain is described in a JSON object with the following fields:
-
-| Field         | Type     | Description                           | Default   | Notes   |
-|------------------------|:-:       |---------------------------------------|-------------|--------|
-| verified | boolean | Whether domain has been verified | false | Read only. This field will return "true" if cname_status is "valid".|
-| cname_status | string | Verification status of CNAME configuration | unverified | Read only. Valid values are "unverified", "pending", "invalid" or "valid".|
-| compliance_status | string | Compliance status | | Valid values are "pending", "valid", or "blocked".|
-
-## Create and List [/bounce-domains]
-
-### Create a Bounce Domain [POST]
-
-Create a Bounce Domain.
-
-+ Request (application/json)
-
-  + Headers
-
-            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-
-  + Body
-
-            {
-              "domain": "example.domain.com"
-            }
-
-+ Response 200
-
-  + Body
-
-            {
-              "results": {
-                "domain": "example.domain.com"
-              }
-            }
-
-+ Response 400 (application/json)
-
-  + Body
-
-            {
-              "errors" : [
-                {
-                  "code" : "8000",
-                  "message" : "only one bounce domain can be created",
-                  "description" : "Can't create more than one bounce domain."
-                }
-              ]
-            }
-
-+ Response 400 (application/json)
-
-  + Body
-
-            {
-              "errors" : [
-                {
-                  "code" : "7000",
-                  "message" : "restricted domain",
-                  "description" : "Please contact us at support@sparkpost.com to get this domain authorized for your account."
-                }
-              ]
-            }
-
-+ Response 409 (application/json)
-
-  + Body
-
-            {
-              "errors" : [
-                {
-                  "code" : "1602",
-                  "message" : "resource conflict",
-                  "description" : "A bounce domain with similar attributes already exists."
-                }
-              ]
-            }
-
-+ Response 422 (application/json)
-
-  + Body
-
-            {
-              "errors": [
-                {
-                  "code": "1300",
-                  "message": "invalid data format/type",
-                  "description": "Error validating domain name syntax for domain: 'example..domain.com'"
-                }
-              ]
-            }
-
-+ Response 422 (application/json)
-
-  + Body
-
-            {
-              "errors": [
-                {
-                  "code": "1300",
-                  "message": "invalid data format/type",
-                  "description": "Error domain name length too short for domain: 'ex'"
-                } 
-              ]
-            }
-
-+ Response 422 (application/json)
-
-  + Body
-
-            {
-              "errors": [
-                {
-                  "code": "1300",
-                  "message": "invalid data format/type",
-                  "description": "Error domain name contains no '.'(s) for domain: 'exampledomaincom'"
-                }
-              ]
-            }
-
-+ Response 422 (application/json)
-
-  + Body
-
-            {
-              "errors": [
-                {
-                  "code": "1300",
-                  "message": "invalid data format/type",
-                  "description": "Error domain name contains invalid characters or spaces for domain: 'example*&#.domain.com'"
-                }
-              ]
-            }
-
-+ Response 422 (application/json)
-
-  + Body
-
-            {
-              "errors": [
-                {
-                  "code": "1400",
-                  "message": "required field is missing",
-                  "description": "Missing required field: (domain) is required"
-                }
-              ]
-            }
-
-
-### List Bounce Domains [GET]
-
-Retrieve a list of all bounce domains.
-
-**NOTE:** Only one custom bounce domain is permitted per account at this time.
-
-+ Request
-
-  + Headers
-
-            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-            Accept: application/json
-
-+ Response 200 (application/json)
-
-  + Body
-
-            {
-              "results": [
-                {
-                  "domain": "example.domain.com",
-                  "status": {
-                    "verified": false,
-                    "cname_status": "pending",
-                    "compliance_status": "pending"
-                  }
-                } 
-              ]
-            }
-
-
-## Retrieve and Delete [/bounce-domains/{domain}]
-
-### Retrieve a Bounce Domain [GET]
-
-Retrieve an existing bounce domain.
-
-+ Parameters
-  + domain (required, string, `example.domain.com`) ... domain name
-
-
-+ Request
-
-  + Headers
-
-            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-            Accept: application/json
-
-+ Response 200 (application/json)
-
-  + Body
-
-            {
-              "results": {
-                "domain": "example.domain.com",
-                "status": {
-                  "verified": false,
-                  "cname_status": "pending",
-                  "compliance_status": "valid"
-                }
-              }
-            }
-
-+ Response 404 (application/json)
-
-  + Body
-
-            {
-              "errors": [
-                {
-                  "code": "8001",
-                  "message": "bounce domain does not exist",
-                  "description": "Resource not found: example.domain.com"
-                }
-              ]
-            }
-
-
-### Delete a Bounce Domain [DELETE]
-
-Delete an existing bounce domain.
-
-+ Parameters
-  + domain (required, string, `example.domain.com`) ... domain name
-
-+ Request
-
-  + Headers
-
-            Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
-
-+ Response 204
-
-+ Response 404 (application/json)
-
-  + Body
-
-            {
-              "errors": [
-                {
-                  "code": "8001",
-                  "message": "bounce domain does not exist",
-                  "description": "Resource not found: example.domain.com"
-                }
-              ]
-            }
-
-
-## Verify [/bounce-domains/{domain}/verify]
-
-### Verify a Bounce Domain [POST]
-Initiate a check against the CNAME DNS record for the specified bounce domain. The domain's `status` object is returned on success.
 
 + Parameters
   + domain (required, string, `example.domain.com`) ... domain name
