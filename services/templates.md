@@ -1,4 +1,4 @@
-# Group Templates
+# Templates Are Cool!
 
 A template is a named collection of content stored on the server side.  Templates are used
 in a transmission by providing the id of the template at the time of transmission submission.  Each textual component of the
