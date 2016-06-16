@@ -6,7 +6,7 @@ If you use [Postman](https://www.getpostman.com/) you can click the following bu
 
 [![Run in Postman](https://s3.amazonaws.com/postman-static/run-button.png)](https://www.getpostman.com/run-collection/81ee1dd2790d7952b76a)
 
-## Account [/account{?include}]
+## Account [/account{?include}] booya
 
 ## Get your account information [GET]
 
