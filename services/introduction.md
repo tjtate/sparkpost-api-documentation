@@ -7,9 +7,9 @@ There are two service types available:  [SparkPost](http://sparkpost.com/), our 
 
 | Endpoint   | Use for |
 |------------|---------|
-| https\://api.sparkpost.com/api/v1 | SparkPost |
-| https\://yourdomain.sparkpostelite.com/api/v1 | SparkPost Elite |
-| https\://yourdomain.msyscloud.com/api/v1 | SparkPost Elite (prior to June 2015) |
+| `https://api.sparkpost.com/api/v1` | SparkPost |
+| `https://yourdomain.sparkpostelite.com/api/v1` | SparkPost Elite |
+| `https://yourdomain.msyscloud.com/api/v1` | SparkPost Elite (prior to June 2015) |
 
 Note: To prevent abuse, our servers enforce request rate limiting, which may trigger responses with HTTP status code 429.
 

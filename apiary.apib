@@ -10,9 +10,9 @@ There are two service types available:  [SparkPost](http://sparkpost.com/), our 
 
 | Endpoint   | Use for |
 |------------|---------|
-| https\://api.sparkpost.com/api/v1 | SparkPost |
-| https\://yourdomain.sparkpostelite.com/api/v1 | SparkPost Elite |
-| https\://yourdomain.msyscloud.com/api/v1 | SparkPost Elite (prior to June 2015) |
+| `https://api.sparkpost.com/api/v1` | SparkPost |
+| `https://yourdomain.sparkpostelite.com/api/v1` | SparkPost Elite |
+| `https://yourdomain.msyscloud.com/api/v1` | SparkPost Elite (prior to June 2015) |
 
 Note: To prevent abuse, our servers enforce request rate limiting, which may trigger responses with HTTP status code 429.
 
@@ -7487,15 +7487,12 @@ To use a DKIM Signing Domain Identifier different to the Sending Domain, set the
 
     + Body
 
-        ```
-        {
-            "domain": "example1.com"
-        }
-        ```
+           {
+               "domain": "example1.com"
+           }
 
-+ Response 200 (application/json; charset=utf-8)
++ Response 200 (application/json)
 
-        ```
         {
           "results": {
             "message": "Successfully Created domain.",
@@ -7517,14 +7514,12 @@ To use a DKIM Signing Domain Identifier different to the Sending Domain, set the
 
     + Body
 
-        ```
-        {
-            "domain": "example1.com",
-            "generate_dkim": false
-        }
-        ```
+           {
+               "domain": "example1.com",
+               "generate_dkim": false
+           }
 
-+ Response 200 (application/json; charset=utf-8)
++ Response 200 (application/json)
 
         {
           "results": {
@@ -7541,19 +7536,17 @@ To use a DKIM Signing Domain Identifier different to the Sending Domain, set the
 
     + Body
 
-        ```
-        {
-            "domain": "example1.com",
-            "tracking_domain": "click.example1.com",
-            "dkim": {  "private": "MIICXgIBAAKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQABAoGBAITb3BCRPBi5lGhHdn+1RgC7cjUQEbSb4eFHm+ULRwQ0UIPWHwiVWtptZ09usHq989fKp1g/PfcNzm8c78uTS6gCxfECweFCRK6EdO6cCCr1cfWvmBdSjzYhODUdQeyWZi2ozqd0FhGWoV4VHseh4iLj36DzleTLtOZj3FhAo1WJAkEA68T+KkGeDyWwvttYtuSiQCCTrXYAWTQnkIUxduCp7Ap6tVeIDn3TaXTj74UbEgaNgLhjG4bX//fdeDW6PaK9YwJBAM6xJmwHLPMgwNVjiz3u/6fhY3kaZTWcxtMkXCjh1QE82KzDwqyrCg7EFjTtFysSHCAZxXZMcivGl4TZLHnydJUCQQCx16+M+mAatuiCnvxlQUMuMiSTNK6Amzm45u9v53nlZeY3weYMYFdHdfe1pebMiwrT7MI9clKebz6svYJVmdtXAkApDAc8VuR3WB7TgdRKNWdyGJGfoD1PO1ZE4iinOcoKV+IT1UCY99Kkgg6C7j62n/8T5OpRBvd5eBPpHxP1F9BNAkEA5Nf2VO9lcTetksHdIeKK+F7sio6UZn0Rv7iUo3ALrN1D1cGfWIh2dj3ko1iSreyNVSwGW0ePP27qDmU+u6/Y1g==",
-                "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
-                "selector": "scph0316",
-                "headers": "from:to:subject:date"
-            }
-        }
-        ```
+          {
+              "domain": "example1.com",
+              "tracking_domain": "click.example1.com",
+              "dkim": {  "private": "MIICXgIBAAKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQABAoGBAITb3BCRPBi5lGhHdn+1RgC7cjUQEbSb4eFHm+ULRwQ0UIPWHwiVWtptZ09usHq989fKp1g/PfcNzm8c78uTS6gCxfECweFCRK6EdO6cCCr1cfWvmBdSjzYhODUdQeyWZi2ozqd0FhGWoV4VHseh4iLj36DzleTLtOZj3FhAo1WJAkEA68T+KkGeDyWwvttYtuSiQCCTrXYAWTQnkIUxduCp7Ap6tVeIDn3TaXTj74UbEgaNgLhjG4bX//fdeDW6PaK9YwJBAM6xJmwHLPMgwNVjiz3u/6fhY3kaZTWcxtMkXCjh1QE82KzDwqyrCg7EFjTtFysSHCAZxXZMcivGl4TZLHnydJUCQQCx16+M+mAatuiCnvxlQUMuMiSTNK6Amzm45u9v53nlZeY3weYMYFdHdfe1pebMiwrT7MI9clKebz6svYJVmdtXAkApDAc8VuR3WB7TgdRKNWdyGJGfoD1PO1ZE4iinOcoKV+IT1UCY99Kkgg6C7j62n/8T5OpRBvd5eBPpHxP1F9BNAkEA5Nf2VO9lcTetksHdIeKK+F7sio6UZn0Rv7iUo3ALrN1D1cGfWIh2dj3ko1iSreyNVSwGW0ePP27qDmU+u6/Y1g==",
+                  "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
+                  "selector": "scph0316",
+                  "headers": "from:to:subject:date"
+              }
+          }
 
-+ Response 200 (application/json; charset=utf-8)
++ Response 200 (application/json)
 
         {
           "results": {
@@ -7570,31 +7563,27 @@ To use a DKIM Signing Domain Identifier different to the Sending Domain, set the
 
 + Response 400 (application/json)
 
-      ```
-      {
-        "errors": [
-          {
-            "message": "invalid params",
-            "description": "Tracking domain 'click.example1.com' is not a registered tracking domain",
-            "code": "1200"
-          }
-        ]
-      }
-      ```
+           {
+             "errors": [
+               {
+                 "message": "invalid params",
+                 "description": "Tracking domain 'click.example1.com' is not a registered tracking domain",
+                 "code": "1200"
+               }
+             ]
+           }
 
 + Response 422 (application/json)
 
-    ```
-    {
-      "errors": [
-        {
-          "message": "invalid data format/type",
-          "description": "Error validating domain name syntax for domain: '(domain)'",
-          "code": "1300"
-        }
-      ]
-    }
-    ```
+           {
+             "errors": [
+               {
+                 "message": "invalid data format/type",
+                 "description": "Error validating domain name syntax for domain: '(domain)'",
+                 "code": "1300"
+               }
+             ]
+           }
 
 ### List all Sending Domains [GET]
 
@@ -7607,9 +7596,8 @@ List an overview of all sending domains in the system.
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
             Accept: application/json
 
-+ Response 200 (application/json; charset=utf-8)
++ Response 200 (application/json)
 
-        ```
         {
             "results": [
                 {
@@ -7639,7 +7627,6 @@ List an overview of all sending domains in the system.
                 }
             ]
         }
-        ```
 
 ## Retrieve, Update, and Delete [/sending-domains/{domain}]
 
@@ -7657,9 +7644,8 @@ Retrieve a sending domain by specifying its domain name in the URI path.  The re
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
             Accept: application/json
 
-+ Response 200 (application/json; charset=utf-8)
++ Response 200 (application/json)
 
-        ```
         {
             "results": {
                 "tracking_domain": "click.example1.com",
@@ -7679,8 +7665,6 @@ Retrieve a sending domain by specifying its domain name in the URI path.  The re
                 "shared_with_subaccounts": false
             }
         }
-        ```
-
 
 ### Update a Sending Domain [PUT]
 
@@ -7703,18 +7687,16 @@ To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty
 
     + Body
 
-        ```
-        {
-            "tracking_domain": "click.example1.com",
-            "dkim": {  "private": "MIICXgIBAAKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQABAoGBAITb3BCRPBi5lGhHdn+1RgC7cjUQEbSb4eFHm+ULRwQ0UIPWHwiVWtptZ09usHq989fKp1g/PfcNzm8c78uTS6gCxfECweFCRK6EdO6cCCr1cfWvmBdSjzYhODUdQeyWZi2ozqd0FhGWoV4VHseh4iLj36DzleTLtOZj3FhAo1WJAkEA68T+KkGeDyWwvttYtuSiQCCTrXYAWTQnkIUxduCp7Ap6tVeIDn3TaXTj74UbEgaNgLhjG4bX//fdeDW6PaK9YwJBAM6xJmwHLPMgwNVjiz3u/6fhY3kaZTWcxtMkXCjh1QE82KzDwqyrCg7EFjTtFysSHCAZxXZMcivGl4TZLHnydJUCQQCx16+M+mAatuiCnvxlQUMuMiSTNK6Amzm45u9v53nlZeY3weYMYFdHdfe1pebMiwrT7MI9clKebz6svYJVmdtXAkApDAc8VuR3WB7TgdRKNWdyGJGfoD1PO1ZE4iinOcoKV+IT1UCY99Kkgg6C7j62n/8T5OpRBvd5eBPpHxP1F9BNAkEA5Nf2VO9lcTetksHdIeKK+F7sio6UZn0Rv7iUo3ALrN1D1cGfWIh/Y1g==",
-                "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
-                "selector": "hello_selector",
-                "headers": "from:to:subject:date"
-            }
-        }
-        ```
+           {
+               "tracking_domain": "click.example1.com",
+               "dkim": {  "private": "MIICXgIBAAKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQABAoGBAITb3BCRPBi5lGhHdn+1RgC7cjUQEbSb4eFHm+ULRwQ0UIPWHwiVWtptZ09usHq989fKp1g/PfcNzm8c78uTS6gCxfECweFCRK6EdO6cCCr1cfWvmBdSjzYhODUdQeyWZi2ozqd0FhGWoV4VHseh4iLj36DzleTLtOZj3FhAo1WJAkEA68T+KkGeDyWwvttYtuSiQCCTrXYAWTQnkIUxduCp7Ap6tVeIDn3TaXTj74UbEgaNgLhjG4bX//fdeDW6PaK9YwJBAM6xJmwHLPMgwNVjiz3u/6fhY3kaZTWcxtMkXCjh1QE82KzDwqyrCg7EFjTtFysSHCAZxXZMcivGl4TZLHnydJUCQQCx16+M+mAatuiCnvxlQUMuMiSTNK6Amzm45u9v53nlZeY3weYMYFdHdfe1pebMiwrT7MI9clKebz6svYJVmdtXAkApDAc8VuR3WB7TgdRKNWdyGJGfoD1PO1ZE4iinOcoKV+IT1UCY99Kkgg6C7j62n/8T5OpRBvd5eBPpHxP1F9BNAkEA5Nf2VO9lcTetksHdIeKK+F7sio6UZn0Rv7iUo3ALrN1D1cGfWIh/Y1g==",
+                   "public": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+W6scd3XWwvC/hPRksfDYFi3ztgyS9OSqnnjtNQeDdTSD1DRx/xFar2wjmzxp2+SnJ5pspaF77VZveN3P/HVmXZVghr3asoV9WBx/uW1nDIUxU35L4juXiTwsMAbgMyh3NqIKTNKyMDy4P8vpEhtH1iv/BrwMdBjHDVCycB8WnwIDAQAB",
+                   "selector": "hello_selector",
+                   "headers": "from:to:subject:date"
+               }
+           }
 
-+ Response 200 (application/json; charset=utf-8)
++ Response 200 (application/json)
 
         {
             "results": {
@@ -7725,31 +7707,27 @@ To remove the DKIM Signing Domain Identifier for a Sending Domain, use the empty
 
 + Response 400 (application/json)
 
-      ```
-      {
-        "errors": [
-          {
-            "message": "invalid params",
-            "description": "Tracking domain '(domain)' is not a registered tracking domain",
-            "code": "1200"
-          }
-        ]
-      }
-      ```
+           {
+             "errors": [
+               {
+                 "message": "invalid params",
+                 "description": "Tracking domain '(domain)' is not a registered tracking domain",
+                 "code": "1200"
+               }
+             ]
+           }
 
 + Response 422 (application/json)
 
-    ```
-    {
-      "errors": [
-        {
-          "message": "invalid data format/type",
-          "description": "Error validating domain name syntax for domain: '(domain)'",
-          "code": "1300"
-        }
-      ]
-    }
-    ```
+           {
+             "errors": [
+               {
+                 "message": "invalid data format/type",
+                 "description": "Error validating domain name syntax for domain: '(domain)'",
+                 "code": "1300"
+               }
+             ]
+           }
 
 ### Delete a Sending Domain [DELETE]
 
@@ -7783,7 +7761,7 @@ Delete an existing sending domain.
             }
 
 
-## Verify [/sending-domains/{domain_name}/verify]
+## Verify [/sending-domains/{domain}/verify]
 
 ### Verify a Sending Domain [POST]
 
@@ -7806,6 +7784,9 @@ SPF verification requires the following:
 
 The domain's "status" object is returned on success.
 
++ Parameters
+  + domain (required, string, `example1.com`) ... Name of the domain
+
 + Request Verify DKIM and SPF (application/json)
 
     + Headers
@@ -7813,17 +7794,14 @@ The domain's "status" object is returned on success.
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
     + Body
 
-        ```
-        {
-            "dkim_verify": true,
-            "spf_verify": true
-        }
-        ```
+           {
+               "dkim_verify": true,
+               "spf_verify": true
+           }
 
 
-+ Response 200 (application/json; charset=utf-8)
++ Response 200 (application/json)
 
-        ```
         {
             "results": {
                 "ownership_verified": true,
@@ -7838,7 +7816,6 @@ The domain's "status" object is returned on success.
                 "postmaster_at_status": "unverified"
             }
         }
-        ```
 
 + Request Initiate postmaster@ email (application/json)
 
@@ -7847,15 +7824,12 @@ The domain's "status" object is returned on success.
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
     + Body
 
-        ```
-        {
-            "postmaster_at_verify": true
-        }
-        ```
+           {
+               "postmaster_at_verify": true
+           }
 
-+ Response 200 (application/json; charset=utf-8)
++ Response 200 (application/json)
 
-        ```
         {
             "results": {
                 "ownership_verified": false,
@@ -7866,7 +7840,6 @@ The domain's "status" object is returned on success.
                 "postmaster_at_status": "unverified"
             }
         }
-        ```
 
 + Request Verify postmaster@ correct token (application/json)
 
@@ -7875,15 +7848,12 @@ The domain's "status" object is returned on success.
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
     + Body
 
-        ```
-        {
-            "postmaster_at_token": "rcayptmrczdnrnqfsxyrzljmtsxvjzxb"
-        }
-        ```
+           {
+               "postmaster_at_token": "rcayptmrczdnrnqfsxyrzljmtsxvjzxb"
+           }
 
-+ Response 200 (application/json; charset=utf-8)
++ Response 200 (application/json)
 
-        ```
         {
             "results": {
                 "ownership_verified": true,
@@ -7894,7 +7864,6 @@ The domain's "status" object is returned on success.
                 "postmaster_at_status": "valid"
             }
         }
-        ```
 
 + Request Verify abuse@ incorrect token (application/json)
 
@@ -7903,15 +7872,12 @@ The domain's "status" object is returned on success.
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
     + Body
 
-        ```
-        {
-            "abuse_at_token": "AN_INCORRECT_OR_EXPIRED_TOKEN"
-        }
-        ```
+           {
+               "abuse_at_token": "AN_INCORRECT_OR_EXPIRED_TOKEN"
+           }
 
-+ Response 200 (application/json; charset=utf-8)
++ Response 200 (application/json)
 
-        ```
         {
             "results": {
                 "ownership_verified": false,
@@ -7922,7 +7888,6 @@ The domain's "status" object is returned on success.
                 "postmaster_at_status": "unverified"
             }
         }
-        ```
 
 + Request Unable to process abuse@ request (application/json)
 
@@ -7931,15 +7896,12 @@ The domain's "status" object is returned on success.
             Authorization: 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf
     + Body
 
-        ```
-        {
-            "abuse_at_verify": true
-        }
-        ```
+           {
+               "abuse_at_verify": true
+           }
 
-+ Response 400 (application/json; charset=utf-8)
++ Response 400 (application/json)
 
-        ```
         {
            "errors": [
               {
@@ -7949,7 +7911,6 @@ The domain's "status" object is returned on success.
               }
            ]
         }
-        ```
 
 # Group Sending IPs
 
@@ -9570,7 +9531,7 @@ If you use [Postman](https://www.getpostman.com/) you can click the following bu
 |transactional|boolean|Whether message is transactional or non-transactional for unsubscribe and suppression purposes (**Note:** no List-Unsubscribe header is included in transactional messages)| no |If not specified, the setting at template level is used, or defaults to false. |
 |sandbox|boolean|Whether or not to use the sandbox sending domain ( **Note:** SparkPost only )| no |Defaults to false. |
 |skip_suppression|boolean|Whether or not to ignore customer suppression rules, for this transmission only.  Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no - Defaults to false |  Unlike most other options, this flag is omitted on a GET transmission response unless the flag's value is true. |
-| ip_pool | string | The name of a dedicated IP pool associated with your account ( **Note:** SparkPost only ).  If this field is not provided, the account's default dedicated IP pool is used (if such a pool exists).  To explicitly bypass the account's default dedicated IP pool and instead fallback to the shared pool, specify a value of "sp_shared".  Please note that this option does not apply to subaccounts. | no | For more information on dedicated IPs, see the [Support Center](https://support.sparkpost.com/customer/en/portal/articles/2002977-dedicated-ip-addresses)
+| ip_pool | string | The ID of a dedicated IP pool associated with your account ( **Note:** SparkPost only ).  If this field is not provided, the account's default dedicated IP pool is used (if there are IPs assigned to it).  To explicitly bypass the account's default dedicated IP pool and instead fallback to the shared pool, specify a value of "sp_shared".  Please note that this option does not apply to subaccounts. | no | For more information on dedicated IPs, see the [Support Center](https://support.sparkpost.com/customer/en/portal/articles/2002977-dedicated-ip-addresses)
 |inline_css|boolean|Whether or not to perform CSS inlining in HTML content | no - Defaults to false | |
 
 ### Inline Content Attributes
@@ -11052,7 +11013,7 @@ The fields supported in the X-MSYS-API header are as follows:
 | transactional | boolean | Whether message is transactional or non-transactional for unsubscribe and suppression purposes (**Note:** no List-Unsubscribe header is included in transactional messages)| no | Defaults to false. |
 | sandbox| boolean| Whether or not to use the sandbox sending domain ( **Note:** SparkPost only ) | no | Defaults to false. |
 | skip_suppression| boolean| Whether or not to ignore customer suppression rules, for this SMTP message only. Only applicable if your configuration supports this parameter. ( **Note:** SparkPost Elite only )| no | Defaults to false. |
-| ip_pool | string | The name of a dedicated IP pool associated with your account ( **Note:** SparkPost only ).  If this field is not provided, the account's default dedicated IP pool is used (if such a pool exists).  To explicitly bypass the account's default dedicated IP pool and instead fallback to the shared pool, specify a value of "sp_shared". Please note that this option does not apply to subaccounts. | no | For more information on dedicated IPs, see the [Support Center](https://support.sparkpost.com/customer/en/portal/articles/2002977-dedicated-ip-addresses)
+| ip_pool | string | The ID of a dedicated IP pool associated with your account ( **Note:** SparkPost only ).  If this field is not provided, the account's default dedicated IP pool is used (if there are IPs assigned to it).  To explicitly bypass the account's default dedicated IP pool and instead fallback to the shared pool, specify a value of "sp_shared". Please note that this option does not apply to subaccounts. | no | For more information on dedicated IPs, see the [Support Center](https://support.sparkpost.com/customer/en/portal/articles/2002977-dedicated-ip-addresses)
 | inline_css| boolean| Whether or not to perform CSS inlining in HTML content | no | Defaults to false. |
 
 ## Sending Messages with cc, bcc, and archive Recipients
