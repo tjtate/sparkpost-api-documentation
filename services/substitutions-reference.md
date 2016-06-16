@@ -1,4 +1,4 @@
-## Substitutions Reference
+# Substitutions Reference
 <a name="substitutions-reference"></a>
 
 ## Key Features
