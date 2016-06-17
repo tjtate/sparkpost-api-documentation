@@ -1,7 +1,5 @@
 # Group Account
 
-To use this API, you need an API key, duh!
-
 ## Using Postman
 
 If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
