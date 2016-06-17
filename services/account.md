@@ -1,8 +1,10 @@
 # Group Account
 
-# Bacon ipsum
+## Bacon ipsum
 
-*Bacon ipsum* dolor amet tail swine shank jowl pastrami, hamburger kielbasa venison brisket pancetta prosciutto corned beef spare ribs cupim. Frankfurter pig pork belly, t-bone tongue biltong swine tenderloin pancetta prosciutto sirloin. Porchetta pancetta capicola, strip steak cow bacon ham hock bresaola tongue short ribs spare ribs andouille jowl fatback alcatra.
+**Bacon ipsum** dolor amet tail swine shank jowl pastrami, hamburger kielbasa venison brisket pancetta prosciutto corned beef spare ribs cupim. 
+* Frankfurter pig pork belly, t-bone tongue biltong swine tenderloin pancetta prosciutto sirloin
+* Porchetta pancetta capicola, strip steak cow bacon ham hock bresaola tongue short ribs spare ribs andouille jowl fatback alcatra.
 
 ## Using Postman
 
