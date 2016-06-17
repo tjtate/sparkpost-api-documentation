@@ -2,7 +2,7 @@
 
 ## Using Postman
 
-I am updating the docs too :)
+I am updating the docs and they go to wordpress
 
 If you use [Postman](https://www.getpostman.com/) you can click the following button to import the SparkPost API as a collection:
 
